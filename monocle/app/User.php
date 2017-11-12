@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Events\UserCreated;
 
 class User extends Authenticatable
 {
@@ -25,4 +26,13 @@ class User extends Authenticatable
      */
     protected $hidden = [
     ];
+
+    protected $dispatchesEvents = [
+        'created' => UserCreated::class
+    ];
+
+    public function channels() {
+        return $this->hasMany('App\Channel');
+    }
+
 }

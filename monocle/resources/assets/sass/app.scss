@@ -7,17 +7,71 @@
 
 @import "node_modules/bulma/bulma.sass";
 
-.glyphicon-refresh-animate {
-    -animation: spin 1s infinite linear;
-    -webkit-animation: spin2 1s infinite linear;
+.container.dashboard {
+  .channel {
+    border: 1px $panel-default-border solid;
+    border-radius: 4px;
+    padding: 8px;
+    margin-top: 1em;
+
+    h2 {
+      font-size: 1.4em;
+    }
+
+    .channel-stats {
+      color: $text-color-light;
+      font-size: 0.8em;
+    }
+  }
 }
 
-@-webkit-keyframes spin2 {
-    from { -webkit-transform: rotate(0deg);}
-    to { -webkit-transform: rotate(360deg);}
+.container.channel {
+  .source {
+    border: 1px $panel-default-border solid;
+    border-radius: 4px;
+    padding: 8px;
+    margin-top: 1em;
+
+    h2 {
+      font-size: 1.4em;
+    }
+
+    .source-stats {
+      color: $text-color-light;
+      font-size: 0.8em;
+    }  
+  }  
 }
 
-@keyframes spin {
-    from { transform: scale(1) rotate(0deg);}
-    to { transform: scale(1) rotate(360deg);}
+#new-source-modal {
+  ul {
+    li {
+      margin-top: 12px;
+      padding: 8px;
+      border: 1px $panel-default-border solid;
+      border-radius: 4px;
+
+      h3 {
+        font-weight: bold;
+      }
+
+      .url {
+        font-size: 0.9em;
+        margin-bottom: 4px;
+      }
+    }
+  }
+
+}
+
+.container.dashboard, .container.channel {
+  .buttons.is-right {
+    float: right;
+  }
+
+  @media(max-width: 600px) {
+    .buttons.is-right {
+      float: none;
+    }
+  }
 }
