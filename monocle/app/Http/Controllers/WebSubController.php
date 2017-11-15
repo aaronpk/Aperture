@@ -53,6 +53,11 @@ class WebSubController extends Controller
         }
 
         $entry->data = json_encode($item, JSON_PRETTY_PRINT);
+
+        // Also cache the published date for sorting
+        if($item['published'])
+          $entry->published = date('Y-m-d H:i:s', strtotime($item['published']));
+
         $entry->save();
 
         if($is_new) {
