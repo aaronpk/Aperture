@@ -33,6 +33,7 @@ class SourceRemovedListener implements ShouldQueue
 
         // If the source no longer belongs to any channels, unsubscribe from updates
         if($channels->count() == 0) {
+            $http = new \p3k\HTTP();
             $response = $http->post(env('WATCHTOWER_URL'), http_build_query([
                 'hub.mode' => 'unsubscribe',
                 'hub.topic' => $event->source->url,
