@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 class Entry extends Model {
 
   protected $fillable = [
-    'source_id', 'data'
+    'source_id', 'url', 'data'
   ];
 
   public function source() {

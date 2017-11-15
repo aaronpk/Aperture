@@ -13,7 +13,7 @@ class Source extends Model {
     return $this->hasMany('App\Entry');
   }
 
-  public function sources() {
+  public function channels() {
     return $this->belongsToMany('\App\Channel');
   }
 

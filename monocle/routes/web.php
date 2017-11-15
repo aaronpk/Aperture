@@ -25,8 +25,8 @@ Route::post('/channel/{channel}/add_apikey', 'HomeController@add_apikey')->name(
 
 Route::post('/source/find_feeds', 'HomeController@find_feeds')->name('find_feeds');
 
-
 Route::get('/login', 'LoginController@login')->name('login');
 Route::get('/logout', 'LoginController@logout')->name('logout');
 Route::post('/login', 'LoginController@start');
 Route::get('/login/callback', 'LoginController@callback')->name('login_callback');
+

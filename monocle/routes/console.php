@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Foundation\Inspiring;
+use App\User, App\Source, App\Channel, App\Entry;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +18,11 @@ use Illuminate\Foundation\Inspiring;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->describe('Display an inspiring quote');
+
+Artisan::command('test', function(){
+
+  $source = Source::where('url','http://scratch.dev/blog/')->first();
+  Log::info($source->id);
+  Log::info(json_encode($source->channels()->get()));
+
+});

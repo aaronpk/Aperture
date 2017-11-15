@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use Auth, Gate, Request, DB;
 use App\Podcast, App\Channel, App\Source;
+use App\Events\SourceAdded, App\Events\SourceRemoved;
 
 class HomeController extends Controller
 {
@@ -59,6 +60,8 @@ class HomeController extends Controller
         $source->save();
       }
 
+      event(new SourceAdded($source, $channel));
+
       if($channel->sources()->where('source_id', $source->id)->count() == 0)
         $channel->sources()->attach($source->id, ['created_at'=>date('Y-m-d H:i:s')]);
 
@@ -74,6 +77,10 @@ class HomeController extends Controller
     if(Gate::allows('edit-channel', $channel)) {
 
       $channel->sources()->detach(Request::input('source_id'));
+
+      $source = Source::where('id', Request::input('source_id'))->first();
+
+      event(new SourceRemoved($source, $channel));
 
       return response()->json([
         'result' => 'ok'
