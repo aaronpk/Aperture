@@ -24,6 +24,11 @@ class LoginController extends Controller
         ->with('auth_error_description', 'The URL you entered was not valid');
     }
 
+    if(!\p3k\url\host_matches(Request::input('url'), env('ALLOWED_USER'))) {
+      return redirect('login')->with('auth_error', 'invalid url')
+        ->with('auth_error_description', 'Sorry, you do not have an account here');
+    }
+
     // Discover the endpoints
     $url = IndieAuth\Client::normalizeMeURL(Request::input('url'));
     $authorizationEndpoint = IndieAuth\Client::discoverAuthorizationEndpoint($url);
