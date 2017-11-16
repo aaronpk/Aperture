@@ -32,6 +32,7 @@ class LoginController extends Controller
     // Discover the endpoints
     $url = IndieAuth\Client::normalizeMeURL(Request::input('url'));
     $authorizationEndpoint = IndieAuth\Client::discoverAuthorizationEndpoint($url);
+    $tokenEndpoint = IndieAuth\Client::discoverTokenEndpoint($url);
 
     if(!$authorizationEndpoint) {
       return redirect('login')->with('auth_error', 'missing authorization endpoint')
@@ -39,10 +40,17 @@ class LoginController extends Controller
         ->with('auth_url', Request::input('url'));
     }
 
+    if(!$tokenEndpoint) {
+      return redirect('login')->with('auth_error', 'missing token endpoint')
+        ->with('auth_error_description', 'Could not find your token endpoint. Monocle uses this to verify access tokens sent to its Microsub endpoint by other clients.')
+        ->with('auth_url', Request::input('url'));
+    }
+
     $state = str_random(32);
     session([
       'state' => $state,
       'authorization_endpoint' => $authorizationEndpoint,
+      'token_endpoint' => $tokenEndpoint,
       'indieauth_url' => $url,
     ]);
 
@@ -97,8 +105,10 @@ class LoginController extends Controller
       if(!$user) {
         $user = new User();
         $user->url = $auth['me'];
-        $user->save();
       }
+
+      $user->token_endpoint = session('token_endpoint');
+      $user->save();
 
       Auth::login($user);
 

@@ -43,7 +43,10 @@ class Kernel extends HttpKernel
         ],
 
         'websub' => [
+        ],
 
+        'microsub' => [
+            \App\Http\Middleware\VerifyIndieAuthAccessToken::class
         ]
     ];
 

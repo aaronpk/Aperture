@@ -40,6 +40,7 @@ class SourceAddedListener implements ShouldQueue
             ]), [
                 'Authorization: Bearer '.env('WATCHTOWER_TOKEN')
             ]);
+            Log::info($response['body']);
         }
     }
 }
