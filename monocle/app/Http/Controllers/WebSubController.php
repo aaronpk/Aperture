@@ -52,7 +52,7 @@ class WebSubController extends Controller
           $is_new = false;
         }
 
-        $entry->data = json_encode($item, JSON_PRETTY_PRINT);
+        $entry->data = json_encode($item, JSON_PRETTY_PRINT+JSON_UNESCAPED_SLASHES);
 
         // Also cache the published date for sorting
         if($item['published'])
