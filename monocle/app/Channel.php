@@ -21,4 +21,11 @@ class Channel extends Model {
     return $this->belongsToMany('\App\Entry');
   }
 
+  public function to_array() {
+    return [
+      'uid' => $this->uid,
+      'name' => $this->name,
+    ];
+  }
+
 }

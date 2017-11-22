@@ -89,17 +89,13 @@ class MicrosubController extends Controller
     $channels = [];
 
     foreach(Auth::user()->channels()->get() as $channel) {
-      $channels[] = [
-        'uid' => $channel->uid,
-        'name' => $channel->name,
-      ];
+      $channels[] = $channel->to_array();
     }
 
     return [
       'channels' => $channels
     ];
   }
-
 
   private function get_timeline() {
     $channel = $this->_getRequestChannel();
@@ -131,7 +127,7 @@ class MicrosubController extends Controller
     $items = [];
     foreach($entries as $i=>$entry) {
       if($i < $limit)
-        $items[] = json_decode($entry->data, true);
+        $items[] = $entry->to_array();
       else
         $cursor = $this->_buildEntryCursor($entry);
     }

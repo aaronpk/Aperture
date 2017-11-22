@@ -13,4 +13,8 @@ class Entry extends Model {
     return $this->belongsTo('\App\Source');
   }
 
+  public function to_array() {
+    return json_decode($this->data, true);
+  }
+
 }
