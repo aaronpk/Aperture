@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 class Entry extends Model {
 
   protected $fillable = [
-    'source_id', 'url', 'data'
+    'source_id', 'unique', 'data'
   ];
 
   public function source() {
@@ -14,7 +14,9 @@ class Entry extends Model {
   }
 
   public function to_array() {
-    return json_decode($this->data, true);
+    $data = json_decode($this->data, true);
+    unset($data['uid']);
+    return $data;
   }
 
 }
