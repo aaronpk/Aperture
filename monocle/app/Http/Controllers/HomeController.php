@@ -113,17 +113,22 @@ class HomeController extends Controller
 
   public function find_feeds() {
 
-    $http = new \p3k\HTTP();
-    $http->set_user_agent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36 Monocle/0.1');
-    $response = $http->get(env('XRAY_URL').'/feeds?url='.urlencode(Request::input('url')));
+    $url = Request::input('url');
+    if(preg_match('/^[a-z][a-z0-9]+$/', $url)) {
+      $url = $url . '.com';
+    }
+    $url = \p3k\url\normalize($url);
+
+    $http = new \p3k\HTTP(env('USER_AGENT'));
+    $http->timeout = 10;
+    $xray = new \p3k\XRay();
+    $xray->http = $http;
+    $response = $xray->feeds($url);
 
     $feeds = [];
 
-    if($response['code'] == 200) {
-      $data = json_decode($response['body'], true);
-      if($data) {
-        $feeds = $data['feeds'];
-      }
+    if(!isset($response['error']) && $response['code'] == 200) {
+      $feeds = $response['feeds'];
     }
 
     return response()->json([

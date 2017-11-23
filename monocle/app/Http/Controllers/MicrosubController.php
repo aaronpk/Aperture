@@ -20,7 +20,8 @@ class MicrosubController extends Controller
       'unmute' => 'mute',
       'block' => 'block',
       'unblock' => 'block',
-      'channels' => 'channels'
+      'channels' => 'channels',
+      'search' => '',
     ];
     if(!array_key_exists(Request::input('action'), $actions)) {
       return Response::json([
@@ -97,6 +98,65 @@ class MicrosubController extends Controller
     ];
   }
 
+  private function post_search() {
+    if(Request::input('channel') == null) {
+      // Search for feeds matching the query
+
+      if(!Request::input('query')) {
+        return Response::json(['error' => 'invalid_query'], 400);
+      }
+
+      // The query might be:
+      // * a full URL
+      // * a term that could be normalized to a URL (e.g. "example.com")
+      // * a generic term
+
+      $url = false;
+      $query = Request::input('query');
+
+      if(\p3k\url\is_url($query)) {
+        // Directly entered URL including scheme
+        $url = \p3k\url\normalize($query);
+      } else {
+        if(preg_match('/^[a-z][a-z0-9]+$/', $query)) {
+          // if just a word was entered, append .com
+          $possible_url = $query . '.com';
+        } else {
+          $possible_url = $query;
+        }
+        // Possible URL that may require adding a scheme
+        $possible_url = \p3k\url\normalize($possible_url);
+        // Check if the hostname has at least one dot
+        if(strpos(parse_url($possible_url, PHP_URL_HOST), '.') !== false) {
+          $url = $possible_url;
+        }
+      }
+
+      $http = new \p3k\HTTP();
+      $http->set_user_agent(env('USER_AGENT'));
+      $http->timeout = 4;
+
+      $xray = new \p3k\XRay();
+      $xray->http = $http;
+      $response = $xray->feeds($url);
+
+      $feeds = [];
+
+      if(!isset($response['error']) && $response['code'] == 200) {
+        $feeds = $response['feeds'];
+      }
+
+      // TODO: also search existing feeds in the database that may be indexed
+
+
+      return Response::json([
+        'results' => $feeds
+      ]);
+    } else {
+      // TODO: Search within channels for posts matching the query
+    }
+  }
+
   private function get_timeline() {
     $channel = $this->_getRequestChannel();
 
@@ -133,10 +193,32 @@ class MicrosubController extends Controller
     }
 
     return Response::json([
-      'channel' => $channel,
       'items' => $items,
       'cursor' => $cursor,
     ]);
+  }
+
+  private function get_follow() {
+    $channel = $this->_getRequestChannel();
+
+    if(get_class($channel) != Channel::class)
+      return $channel;
+
+    $following = [];
+
+    $sources = $channel->sources()
+      ->where('url', '!=', '')
+      ->get();
+
+    foreach($sources as $s) {
+      $following[] = [
+        'url' => $s->url
+      ];
+    }
+
+    return [
+      'following' => $following
+    ];
   }
 
   private function _buildEntryCursor($entry) {
