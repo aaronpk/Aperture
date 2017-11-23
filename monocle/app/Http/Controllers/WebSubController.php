@@ -34,19 +34,22 @@ class WebSubController extends Controller
 
         // Prefer uid, then url, then hash the content
         if(isset($item['uid']))
-          $url = '@'.$item['uid'];
+          $unique = '@'.$item['uid'];
         elseif(isset($item['url']))
-          $url = $item['url'];
+          $unique = $item['url'];
         else
-          $url = '#'.md5(json_encode($item));
+          $unique = '#'.md5(json_encode($item));
+
+        // TODO: If the entry reports a URL that is different from the domain that the feed is from,
+        // kick off a job to fetch the original post and process it rather than using the data from the feed.
 
         $entry = Entry::where('source_id', $source->id)
-          ->where('url', $url)->first();
+          ->where('unique', $unique)->first();
 
         if(!$entry) {
           $entry = new Entry;
           $entry->source_id = $source->id;
-          $entry->url = $url;
+          $entry->unique = $unique;
           $is_new = true;
         } else {
           $is_new = false;
