@@ -99,6 +99,25 @@ class MicrosubController extends Controller
     ];
   }
 
+  private function post_channels() {
+    $channels = [];
+    foreach(Auth::user()->channels()->get() as $channel) {
+      $channels[] = $channel->name;
+    }
+
+    if(in_array(Request::input('name'), $channels)) {
+      return Response::json(['error' => 'duplicate'], 400);
+    }
+
+    $channel = new Channel;
+    $channel->user_id = Auth::user()->id;
+    $channel->name = Request::input('name');
+    $channel->uid = str_random(32);
+    $channel->save();
+
+    return Response::json($channel->to_array());
+  }
+
   private function post_search() {
     if(Request::input('channel') == null) {
       // Search for feeds matching the query
