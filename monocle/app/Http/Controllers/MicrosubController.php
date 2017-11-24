@@ -154,6 +154,8 @@ class MicrosubController extends Controller
       ]);
     } else {
       // TODO: Search within channels for posts matching the query
+
+
     }
   }
 
@@ -172,30 +174,57 @@ class MicrosubController extends Controller
       ->orderByDesc('entries.published')
       ->limit($limit+1); // fetch 1 more than the limit so we know if we've reached the end
 
-    if(Request::input('cursor')) {
-      if(!($cursor=$this->_parseEntryCursor(Request::input('cursor')))) {
+    if(Request::input('before')) {
+      if(!($before=$this->_parseEntryCursor(Request::input('before')))) {
         return Response::json(['error' => 'invalid_cursor'], 400);
       }
 
-      $entries = $entries->where('channel_entry.created_at', '<=', $cursor[0])
-        ->where('entries.published', '<=', $cursor[1]);
+      $entries = $entries->where('channel_entry.created_at', '>', $before[0])
+        ->where('entries.published', '>', $before[1]);
     }
+
+    if(Request::input('after')) {
+      if(!($after=$this->_parseEntryCursor(Request::input('after')))) {
+        return Response::json(['error' => 'invalid_cursor'], 400);
+      }
+
+      $entries = $entries->where('channel_entry.created_at', '<=', $after[0])
+        ->where('entries.published', '<=', $after[1]);
+    }
+
+    #Log::info('timeline request: before='.Request::input('before').' after='.Request::input('after'));
 
     $entries = $entries->get();
 
-    $cursor = false;
+    $newbefore = false;
+    $newafter = false;
     $items = [];
     foreach($entries as $i=>$entry) {
+      if($i == 0) // Always include a cursor to be able to return newer entries
+        $newbefore = $this->_buildEntryCursor($entry);
+
       if($i < $limit)
         $items[] = $entry->to_array();
-      else
-        $cursor = $this->_buildEntryCursor($entry);
+      
+      if($i == $limit) // Don't add the last item, but return a cursor for the next page
+        $newafter = $this->_buildEntryCursor($entry);
     }
 
-    return Response::json([
+    $response = [
       'items' => $items,
-      'cursor' => $cursor,
-    ]);
+      'limit' => $limit,
+      'paging' => []
+    ];
+
+    if($newbefore && $newbefore != Request::input('after'))
+      $response['paging']['before'] = $newbefore;
+
+    if($newafter)
+      $response['paging']['after'] = $newafter;
+
+    #Log::info('new paging: '.json_encode($response['paging']));
+
+    return Response::json($response);
   }
 
   private function get_follow() {
@@ -222,14 +251,23 @@ class MicrosubController extends Controller
   }
 
   private function _buildEntryCursor($entry) {
-    return dechex(strtotime($entry['added_to_channel_at']))
-      .':'.dechex(strtotime($entry['created_at']));
+    // if(env('APP_ENV') == 'testing')
+    //   return $entry['added_to_channel_at']
+    //     .'  '.$entry['published'];
+    // else
+      return dechex(strtotime($entry['added_to_channel_at']))
+        .':'.dechex(strtotime($entry['published']));
   }
 
   private function _parseEntryCursor($cursor) {
-    if(preg_match('/([0-9a-f]{8}):([0-9a-f]{8})/', $cursor, $match)) {
-      return [date('Y-m-d H:i:s', hexdec($match[1])), date('Y-m-d H:i:s', hexdec($match[2]))];
-    }
+    // if(env('APP_ENV') == 'testing')
+    //   if(preg_match('/([0-9\-]{10} [0-9:]{8})  ([0-9\-]{10} [0-9:]{8})/', $cursor, $match)) {
+    //     return [$match[1], $match[2]];
+    //   }
+    // else
+      if(preg_match('/([0-9a-f]{8}):([0-9a-f]{8})/', $cursor, $match)) {
+        return [date('Y-m-d H:i:s', hexdec($match[1])), date('Y-m-d H:i:s', hexdec($match[2]))];
+      }
     return false;
   }
 }

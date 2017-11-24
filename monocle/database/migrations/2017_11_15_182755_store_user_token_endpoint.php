@@ -14,7 +14,7 @@ class StoreUserTokenEndpoint extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('token_endpoint', 512);
+            $table->string('token_endpoint', 512)->default('');
         });
     }
 

@@ -16,6 +16,11 @@ class Entry extends Model {
   public function to_array() {
     $data = json_decode($this->data, true);
     unset($data['uid']);
+
+    // For testing, override the JSON published with the DB published
+    if(env('APP_ENV') == 'testing') 
+      $data['published'] = date('c', strtotime($this->published));
+
     return $data;
   }
 

@@ -41,8 +41,8 @@ class VerifyIndieAuthAccessToken
 
         // Check the cache
         if($cache_data=Cache::get('token:'.$token)) {
-            Log::info("Token data from cache");
-            Log::info($cache_data);
+            // Log::info("Token data from cache");
+            // Log::info($cache_data);
             $token_data = json_decode($cache_data, true);
         } else {
             $http = new HTTP();
