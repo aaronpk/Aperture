@@ -27,6 +27,29 @@
     </div>
   @endforeach
 
+  <hr>
+
+  <div class="helpsection">
+    <p>To use Monocle as your Microsub endpoint, add this HTML to your home page.</p>
+
+    <pre><?= htmlspecialchars('<link rel="microsub" href="'.env('APP_URL').'/microsub/'.Auth::user()->id.'">') ?></pre>
+
+    <p>To test API calls, you can generate a token from your token endpoint yourself or by using this <a href="https://gimme-a-token.5eb.nl/">access token tool</a>.</p>
+
+    <p>Monocle has implemented the following actions in the <a href="https://indieweb.org/Microsub-spec">Microsub spec</a>:</p>
+
+    <ul class="methods">
+      <li><a href="https://indieweb.org/Microsub-spec#Timelines">GET action=timeline</a> - retrieve the list of items in a channel</li>
+      <li><a href="https://indieweb.org/Microsub-spec#Search">POST action=search</a> - search for a new feed to add</li>
+      <li><a href="https://indieweb.org/Microsub-spec#Preview">GET action=preview</a> - preview a feed before following it</li>
+      <li><a href="https://indieweb.org/Microsub-spec#Following">GET action=follow</a> - retrieve the list of feeds followed in a channel</li>
+      <li><a href="https://indieweb.org/Microsub-spec#Following">POST action=follow</a> - follow a new feed in a channel</li>
+      <li><a href="https://indieweb.org/Microsub-spec#Unfollowing">POST action=unfollow</a> - unfollow a feed in a channel (existing items from that feed are left in the channel, like IRC/Slack)</li>
+      <li><a href="https://indieweb.org/Microsub-spec#Channels_2">GET action=channels</a> - retrieve the list of channels for a user</li>
+      <li><a href="https://indieweb.org/Microsub-spec#Channels_2">POST action=channels</a> - create a new channel</li>
+    </ul>
+  </div>
+
 </div>
 </section>
 
@@ -41,9 +64,7 @@
       </header>
       <section class="modal-card-body">
 
-
-      <input class="input" type="text" placeholder="Name" name="name" required="required">
-
+        <input class="input" type="text" placeholder="Name" name="name" required="required">
 
       </section>
       <footer class="modal-card-foot">
@@ -63,4 +84,13 @@ $(function(){
   });
 });
 </script>
+<style>
+.helpsection p {
+  margin: 1em 0;
+}
+.helpsection ul.methods {
+  list-style-type: disc;
+  margin-left: 1em;
+}
+</style>
 @endsection
