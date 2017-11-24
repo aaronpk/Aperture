@@ -255,8 +255,8 @@ class MicrosubController extends Controller
     //   return $entry['added_to_channel_at']
     //     .'  '.$entry['published'];
     // else
-      return dechex(strtotime($entry['added_to_channel_at']))
-        .':'.dechex(strtotime($entry['published']));
+      return \p3k\b10to60(strtotime($entry['added_to_channel_at']))
+        .':'.\p3k\b10to60(strtotime($entry['published']));
   }
 
   private function _parseEntryCursor($cursor) {
@@ -265,8 +265,8 @@ class MicrosubController extends Controller
     //     return [$match[1], $match[2]];
     //   }
     // else
-      if(preg_match('/([0-9a-f]{8}):([0-9a-f]{8})/', $cursor, $match)) {
-        return [date('Y-m-d H:i:s', hexdec($match[1])), date('Y-m-d H:i:s', hexdec($match[2]))];
+      if(preg_match('/([0-9a-zA-Z_]{6}):([0-9a-zA-Z_]{6})/', $cursor, $match)) {
+        return [date('Y-m-d H:i:s', \p3k\b60to10($match[1])), date('Y-m-d H:i:s', \p3k\b60to10($match[2]))];
       }
     return false;
   }
