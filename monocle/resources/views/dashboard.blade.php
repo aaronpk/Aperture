@@ -4,6 +4,10 @@
 <section class="section">
 <div class="container dashboard">
 
+  <div class="notification is-info">
+    Thanks for joining the alpha of Monocle! It's a little sparse around here so you'll have to excuse the lack of polish in the UI. In the mean time, feel free to poke around, and feedback is always appreciated! You can contact Aaron at <a href="mailto:aaron@parecki.com">aaron@parecki.com</a> or in the <a href="https://indieweb.org/discuss">IndieWeb chat</a>!
+  </div>
+
   <div class="buttons is-right">
     <a href="#" id="new-channel" class="button is-primary">New Channel</a>
   </div>
