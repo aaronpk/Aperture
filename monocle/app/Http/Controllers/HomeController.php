@@ -35,7 +35,9 @@ class HomeController extends Controller
 
   public function channel(Channel $channel) {
     if(Gate::allows('edit-channel', $channel)) {
-      $sources = $channel->sources()->get();
+      $sources = $channel->sources()
+        ->withCount('entries')
+        ->get();
 
       return view('channel', [
         'channel' => $channel,
@@ -60,10 +62,10 @@ class HomeController extends Controller
         $source->save();
       }
 
-      event(new SourceAdded($source, $channel));
-
       if($channel->sources()->where('source_id', $source->id)->count() == 0)
         $channel->sources()->attach($source->id, ['created_at'=>date('Y-m-d H:i:s')]);
+
+      event(new SourceAdded($source, $channel));
 
       return response()->json([
         'result' => 'ok'

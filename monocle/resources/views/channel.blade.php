@@ -28,6 +28,7 @@
 
       <div class="source-stats">
         <span>{{ $source->format }}</span>
+        <span>{{ $source->entries_count }} entries</span>
         @if($source->websub)
           <span>websub</span>
         @endif
