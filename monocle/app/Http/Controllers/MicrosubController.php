@@ -22,6 +22,7 @@ class MicrosubController extends Controller
       'unblock' => 'block',
       'channels' => 'channels',
       'search' => '',
+      'preview' => '',
     ];
     if(!array_key_exists(Request::input('action'), $actions)) {
       return Response::json([
@@ -155,8 +156,48 @@ class MicrosubController extends Controller
     } else {
       // TODO: Search within channels for posts matching the query
 
-
+      return Response::json([
+        'error' => 'not_implemented'
+      ], 400);
     }
+  }
+
+  private function get_preview() {
+    // If the feed is already in the database, return those results
+    $source = Source::where('url', Request::input('url'))->first();
+
+    $items = [];
+
+    if($source) {
+      $entries = $source->entries()
+        ->select('entries.*')
+        ->orderByDesc('created_at')
+        ->orderByDesc('published')
+        ->limit(20)
+        ->get();
+
+      foreach($entries as $entry) {
+        $items[] = $entry->to_array();
+      }
+    } else {
+      // Fetch the feed and return the first results
+      $http = new \p3k\HTTP();
+      $http->set_user_agent(env('USER_AGENT'));
+      $http->timeout = 4;
+
+      $xray = new \p3k\XRay();
+      $xray->http = $http;
+      $parsed = $xray->parse(Request::input('url'), ['expect'=>'feed']);
+
+      if($parsed && isset($parsed['data']['type']) && $parsed['data']['type'] == 'feed') {
+        $items = $parsed['data']['items'];
+      }
+    }
+
+    $response = [
+      'items' => $items
+    ];
+    return Response::json($response);
   }
 
   private function get_timeline() {
