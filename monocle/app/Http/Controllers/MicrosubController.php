@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use Request, Response, DB, Log, Auth;
+use App\Events\SourceAdded, App\Events\SourceRemoved;
 use App\User, App\Source, App\Channel, App\Entry;
 use p3k\XRay;
 
@@ -166,6 +167,10 @@ class MicrosubController extends Controller
         $feeds = $response['feeds'];
       }
 
+      foreach($feeds as $i=>$feed) {
+        $feeds[$i]['type'] = 'feed';
+      }
+
       // TODO: also search existing feeds in the database that may be indexed
 
 
@@ -272,7 +277,6 @@ class MicrosubController extends Controller
 
     $response = [
       'items' => $items,
-      'limit' => $limit,
       'paging' => []
     ];
 
@@ -301,12 +305,61 @@ class MicrosubController extends Controller
 
     foreach($sources as $s) {
       $following[] = [
+        'type' => 'feed',
         'url' => $s->url
       ];
     }
 
     return [
-      'following' => $following
+      'items' => $following
+    ];
+  }
+
+  private function post_follow() {
+    $channel = $this->_getRequestChannel();
+
+    if(get_class($channel) != Channel::class)
+      return $channel;
+
+    $source = Source::where('url', Request::input('url'))->first();
+
+    if(!$source) {
+      $source = new Source;
+      $source->created_by = Auth::user()->id;
+      $source->url = Request::input('url');
+      $source->token = str_random(32);
+      $source->save();
+    }
+
+    if($channel->sources()->where('source_id', $source->id)->count() == 0)
+      $channel->sources()->attach($source->id, ['created_at'=>date('Y-m-d H:i:s')]);
+
+    event(new SourceAdded($source, $channel));
+
+    return [
+      'type' => 'feed',
+      'url' => $source->url
+    ];
+  }
+
+  private function post_unfollow() {
+    $channel = $this->_getRequestChannel();
+
+    if(get_class($channel) != Channel::class)
+      return $channel;
+
+    $source = Source::where('url', Request::input('url'))->first();
+
+    if(!$source) {
+      return '';
+    }
+
+    $channel->sources()->detach($source->id);
+    event(new SourceRemoved($source, $channel));
+
+    return [
+      'type' => 'feed',
+      'url' => $source->url
     ];
   }
 
