@@ -47,7 +47,8 @@ class VerifyIndieAuthAccessToken
         } else {
             $http = new HTTP();
             $token_response = $http->get($user->token_endpoint, [
-                'Authorization: Bearer '.$token
+                'Authorization: Bearer '.$token,
+                'Accept: application/json'
             ]);
 
             // The token endpoint returns 200 for a valid token
@@ -57,6 +58,12 @@ class VerifyIndieAuthAccessToken
 
             // Check that the user in the token matches what we expect
             $token_data = json_decode($token_response['body'], true);
+
+            if(!$token_data) {
+              // Parse as form-encoded for fallback support
+              $token_data = [];
+              parse_str($token_response['body'], $token_data);
+            }
 
             if(!$token_data || !isset($token_data['me'])) {
                 return Response::json(['error'=>'invalid_token_response'], 400);
