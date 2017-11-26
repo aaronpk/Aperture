@@ -102,6 +102,8 @@ class LoginController extends Controller
         'indieauth_url' => false
       ]);
 
+      $auth['me'] = IndieAuth\Client::normalizeMeURL($auth['me']);
+
       // Load or create the user record
       $user = User::where('url', $auth['me'])->first();
       if(!$user) {
