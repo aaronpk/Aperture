@@ -69,7 +69,7 @@ class VerifyIndieAuthAccessToken
                 return Response::json(['error'=>'invalid_token_response'], 400);
             }
 
-            if(IndieAuth\Client::normalizeMeURL($token_data['me']) != IndieAuth\Client::normalizeMeURL($user->url)) {
+            if(\IndieAuth\Client::normalizeMeURL($token_data['me']) != \IndieAuth\Client::normalizeMeURL($user->url)) {
                 return Response::json(['error'=>'invalid_user'], 403);
             }
 
