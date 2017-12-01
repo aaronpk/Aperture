@@ -13,7 +13,7 @@
         "laravel/tinker": "~1.0",
         "p3k/http": "^0.1.5",
         "p3k/utils": "^1.0",
-        "p3k/xray": "1.4.*",
+        "p3k/xray": ">=1.4.5",
         "predis/predis": "^1.1"
     },
     "require-dev": {
@@ -58,5 +58,12 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "optimize-autoloader": true
-    }
+    },
+    "repositories": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/aaronpk/picoFeed.git",
+          "no-api": true
+        }
+    ]
 }
