@@ -19,6 +19,8 @@ Route::get('/dashboard', 'HomeController@index')->name('dashboard');
 
 Route::post('/channel/new', 'HomeController@create_channel')->name('create_channel');
 Route::get('/channel/{channel}', 'HomeController@channel')->name('channel');
+Route::post('/channel/{channel}/save', 'HomeController@save_channel')->name('save_channel');
+Route::post('/channel/{channel}/delete', 'HomeController@delete_channel')->name('delete_channel');
 Route::post('/channel/{channel}/add_source', 'HomeController@add_source')->name('add_source');
 Route::post('/channel/{channel}/remove_source', 'HomeController@remove_source')->name('remove_source');
 Route::post('/channel/{channel}/add_apikey', 'HomeController@add_apikey')->name('add_apikey');

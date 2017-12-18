@@ -2,6 +2,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Events\SourceRemoved;
 
 class Channel extends Model {
 
@@ -26,6 +27,19 @@ class Channel extends Model {
       'uid' => $this->uid,
       'name' => $this->name,
     ];
+  }
+
+  public function remove_source(Source $source) {
+    $this->sources()->detach($source->id);
+    event(new SourceRemoved($source, $this));
+  }
+
+  public function delete() {
+    $sources = $this->sources()->get();
+    foreach($sources as $source) {
+      $this->remove_source($source);
+    }
+    parent::delete();
   }
 
 }

@@ -354,8 +354,7 @@ class MicrosubController extends Controller
       return '';
     }
 
-    $channel->sources()->detach($source->id);
-    event(new SourceRemoved($source, $channel));
+    $channel->remove_source($source);
 
     return [
       'type' => 'feed',

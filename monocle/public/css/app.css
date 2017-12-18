@@ -11511,3 +11511,7 @@ label.panel-block:hover {
   }
 }
 
+.hidden {
+  display: none;
+}
+

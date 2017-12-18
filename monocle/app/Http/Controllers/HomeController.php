@@ -75,17 +75,52 @@ class HomeController extends Controller
     }
   }
 
-  public function remove_source(Channel $channel) {
+  public function save_channel(Channel $channel) {
     if(Gate::allows('edit-channel', $channel)) {
 
-      $channel->sources()->detach(Request::input('source_id'));
-
-      $source = Source::where('id', Request::input('source_id'))->first();
-
-      event(new SourceRemoved($source, $channel));
+      $channel->name = Request::input('name');
+      $channel->save();
 
       return response()->json([
         'result' => 'ok'
+      ]);
+    } else {
+      abort(401);
+    }
+  }
+
+  public function remove_source(Channel $channel) {
+    if(Gate::allows('edit-channel', $channel)) {
+
+      $source = Source::where('id', Request::input('source_id'))->first();
+
+      if(Request::input('remove_entries')) {
+
+      }
+
+      if($source) {
+        $channel->remove_source($source);
+      }
+
+      return response()->json([
+        'result' => 'ok'
+      ]);
+    } else {
+      abort(401);
+    }
+  }
+
+  public function delete_channel(Channel $channel) {
+    if(Gate::allows('edit-channel', $channel)) {
+
+      if(in_array($channel->uid, ['default','notifications']))
+        abort(400);
+
+      $channel->entries()->delete();
+      $channel->delete();
+
+      return response()->json([
+        'result' => 'ok',
       ]);
     } else {
       abort(401);
