@@ -134,6 +134,15 @@
             <input class="input" type="text" name="name" id="channel-name" required="required" value="{{ $channel->name }}">
           </div>
         </div>
+        <!--
+        <div class="field">
+          <div class="control">
+            <label class="label">Map a Domain</label>
+            <input class="input" type="text" name="domain" id="channel-domain" value="{{ $channel->domain }}">
+            <p class="help">Enter a domain name to have Monocle serve all the content in this channel publicly at that domain. You'll need to create a DNS CNAME record to <code>{{ parse_url(env('APP_URL'), PHP_URL_HOST) }}</code>.</p>
+          </div>
+        </div>
+        -->
       </div>
 
       <div id="delete-channel-confirm" class="hidden">
@@ -174,7 +183,8 @@ $(function(){
     $(this).addClass("is-loading");
     $.post("{{ route('save_channel', $channel) }}", {
       _token: csrf_token(),
-      name: $("#channel-name").val()
+      name: $("#channel-name").val(),
+      domain: $("#channel-domain").val()
     }, function(response) {
       reload_window();
     });

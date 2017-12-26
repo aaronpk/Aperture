@@ -2,7 +2,7 @@
 namespace App\Http\Controllers;
 
 use Auth, Gate, Request, DB;
-use App\Podcast, App\Channel, App\Source;
+use App\Channel, App\Source;
 use App\Events\SourceAdded, App\Events\SourceRemoved;
 
 class HomeController extends Controller
@@ -11,7 +11,7 @@ class HomeController extends Controller
     $this->middleware('auth');
   }
 
-  public function index() {
+  public function dashboard() {
     $channels = Auth::user()->channels()
       ->orderByDesc(DB::raw('uid = "default"'))
       ->orderByDesc(DB::raw('uid = "notifications"'))
@@ -79,6 +79,7 @@ class HomeController extends Controller
     if(Gate::allows('edit-channel', $channel)) {
 
       $channel->name = Request::input('name');
+      #$channel->domain = Request::input('domain');
       $channel->save();
 
       return response()->json([
