@@ -58,20 +58,20 @@ class WebSubController extends Controller
         $entry->data = json_encode($item, JSON_PRETTY_PRINT+JSON_UNESCAPED_SLASHES);
 
         // Also cache the published date for sorting
-        if($item['published'])
+        if(isset($item['published']))
           $entry->published = date('Y-m-d H:i:s', strtotime($item['published']));
 
         $entry->save();
 
         if($is_new) {
-          Log::info("Adding this entry to channels");
+          Log::info("Adding entry ".$entry->unique." to channels");
           // Loop through each channel associates with this source and add the entry
           foreach($source->channels()->get() as $channel) {
-            Log::info("Adding to channel #".$channel->id);
+            Log::info("  Adding to channel #".$channel->id);
             $channel->entries()->attach($entry->id, ['created_at'=>date('Y-m-d H:i:s')]);
           }
         } else {
-          Log::info("Already seen this item");
+          #Log::info("Already seen this item");
         }
 
       }
