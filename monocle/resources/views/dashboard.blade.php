@@ -50,7 +50,7 @@
       <li><a href="https://indieweb.org/Microsub-spec#Following">POST action=follow</a> - follow a new feed in a channel</li>
       <li><a href="https://indieweb.org/Microsub-spec#Unfollowing">POST action=unfollow</a> - unfollow a feed in a channel (existing items from that feed are left in the channel, like IRC/Slack)</li>
       <li><a href="https://indieweb.org/Microsub-spec#Channels_2">GET action=channels</a> - retrieve the list of channels for a user</li>
-      <li><a href="https://indieweb.org/Microsub-spec#Channels_2">POST action=channels</a> - create a new channel</li>
+      <li><a href="https://indieweb.org/Microsub-spec#Channels_2">POST action=channels</a> - create, update or delete channels</li>
     </ul>
   </div>
 

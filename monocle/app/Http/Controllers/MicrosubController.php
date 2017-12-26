@@ -101,22 +101,72 @@ class MicrosubController extends Controller
   }
 
   private function post_channels() {
-    $channels = [];
-    foreach(Auth::user()->channels()->get() as $channel) {
-      $channels[] = $channel->name;
+    if(Request::input('method') == 'delete') {
+      // Delete
+
+      if(!Request::input('channel')) {
+        return Response::json(['error' => 'invalid_input', 'error_description' => 'Missing channel parameter'], 400);
+      }
+
+      if(in_array(Request::input('channel'), ['default','notifications','global'])) {
+        return Response::json(['error' => 'invalid_input', 'error_description' => 'Cannot delete system channels'], 400);
+      }
+
+      $channel = Auth::user()->channels()->where('uid', Request::input('channel'))->first();
+
+      if(!$channel) {
+        return Response::json(['error' => 'invalid_input', 'error_description' => 'Channel not found'], 400);
+      }
+
+      $channel->entries()->delete();
+      $channel->delete();
+
+      return Response::json(['deleted' => true]);
+
+    } elseif(Request::input('channel')) {
+      // Update
+
+      if(!Request::input('channel')) {
+        return Response::json(['error' => 'invalid_input', 'error_description' => 'Missing channel parameter'], 400);
+      }
+
+      if(in_array(Request::input('channel'), ['default','notifications','global'])) {
+        return Response::json(['error' => 'invalid_input', 'error_description' => 'Cannot delete system channels'], 400);
+      }
+
+      $channel = Auth::user()->channels()->where('uid', Request::input('channel'))->first();
+
+      if(!$channel) {
+        return Response::json(['error' => 'invalid_input', 'error_description' => 'Channel not found'], 400);
+      }
+
+      if(Request::input('name')) {
+        $channel->name = Request::input('name');
+        $channel->save();
+      }
+
+      return Response::json($channel->to_array());
+
+    } else {
+      // Create
+
+      $channels = [];
+      foreach(Auth::user()->channels()->get() as $channel) {
+        $channels[] = $channel->name;
+      }
+
+      if(in_array(Request::input('name'), $channels)) {
+        return Response::json(['error' => 'duplicate'], 400);
+      }
+
+      $channel = new Channel;
+      $channel->user_id = Auth::user()->id;
+      $channel->name = Request::input('name');
+      $channel->uid = str_random(32);
+      $channel->save();
+
+      return Response::json($channel->to_array());
     }
-
-    if(in_array(Request::input('name'), $channels)) {
-      return Response::json(['error' => 'duplicate'], 400);
-    }
-
-    $channel = new Channel;
-    $channel->user_id = Auth::user()->id;
-    $channel->name = Request::input('name');
-    $channel->uid = str_random(32);
-    $channel->save();
-
-    return Response::json($channel->to_array());
   }
 
   private function post_search() {
