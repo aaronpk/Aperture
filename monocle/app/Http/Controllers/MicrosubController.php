@@ -3,7 +3,7 @@ namespace App\Http\Controllers;
 
 use Request, Response, DB, Log, Auth;
 use App\Events\SourceAdded, App\Events\SourceRemoved;
-use App\User, App\Source, App\Channel, App\Entry;
+use App\User, App\Source, App\Channel, App\Entry, App\ChannelToken;
 use p3k\XRay;
 
 class MicrosubController extends Controller
@@ -31,19 +31,26 @@ class MicrosubController extends Controller
         'error_description' => 'This operation is not supported'
       ], 400);
     }
+    // TODO: verify the token contains the necessary scope
     return true;
   }
 
   private function _getRequestChannel() {
-    $uid = Request::input('channel') ?: 'default';
-    $channel = Channel::where('user_id', Auth::user()->id)->where('uid', $uid)->first();
-    if(!$channel)
-      return Response::json([
-        'error' => 'not_found',
-        'error_description' => 'Channel not found'
-      ], 404);
-    else
-      return $channel;
+    // For channel tokens, force the request channel to the channel defined in the token
+    $td = Request::get('token_data');
+    if(isset($td['type']) && $td['type'] == 'channel') {
+      return Channel::where('id', $td['channel_id'])->first();
+    } else {
+      $uid = Request::input('channel') ?: 'default';
+      $channel = Channel::where('user_id', Auth::user()->id)->where('uid', $uid)->first();
+      if(!$channel)
+        return Response::json([
+          'error' => 'not_found',
+          'error_description' => 'Channel not found'
+        ], 404);
+      else
+        return $channel;
+    }
   }
 
   public function get(Request $request) {
@@ -410,26 +417,5 @@ class MicrosubController extends Controller
       'type' => 'feed',
       'url' => $source->url
     ];
-  }
-
-  private function _buildEntryCursor($entry) {
-    // if(env('APP_ENV') == 'testing')
-    //   return $entry['added_to_channel_at']
-    //     .'  '.$entry['published'];
-    // else
-      return \p3k\b10to60(strtotime($entry['added_to_channel_at']))
-        .':'.\p3k\b10to60(strtotime($entry['published']));
-  }
-
-  private function _parseEntryCursor($cursor) {
-    // if(env('APP_ENV') == 'testing')
-    //   if(preg_match('/([0-9\-]{10} [0-9:]{8})  ([0-9\-]{10} [0-9:]{8})/', $cursor, $match)) {
-    //     return [$match[1], $match[2]];
-    //   }
-    // else
-      if(preg_match('/([0-9a-zA-Z_]{6}):([0-9a-zA-Z_]{6})/', $cursor, $match)) {
-        return [date('Y-m-d H:i:s', \p3k\b60to10($match[1])), date('Y-m-d H:i:s', \p3k\b60to10($match[2]))];
-      }
-    return false;
   }
 }
