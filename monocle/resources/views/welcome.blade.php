@@ -96,6 +96,7 @@
                 <div class="title m-b-md p-name">
                     Monocle
                 </div>
+                <a href="" class="u-url"></a>
             </div>
         </div>
 
