@@ -96,6 +96,7 @@
                 <div class="title m-b-md p-name">
                     Monocle
                 </div>
+                <img src="/icons/monocle-icon-84.png" alt="Monocle Logo" class="u-logo" style="display: none;">
                 <a href="" class="u-url"></a>
             </div>
         </div>
