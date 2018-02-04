@@ -81,7 +81,7 @@
         </style>
     </head>
     <body>
-        <div class="flex-center position-ref full-height">
+        <div class="flex-center position-ref full-height h-x-app">
             @if (Route::has('login'))
                 <div class="top-right links">
                     @auth
@@ -93,9 +93,11 @@
             @endif
 
             <div class="content">
-                <div class="title m-b-md">
+                <div class="title m-b-md p-name">
                     Monocle
                 </div>
+                <img src="/icons/monocle-icon-84.png" alt="Monocle Logo" class="u-logo" style="display: none;">
+                <a href="" class="u-url"></a>
             </div>
         </div>
 
