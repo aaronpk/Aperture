@@ -98,7 +98,7 @@
                 <div class="title m-b-md p-name">
                     Aperture
                 </div>
-                <img src="/icons/aperture-icon-84.png" alt="Aperture Logo" class="u-logo" style="display: none;">
+                <img src="/icons/android-chrome-192x192.png" alt="Aperture Logo" class="u-logo" style="display: none;">
                 <a href="" class="u-url"></a>
             </div>
         </div>
