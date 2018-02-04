@@ -5,7 +5,7 @@
 <div class="container dashboard">
 
   <div class="notification is-info">
-    Thanks for joining the alpha of Monocle! It's a little sparse around here so you'll have to excuse the lack of polish in the UI. In the mean time, feel free to poke around, and feedback is always appreciated! You can contact Aaron at <a href="mailto:aaron@parecki.com">aaron@parecki.com</a> or in the <a href="https://indieweb.org/discuss">IndieWeb chat</a>!
+    Thanks for joining the alpha of Aperture! It's a little sparse around here so you'll have to excuse the lack of polish in the UI. In the mean time, feel free to poke around, and feedback is always appreciated! You can contact Aaron at <a href="mailto:aaron@parecki.com">aaron@parecki.com</a> or in the <a href="https://indieweb.org/discuss">IndieWeb chat</a>!
   </div>
 
   <div class="buttons is-right">
@@ -14,6 +14,7 @@
 
   <h1 class="title">Channels</h1>
 
+  <div class="channels">
   @foreach($channels as $channel)
     <div class="channel">
       <h2><a href="{{ route('channel', $channel) }}">{{ $channel->name }}</a></h2>
@@ -30,17 +31,18 @@
       </div>
     </div>
   @endforeach
+  </div>
 
   <hr>
 
   <div class="helpsection">
-    <p>To use Monocle as your Microsub endpoint, add this HTML to your home page.</p>
+    <p>To use Aperture as your Microsub endpoint, add this HTML to your home page.</p>
 
     <pre><?= htmlspecialchars('<link rel="microsub" href="'.env('APP_URL').'/microsub/'.Auth::user()->id.'">') ?></pre>
 
     <p>To test API calls, you can generate a token from your token endpoint yourself or by using this <a href="https://gimme-a-token.5eb.nl/">access token tool</a>.</p>
 
-    <p>Monocle has implemented the following actions in the <a href="https://indieweb.org/Microsub-spec">Microsub spec</a>:</p>
+    <p>Aperture has implemented the following actions in the <a href="https://indieweb.org/Microsub-spec">Microsub spec</a>:</p>
 
     <ul class="methods">
       <li><a href="https://indieweb.org/Microsub-spec#Timelines">GET action=timeline</a> - retrieve the list of items in a channel</li>

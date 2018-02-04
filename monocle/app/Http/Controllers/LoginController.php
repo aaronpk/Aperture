@@ -44,7 +44,7 @@ class LoginController extends Controller
 
     if(!$tokenEndpoint) {
       return redirect('login')->with('auth_error', 'missing token endpoint')
-        ->with('auth_error_description', 'Could not find your token endpoint. Monocle uses this to verify access tokens sent to its Microsub endpoint by other clients.')
+        ->with('auth_error_description', 'Could not find your token endpoint. Aperture uses this to verify access tokens sent to its Microsub endpoint by other clients.')
         ->with('auth_url', Request::input('url'));
     }
 

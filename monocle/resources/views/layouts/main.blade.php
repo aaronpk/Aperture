@@ -10,6 +10,8 @@
 
     <title>{{ env('APP_NAME') }}</title>
 
+    @include('components/favicon')
+    
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
