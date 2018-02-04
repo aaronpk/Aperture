@@ -95,11 +95,11 @@
             @endif
 
             <div class="content">
-                <div class="title m-b-md p-name">
-                    Aperture
+                <div class="title m-b-md">
+                    <img src="/icons/aperture.png" alt="Aperture Logo" class="u-logo" width="90" style="margin-bottom: -15px;">
+                    <span class="p-name">Aperture</span>
                 </div>
-                <img src="/icons/android-chrome-192x192.png" alt="Aperture Logo" class="u-logo" style="display: none;">
-                <a href="" class="u-url"></a>
+                <a href="/" class="u-url"></a>
             </div>
         </div>
     </body>
