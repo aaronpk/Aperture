@@ -1,4 +1,5 @@
 <?php
+/*
 namespace App\Http\Controllers;
 
 use Request, Response, DB, Log, Route;
@@ -75,3 +76,4 @@ class HostedController extends Controller
   }
 
 }
+*/

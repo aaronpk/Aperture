@@ -1,8 +1,6 @@
 <?php
 
-// Monocle application routes
-Route::domain(parse_url(env('APP_URL'), PHP_URL_HOST))->group(function(){
-  Route::middleware('web')->group(function(){
+Route::middleware('web')->group(function(){
     Route::get('/', function() {
       return view('welcome');
     })->name('index');
@@ -23,8 +21,4 @@ Route::domain(parse_url(env('APP_URL'), PHP_URL_HOST))->group(function(){
     Route::get('/logout', 'LoginController@logout')->name('logout');
     Route::post('/login', 'LoginController@start');
     Route::get('/login/callback', 'LoginController@callback')->name('login_callback');
-  });
 });
-
-// Catch-all for all other domains mapped
-Route::get('/', 'HostedController@index');
