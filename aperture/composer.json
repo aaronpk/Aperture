@@ -15,7 +15,7 @@
         "p3k/http": ">=0.1.5",
         "p3k/micropub": ">=0.0.2",
         "p3k/utils": ">=1.0",
-        "p3k/xray": ">=1.4.10",
+        "p3k/xray": ">=1.4.11",
         "predis/predis": "^1.1"
     },
     "require-dev": {
