@@ -22,3 +22,6 @@ Route::middleware('web')->group(function(){
     Route::post('/login', 'LoginController@start');
     Route::get('/login/callback', 'LoginController@callback')->name('login_callback');
 });
+
+Route::get('/entry/{source_id}/{entry}', 'MicropubController@entry')->name('entry');
+

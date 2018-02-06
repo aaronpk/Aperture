@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "923058fbc949d875c1573ed496d6dd6c",
+    "content-hash": "245fcd766dc704267da8cb3ee0b438f7",
     "packages": [
         {
             "name": "barnabywalters/mf-cleaner",
@@ -1705,21 +1705,21 @@
         },
         {
             "name": "p3k/http",
-            "version": "0.1.5",
+            "version": "0.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aaronpk/p3k-http.git",
-                "reference": "3740fe135e6d58457d7528e7c05a67b68e020a79"
+                "reference": "171fe2e71a83b1155cdfc93cdc3156ad97165712"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aaronpk/p3k-http/zipball/3740fe135e6d58457d7528e7c05a67b68e020a79",
-                "reference": "3740fe135e6d58457d7528e7c05a67b68e020a79",
+                "url": "https://api.github.com/repos/aaronpk/p3k-http/zipball/171fe2e71a83b1155cdfc93cdc3156ad97165712",
+                "reference": "171fe2e71a83b1155cdfc93cdc3156ad97165712",
                 "shasum": ""
             },
             "require": {
                 "indieweb/link-rel-parser": "0.1.*",
-                "mf2/mf2": "0.3.*"
+                "mf2/mf2": ">=0.3.2"
             },
             "type": "library",
             "autoload": {
@@ -1739,7 +1739,51 @@
             ],
             "description": "A simple wrapper API around the PHP curl functions",
             "homepage": "https://github.com/aaronpk/p3k-http",
-            "time": "2017-04-29T17:43:29+00:00"
+            "time": "2018-01-22T20:06:21+00:00"
+        },
+        {
+            "name": "p3k/micropub",
+            "version": "0.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aaronpk/p3k-micropub.git",
+                "reference": "a2ba03d6eb4d6ac2db7430f499c9ef26791d8cd6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aaronpk/p3k-micropub/zipball/a2ba03d6eb4d6ac2db7430f499c9ef26791d8cd6",
+                "reference": "a2ba03d6eb4d6ac2db7430f499c9ef26791d8cd6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "p3k": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Aaron Parecki",
+                    "homepage": "https://aaronparecki.com"
+                }
+            ],
+            "description": "Utilities to help handle Micropub requests when building servers and clients",
+            "keywords": [
+                "indieweb",
+                "micropub",
+                "p3k"
+            ],
+            "time": "2018-02-06T16:53:58+00:00"
         },
         {
             "name": "p3k/picofeed",
@@ -1838,16 +1882,16 @@
         },
         {
             "name": "p3k/utils",
-            "version": "1.0.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aaronpk/p3k-utils.git",
-                "reference": "4f2ab159bae3d79a21fb02f30a03eed3d57aab96"
+                "reference": "f8a1258ec548e8ef6747bf2d74568611863cb1ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aaronpk/p3k-utils/zipball/4f2ab159bae3d79a21fb02f30a03eed3d57aab96",
-                "reference": "4f2ab159bae3d79a21fb02f30a03eed3d57aab96",
+                "url": "https://api.github.com/repos/aaronpk/p3k-utils/zipball/f8a1258ec548e8ef6747bf2d74568611863cb1ee",
+                "reference": "f8a1258ec548e8ef6747bf2d74568611863cb1ee",
                 "shasum": ""
             },
             "require": {
@@ -1864,7 +1908,8 @@
                     "src/url.php",
                     "src/utils.php",
                     "src/date.php",
-                    "src/cache.php"
+                    "src/cache.php",
+                    "src/geo.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1879,7 +1924,7 @@
             ],
             "description": "Some helpful functions used by https://p3k.io projects",
             "homepage": "https://github.com/aaronpk/p3k-utils",
-            "time": "2017-04-30T16:14:20+00:00"
+            "time": "2018-01-28T22:31:41+00:00"
         },
         {
             "name": "p3k/xray",

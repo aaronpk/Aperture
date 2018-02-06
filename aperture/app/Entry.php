@@ -13,6 +13,10 @@ class Entry extends Model {
     return $this->belongsTo('\App\Source');
   }
 
+  public function permalink() {
+    return env('APP_URL').'/entry/'.$this->source->id.'/'.$this->unique;
+  }
+
   public function to_array() {
     $data = json_decode($this->data, true);
     unset($data['uid']);

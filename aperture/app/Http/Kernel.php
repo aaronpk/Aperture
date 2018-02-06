@@ -47,7 +47,11 @@ class Kernel extends HttpKernel
 
         'microsub' => [
             \App\Http\Middleware\VerifyIndieAuthAccessToken::class
-        ]
+        ],
+
+        'micropub' => [
+            \App\Http\Middleware\VerifyChannelApiKey::class
+        ],
     ];
 
     /**

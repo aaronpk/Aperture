@@ -42,6 +42,8 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapWebSubRoutes();
 
         $this->mapMicrosubRoutes();
+
+        $this->mapMicropubRoutes();
     }
 
     /**
@@ -84,5 +86,12 @@ class RouteServiceProvider extends ServiceProvider
         Route::middleware('microsub')
           ->namespace($this->namespace)
           ->group(base_path('routes/microsub.php'));
+    }
+
+    protected function mapMicropubRoutes()
+    {
+        Route::middleware('micropub')
+          ->namespace($this->namespace)
+          ->group(base_path('routes/micropub.php'));
     }
 }

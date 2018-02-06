@@ -134,6 +134,12 @@
             <input class="input" type="text" name="name" id="channel-name" required="required" value="{{ $channel->name }}">
           </div>
         </div>
+        <div class="field">
+          <div class="control">
+            <label class="label">UID</label>
+            <input class="input" type="text" readonly="readonly" id="channel-uid" value="{{ $channel->uid }}">
+          </div>
+        </div>
       </div>
 
       <div id="delete-channel-confirm" class="hidden">

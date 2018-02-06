@@ -17,7 +17,7 @@ class VerifyIndieAuthAccessToken
      */
     public function handle($request, Closure $next)
     {
-        if(!preg_match('/micro[sp]ub\/(\d+)/', $request->path(), $match)) {
+        if(!preg_match('/microsub\/(\d+)/', $request->path(), $match)) {
             return Response::json(['error'=>'not_found'], 404);
         }
 
@@ -45,7 +45,8 @@ class VerifyIndieAuthAccessToken
             // Log::info($cache_data);
             $token_data = json_decode($cache_data, true);
         } else {
-            // Check the local token database
+            // Check the local token database for read tokens
+            // Used for other apps to read content from channels without going through IndieAuth
             $channel_token = ChannelToken::where('token', $token)->first();
             if($channel_token) {
                 if($channel_token->channel->user_id == $user->id) {
