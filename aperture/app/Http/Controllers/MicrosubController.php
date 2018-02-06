@@ -8,12 +8,8 @@ use p3k\XRay;
 
 class MicrosubController extends Controller
 {
-  private function _verifyScope($expect) {
-    return in_array($expect, Request::get('token_data')['scope']);
-  }
-
-  private function _verifyAction($action) {
-    $actions = [
+  private static function _actions() {
+    return [
       'timeline' => 'read',
       'follow' => 'follow',
       'unfollow' => 'follow',
@@ -25,13 +21,21 @@ class MicrosubController extends Controller
       'search' => '',
       'preview' => '',
     ];
+  }
+
+  private function _verifyScopeForAction($action) {
+    $expect = self::_actions()[$action];
+    return in_array($expect, Request::get('token_data')['scope']);
+  }
+
+  private function _verifyAction($action) {
+    $actions = self::_actions();
     if(!array_key_exists(Request::input('action'), $actions)) {
       return Response::json([
         'error' => 'bad_request', 
         'error_description' => 'This operation is not supported'
       ], 400);
     }
-    // TODO: verify the token contains the necessary scope
     return true;
   }
 
@@ -60,8 +64,6 @@ class MicrosubController extends Controller
     if($verify !== true)
       return $verify;
 
-    // TODO: Verify the scopes of this token
-
     $action = Request::input('action');
 
     if(!method_exists($this, 'get_'.$action))
@@ -69,6 +71,13 @@ class MicrosubController extends Controller
         'error' => 'not_implemented',
         'error_description' => 'This method has not yet been implemented'
       ], 400);
+
+    if(!$this->_verifyScopeForAction($action)) {
+      return Response::json([
+        'error' => 'unauthorized',
+        'error_description' => 'The access token provided does not have the necessary scope for this action',
+      ], 401);
+    }
 
     return $this->{'get_'.$action}();
   }
@@ -88,7 +97,12 @@ class MicrosubController extends Controller
         'error_description' => 'This method has not yet been implemented'
       ], 400);
     
-    // TODO: Verify the scopes of this token
+    if(!$this->_verifyScopeForAction($action)) {
+      return Response::json([
+        'error' => 'unauthorized',
+        'error_description' => 'The access token provided does not have the necessary scope for this action',
+      ], 401);
+    }
 
     return $this->{'post_'.$action}();
   }
