@@ -88,6 +88,9 @@ class VerifyIndieAuthAccessToken
                 }
 
                 $token_data['type'] = 'indieauth';
+
+                if(is_string($token_data['scope']))
+                    $token_data['scope'] = [$token_data['scope']];
             }
 
             Cache::set('token:'.$token, json_encode($token_data), 300);
