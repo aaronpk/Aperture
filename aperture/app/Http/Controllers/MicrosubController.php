@@ -171,6 +171,10 @@ class MicrosubController extends Controller
     } else {
       // Create
 
+      if(!trim(Request::input('name'))) {
+        return Response::json(['error' => 'invalid_input', 'error_description' => 'Missing name parameter'], 400);
+      }
+
       $channels = [];
       foreach(Auth::user()->channels()->get() as $channel) {
         $channels[] = $channel->name;
