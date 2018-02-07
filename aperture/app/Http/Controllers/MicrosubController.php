@@ -62,12 +62,17 @@ class MicrosubController extends Controller
     $token_data = Request::get('token_data');
 
     $action = Request::input('action');
+
     switch($action) {
+        // Any items that have a different read/write scope, should be added as cases
         case 'channels':
-            $action = (Request::isMethod('get') ? 'read-' : 'write-') . $action;
+            $scopeKey = 'read-'.$action;
+            break;
+        default:
+            $scopeKey = $action;
     }
 
-    $verify = $this->_verifyAction($action);
+    $verify = $this->_verifyAction($scopeKey);
     if($verify !== true)
       return $verify;
 
@@ -77,7 +82,7 @@ class MicrosubController extends Controller
         'error_description' => 'This method has not yet been implemented'
       ], 400);
 
-    if(!$this->_verifyScopeForAction($action)) {
+    if(!$this->_verifyScopeForAction($scopeKey)) {
       return Response::json([
         'error' => 'unauthorized',
         'error_description' => 'The access token provided does not have the necessary scope for this action',
@@ -90,11 +95,20 @@ class MicrosubController extends Controller
   public function post(Request $request) {
     $token_data = Request::get('token_data');
 
-    $verify = $this->_verifyAction(Request::input('action'));
+    $action = Request::input('action');
+
+    switch($action) {
+      // Any items that have a different read/write scope, should be added as cases
+      case 'channels':
+          $scopeKey = 'write-'.$action;
+          break;
+      default:
+          $scopeKey = $action;
+    }
+
+    $verify = $this->_verifyAction($scopeKey);
     if($verify !== true)
       return $verify;
-
-    $action = Request::input('action');
 
     if(!method_exists($this, 'post_'.$action))
       return Response::json([
@@ -102,7 +116,7 @@ class MicrosubController extends Controller
         'error_description' => 'This method has not yet been implemented'
       ], 400);
     
-    if(!$this->_verifyScopeForAction($action)) {
+    if(!$this->_verifyScopeForAction($scopeKey)) {
       return Response::json([
         'error' => 'unauthorized',
         'error_description' => 'The access token provided does not have the necessary scope for this action',
