@@ -17,7 +17,8 @@ class MicrosubController extends Controller
       'unmute' => 'mute',
       'block' => 'block',
       'unblock' => 'block',
-      'channels' => 'channels',
+      'read-channels' => 'read',
+      'write-channels' => 'channels',
       'search' => '',
       'preview' => '',
     ];
@@ -60,11 +61,13 @@ class MicrosubController extends Controller
   public function get(Request $request) {
     $token_data = Request::get('token_data');
 
-    $verify = $this->_verifyAction(Request::input('action'));
+    $action = Request::input('action');
+    if ($action == "channels")
+      $action = (Request::isMethod('get') ? 'read-channels' : 'write-channels');
+
+    $verify = $this->_verifyAction();
     if($verify !== true)
       return $verify;
-
-    $action = Request::input('action');
 
     if(!method_exists($this, 'get_'.$action))
       return Response::json([
