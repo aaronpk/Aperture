@@ -62,10 +62,12 @@ class MicrosubController extends Controller
     $token_data = Request::get('token_data');
 
     $action = Request::input('action');
-    if ($action == "channels")
-      $action = (Request::isMethod('get') ? 'read-channels' : 'write-channels');
+    switch($action) {
+        case 'channels':
+            $action = (Request::isMethod('get') ? 'read-' : 'write-') . $action;
+    }
 
-    $verify = $this->_verifyAction();
+    $verify = $this->_verifyAction($action);
     if($verify !== true)
       return $verify;
 
