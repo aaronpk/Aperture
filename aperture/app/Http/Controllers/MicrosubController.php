@@ -31,7 +31,7 @@ class MicrosubController extends Controller
 
   private function _verifyAction($action) {
     $actions = self::_actions();
-    if(!array_key_exists(Request::input('action'), $actions)) {
+    if(!array_key_exists($action, $actions)) {
       return Response::json([
         'error' => 'bad_request', 
         'error_description' => 'This operation is not supported'
