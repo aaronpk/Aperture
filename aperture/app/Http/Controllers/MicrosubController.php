@@ -17,7 +17,8 @@ class MicrosubController extends Controller
       'unmute' => 'mute',
       'block' => 'block',
       'unblock' => 'block',
-      'channels' => 'channels',
+      'read-channels' => 'read',
+      'write-channels' => 'channels',
       'search' => '',
       'preview' => '',
     ];
@@ -30,7 +31,7 @@ class MicrosubController extends Controller
 
   private function _verifyAction($action) {
     $actions = self::_actions();
-    if(!array_key_exists(Request::input('action'), $actions)) {
+    if(!array_key_exists($action, $actions)) {
       return Response::json([
         'error' => 'bad_request', 
         'error_description' => 'This operation is not supported'
@@ -60,11 +61,20 @@ class MicrosubController extends Controller
   public function get(Request $request) {
     $token_data = Request::get('token_data');
 
-    $verify = $this->_verifyAction(Request::input('action'));
+    $action = Request::input('action');
+
+    switch($action) {
+        // Any items that have a different read/write scope, should be added as cases
+        case 'channels':
+            $scopeKey = 'read-'.$action;
+            break;
+        default:
+            $scopeKey = $action;
+    }
+
+    $verify = $this->_verifyAction($scopeKey);
     if($verify !== true)
       return $verify;
-
-    $action = Request::input('action');
 
     if(!method_exists($this, 'get_'.$action))
       return Response::json([
@@ -72,7 +82,7 @@ class MicrosubController extends Controller
         'error_description' => 'This method has not yet been implemented'
       ], 400);
 
-    if(!$this->_verifyScopeForAction($action)) {
+    if(!$this->_verifyScopeForAction($scopeKey)) {
       return Response::json([
         'error' => 'unauthorized',
         'error_description' => 'The access token provided does not have the necessary scope for this action',
@@ -85,11 +95,20 @@ class MicrosubController extends Controller
   public function post(Request $request) {
     $token_data = Request::get('token_data');
 
-    $verify = $this->_verifyAction(Request::input('action'));
+    $action = Request::input('action');
+
+    switch($action) {
+      // Any items that have a different read/write scope, should be added as cases
+      case 'channels':
+          $scopeKey = 'write-'.$action;
+          break;
+      default:
+          $scopeKey = $action;
+    }
+
+    $verify = $this->_verifyAction($scopeKey);
     if($verify !== true)
       return $verify;
-
-    $action = Request::input('action');
 
     if(!method_exists($this, 'post_'.$action))
       return Response::json([
@@ -97,7 +116,7 @@ class MicrosubController extends Controller
         'error_description' => 'This method has not yet been implemented'
       ], 400);
     
-    if(!$this->_verifyScopeForAction($action)) {
+    if(!$this->_verifyScopeForAction($scopeKey)) {
       return Response::json([
         'error' => 'unauthorized',
         'error_description' => 'The access token provided does not have the necessary scope for this action',
