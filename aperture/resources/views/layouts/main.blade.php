@@ -11,7 +11,9 @@
     <title>{{ env('APP_NAME') }}</title>
 
     @include('components/favicon')
-    
+
+    <script defer src="/font-awesome/js/fontawesome-all.js"></script>
+
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>

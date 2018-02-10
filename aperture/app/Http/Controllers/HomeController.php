@@ -13,9 +13,7 @@ class HomeController extends Controller
 
   public function dashboard() {
     $channels = Auth::user()->channels()
-      ->orderByDesc(DB::raw('uid = "default"'))
-      ->orderByDesc(DB::raw('uid = "notifications"'))
-      ->orderBy('name')
+      ->orderBy('sort')
       ->get();
 
     return view('dashboard', [
@@ -125,6 +123,18 @@ class HomeController extends Controller
       ]);
     } else {
       abort(401);
+    }
+  }
+
+  public function set_channel_order() {
+    if(!is_array(Request::input('channels')))
+      return response()->json(['result'=>'error']);
+    
+    $sorted = Auth::user()->set_channel_order(Request::input('channels'));
+    if($sorted) {
+      return response()->json(['result'=>'ok']);
+    } else {
+      return response()->json(['result'=>'error']);
     }
   }
 

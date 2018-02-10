@@ -14,6 +14,7 @@ Route::middleware('web')->group(function(){
     Route::post('/channel/{channel}/add_source', 'HomeController@add_source')->name('add_source');
     Route::post('/channel/{channel}/remove_source', 'HomeController@remove_source')->name('remove_source');
     Route::post('/channel/{channel}/add_apikey', 'HomeController@add_apikey')->name('add_apikey');
+    Route::post('/channel/set_order', 'HomeController@set_channel_order')->name('set_channel_order');
 
     Route::post('/source/find_feeds', 'HomeController@find_feeds')->name('find_feeds');
 

@@ -163,6 +163,27 @@ class MicrosubController extends Controller
 
       return Response::json(['deleted' => true]);
 
+    } elseif(Request::input('method') == 'order') {
+      // Set Channel Order
+
+      if(!Request::input('channels')) {
+        return Response::json(['error' => 'invalid_input', 'error_description' => 'Missing channels parameter'], 400);
+      }
+
+      if(!is_array(Request::input('channels'))) {
+        return Response::json(['error' => 'invalid_input', 'error_description' => 'channels parameter must be an array'], 400);
+      }
+
+      $inputChannels = Request::input('channels');
+
+      $sorted = Auth::user()->set_channel_order($inputChannels);
+
+      if(!$sorted) {
+        return Response::json(['error' => 'invalid_input', 'error_description' => 'One or more channels were not found'], 400);
+      }
+
+      return Response::json(['channels' => $sorted]);
+
     } elseif(Request::input('channel')) {
       // Update
 

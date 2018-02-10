@@ -15,8 +15,14 @@
   <h1 class="title">Channels</h1>
 
   <div class="channels">
-  @foreach($channels as $channel)
-    <div class="channel">
+  <?php $numChannels = count($channels); ?>
+  @foreach($channels as $i=>$channel)
+    <div class="channel" data-uid="{{ $channel->uid }}">
+      <div class="sort">
+        <a href="#" data-dir="up" {!! $i > 0 ? '' : 'class="disabled"' !!}><i class="fas fa-caret-up"></i></a>
+        <a href="#" data-dir="down" {!! $i < $numChannels-1 ? '' : 'class="disabled"' !!}><i class="fas fa-caret-down"></i></a>
+      </div>
+
       <h2><a href="{{ route('channel', $channel) }}">{{ $channel->name }}</a></h2>
 
       <!-- sparkline -->
@@ -88,6 +94,30 @@ $(function(){
     $('#new-channel-modal').addClass('is-active');
     e.preventDefault();
   });
+
+  $('.channel .sort a').click(function(e){
+    e.preventDefault();
+    if($(this).hasClass("disabled")) { return; }
+
+    var newOrder;
+
+    if($(this).data("dir") == "up") {
+      var thisChannel = $($(this).parents(".channel")[0]).data("uid");
+      var prevChannel = $(".channel[data-uid="+thisChannel+"]").prev().data("uid");
+      newOrder = [thisChannel, prevChannel];
+    } else {
+      var thisChannel = $($(this).parents(".channel")[0]).data("uid");
+      var nextChannel = $(".channel[data-uid="+thisChannel+"]").next().data("uid");
+      newOrder = [nextChannel, thisChannel];
+    }
+
+    $.post("/channel/set_order", {
+      channels: newOrder,
+      _token: csrf_token()
+    }, function(){
+      window.location.reload();
+    })
+  });
 });
 </script>
 <style>
@@ -97,6 +127,16 @@ $(function(){
 .helpsection ul.methods {
   list-style-type: disc;
   margin-left: 1em;
+}
+.channels .sort {
+  float: right;
+}
+.channels .sort a {
+  font-size: 1.1em;
+}
+.channels .sort a.disabled {
+  cursor: auto;
+  color: #ccc;
 }
 </style>
 @endsection
