@@ -36,7 +36,10 @@ class User extends Authenticatable
         return $this->hasMany('App\Channel')->orderBy('sort');
     }
 
-    public function set_channel_order($channelUIDs) {
+    public function set_channel_order(array $channelUIDs) {
+        // Don't allow the notifications channel to be moved
+        $channelUIDs = array_values(array_diff($channelUIDs, ['notifications']));
+
         // This returns the channels in the current order
         $channels = $this->channels()->whereIn('uid', $channelUIDs)->get();
 

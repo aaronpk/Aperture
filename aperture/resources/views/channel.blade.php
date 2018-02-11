@@ -149,7 +149,7 @@
     </section>
     <footer class="modal-card-foot">
       <a href="#" class="button save is-primary">Save</a>
-      @if(!in_array($channel->uid, ['default','notifications']))
+      @if(!in_array($channel->uid, ['notifications']))
         <div style="float:right;"><a href="#" class="button is-danger delete-prompt">Delete</a></div>
       @endif
     </footer>

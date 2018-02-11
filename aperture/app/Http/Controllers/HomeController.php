@@ -112,7 +112,7 @@ class HomeController extends Controller
   public function delete_channel(Channel $channel) {
     if(Gate::allows('edit-channel', $channel)) {
 
-      if(in_array($channel->uid, ['default','notifications']))
+      if(in_array($channel->uid, ['notifications']))
         abort(400);
 
       $channel->entries()->delete();

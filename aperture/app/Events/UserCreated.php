@@ -10,14 +10,16 @@ class UserCreated
     {
         $channel = new Channel();
         $channel->user_id = $user->id;
-        $channel->uid = 'default';
-        $channel->name = 'Home';
+        $channel->uid = 'notifications';
+        $channel->name = 'Notifications';
+        $channel->sort = 0;
         $channel->save();
 
         $channel = new Channel();
         $channel->user_id = $user->id;
-        $channel->uid = 'notifications';
-        $channel->name = 'Notifications';
+        $channel->uid = str_random(32);
+        $channel->name = 'Home';
+        $channel->sort = 1;
         $channel->save();
     }
 }

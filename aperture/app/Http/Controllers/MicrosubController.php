@@ -46,7 +46,14 @@ class MicrosubController extends Controller
     if(isset($td['type']) && $td['type'] == 'channel') {
       return Channel::where('id', $td['channel_id'])->first();
     } else {
-      $uid = Request::input('channel') ?: 'default';
+      if(!Request::input('channel')) {
+        return Response::json([
+          'error' => 'invalid_input',
+          'error_description' => 'No channel specified'
+        ], 400);
+      }
+
+      $uid = Request::input('channel');
       $channel = Channel::where('user_id', Auth::user()->id)->where('uid', $uid)->first();
       if(!$channel)
         return Response::json([
@@ -148,7 +155,7 @@ class MicrosubController extends Controller
         return Response::json(['error' => 'invalid_input', 'error_description' => 'Missing channel parameter'], 400);
       }
 
-      if(in_array(Request::input('channel'), ['default','notifications','global'])) {
+      if(in_array(Request::input('channel'), ['notifications','global'])) {
         return Response::json(['error' => 'invalid_input', 'error_description' => 'Cannot delete system channels'], 400);
       }
 
@@ -191,8 +198,8 @@ class MicrosubController extends Controller
         return Response::json(['error' => 'invalid_input', 'error_description' => 'Missing channel parameter'], 400);
       }
 
-      if(in_array(Request::input('channel'), ['default','notifications','global'])) {
-        return Response::json(['error' => 'invalid_input', 'error_description' => 'Cannot delete system channels'], 400);
+      if(in_array(Request::input('channel'), ['notifications','global'])) {
+        return Response::json(['error' => 'invalid_input', 'error_description' => 'Cannot rename system channels'], 400);
       }
 
       $channel = Auth::user()->channels()->where('uid', Request::input('channel'))->first();

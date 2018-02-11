@@ -18,10 +18,12 @@
   <?php $numChannels = count($channels); ?>
   @foreach($channels as $i=>$channel)
     <div class="channel" data-uid="{{ $channel->uid }}">
-      <div class="sort">
-        <a href="#" data-dir="up" {!! $i > 0 ? '' : 'class="disabled"' !!}><i class="fas fa-caret-up"></i></a>
-        <a href="#" data-dir="down" {!! $i < $numChannels-1 ? '' : 'class="disabled"' !!}><i class="fas fa-caret-down"></i></a>
-      </div>
+      @if($channel->uid != 'notifications')
+        <div class="sort">
+          <a href="#" data-dir="up" {!! $i > 1 ? '' : 'class="disabled"' !!}><i class="fas fa-caret-up"></i></a>
+          <a href="#" data-dir="down" {!! $i < $numChannels-1 ? '' : 'class="disabled"' !!}><i class="fas fa-caret-down"></i></a>
+        </div>
+      @endif
 
       <h2><a href="{{ route('channel', $channel) }}">{{ $channel->name }}</a></h2>
 
