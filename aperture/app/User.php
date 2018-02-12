@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Events\UserCreated;
+use DB;
 
 class User extends Authenticatable
 {
@@ -34,6 +35,23 @@ class User extends Authenticatable
 
     public function channels() {
         return $this->hasMany('App\Channel')->orderBy('sort');
+    }
+
+    public function create_channel($name) {
+        // Move the sort order of existing channels out of the way for the new channel
+        DB::table('channels')
+          ->where('user_id', $this->id)
+          ->where('sort', '>', 0)
+          ->increment('sort');
+
+        $channel = new Channel;
+        $channel->user_id = $this->id;
+        $channel->name = $name;
+        $channel->uid = str_random(32);
+        $channel->sort = 1;
+        $channel->save();
+
+        return $channel;
     }
 
     public function set_channel_order(array $channelUIDs) {

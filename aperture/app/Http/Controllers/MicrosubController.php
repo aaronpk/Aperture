@@ -231,12 +231,8 @@ class MicrosubController extends Controller
         return Response::json(['error' => 'duplicate'], 400);
       }
 
-      $channel = new Channel;
-      $channel->user_id = Auth::user()->id;
-      $channel->name = Request::input('name');
-      $channel->uid = str_random(32);
-      $channel->save();
-
+      $channel = Auth::user()->create_channel(Request::input('name'));
+      
       return Response::json($channel->to_array());
     }
   }

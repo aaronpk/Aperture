@@ -22,11 +22,7 @@ class HomeController extends Controller
   }
 
   public function create_channel() {
-    $channel = new Channel();
-    $channel->user_id = Auth::user()->id;
-    $channel->name = Request::input('name');
-    $channel->uid = str_random(32);
-    $channel->save();
+    $channel = Auth::user()->create_channel(Request::input('name'));
 
     return redirect(route('dashboard'));
   }
