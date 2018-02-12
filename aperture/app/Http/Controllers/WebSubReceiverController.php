@@ -20,6 +20,8 @@ class WebSubReceiverController extends Controller
       return Response::json(['error'=>'not_found'], 404);
     }
 
+    $source_is_empty = $source->entries()->count() == 0;
+
     $content_type = Request::header('Content-Type');
     $body = Request::getContent();
 
@@ -68,7 +70,11 @@ class WebSubReceiverController extends Controller
           // Loop through each channel associates with this source and add the entry
           foreach($source->channels()->get() as $channel) {
             Log::info("  Adding to channel #".$channel->id);
-            $channel->entries()->attach($entry->id, ['created_at'=>date('Y-m-d H:i:s')]);
+            // If the source was previously empty, use the published date on the entry in
+            // order to avoid flooding the channel with new posts
+            $channel->entries()->attach($entry->id, [
+              'created_at' => ($source_is_empty && $entry->published ? $entry->published : date('Y-m-d H:i:s'))
+            ]);
           }
         } else {
           #Log::info("Already seen this item");
