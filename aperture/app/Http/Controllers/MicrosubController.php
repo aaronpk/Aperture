@@ -413,6 +413,68 @@ class MicrosubController extends Controller
     return Response::json($response);
   }
 
+  private function post_timeline() {
+    $channel = $this->_getRequestChannel();
+
+    // Check that the channel exists
+    if(get_class($channel) != Channel::class)
+      return $channel;
+
+    switch(Request::input('method')) {
+      case 'mark_read':
+
+        if(Request::input('last_read_entry')) {
+
+          $channel_entry = DB::table('channel_entry')
+            ->where('channel_id', $channel->id)
+            ->where('entry_id', Request::input('last_read_entry'))
+            ->first();
+
+          if(!$channel_entry) {
+            return Response::json(['error' => 'invalid_input', 'error_description' => 'The entry ID provided was not found'], 400);
+          }
+
+          $entry = Entry::where('id', $channel_entry->entry_id)->first();
+
+          $result = $channel->mark_entries_read_before($entry, $channel_entry);
+
+          return Response::json(['result' => 'ok', 'updated' => $result]);
+
+        } elseif(Request::input('entry')) {
+
+          if(!is_array(Request::input('entry'))) {
+            $entryIds = [Request::input('entry')];
+          }
+
+          $result = $channel->mark_entries_read($entryIds);
+
+          return Response::json(['result' => 'ok', 'updated' => $result]);
+
+        } else {
+          return Response::json(['error' => 'invalid_input', 'error_description' => 'To mark one or more entries as read, include an entry id or last_read_entry parameter'], 400);
+        }
+
+      case 'mark_unread':
+
+        if(Request::input('entry')) {
+
+          if(!is_array(Request::input('entry'))) {
+            $entryIds = [Request::input('entry')];
+          }
+
+          $result = $channel->mark_entries_unread($entryIds);
+
+          return Response::json(['result' => 'ok', 'updated' => $result]);
+
+        } else {
+          return Response::json(['error' => 'invalid_input', 'error_description' => 'To mark one or more entries as unread, include an entry id'], 400);
+        }
+
+      default:
+        return Response::json(['error' => 'invalid_method', 'error_description' => 'The specified method was not found for this action'], 400);
+    }
+  }  
+
   private function get_follow() {
     $channel = $this->_getRequestChannel();
 

@@ -19,7 +19,11 @@ class Entry extends Model {
 
   public function to_array() {
     $data = json_decode($this->data, true);
-    unset($data['uid']);
+    unset($data['uid']); // don't include mf2 uid in the response
+
+    // Include some Microsub info
+    $data['_id'] = (string)$this->id;
+    $data['_is_read'] = (bool)$this->seen;
 
     // For testing, override the JSON published with the DB published
     if(env('APP_ENV') == 'testing') 

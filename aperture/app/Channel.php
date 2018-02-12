@@ -3,6 +3,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Events\SourceRemoved;
+use DB;
 
 class Channel extends Model {
 
@@ -26,6 +27,7 @@ class Channel extends Model {
     return [
       'uid' => $this->uid,
       'name' => $this->name,
+      '_unread' => $this->entries()->where('seen', 0)->count(),
     ];
   }
 
@@ -40,6 +42,30 @@ class Channel extends Model {
       $this->remove_source($source);
     }
     parent::delete();
+  }
+
+  public function mark_entries_read(array $entry_ids) {
+    return DB::table('channel_entry')
+      ->where('channel_id', $this->id)
+      ->whereIn('entry_id', $entry_ids)
+      ->update(['seen' => 1]);
+  }
+
+  public function mark_entries_unread(array $entry_ids) {
+    return DB::table('channel_entry')
+      ->where('channel_id', $this->id)
+      ->whereIn('entry_id', $entry_ids)
+      ->update(['seen' => 0]);
+  }
+
+  public function mark_entries_read_before(Entry $entry, $channel_entry) {
+    // TODO: Need some other method for sorting entries since the entry published date is used 
+    // to sort when returning items in the timeline.
+    // Hoping that sorting by ID in the channel_entry table will be close enough to resolve conflicts.
+    return DB::table('channel_entry')
+      ->where('channel_id', $this->id)
+      ->where('id', '<=', $channel_entry->id)
+      ->update(['seen' => 1]);
   }
 
 }
