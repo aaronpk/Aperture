@@ -232,7 +232,7 @@ class MicrosubController extends Controller
       }
 
       $channel = Auth::user()->create_channel(Request::input('name'));
-      
+
       return Response::json($channel->to_array());
     }
   }
@@ -387,7 +387,7 @@ class MicrosubController extends Controller
         $newbefore = $this->_buildEntryCursor($entry);
 
       if($i < $limit)
-        $items[] = $entry->to_array();
+        $items[] = $entry->to_array($channel);
       
       if($i == $limit) // Don't add the last item, but return a cursor for the next page
         $newafter = $this->_buildEntryCursor($entry);
