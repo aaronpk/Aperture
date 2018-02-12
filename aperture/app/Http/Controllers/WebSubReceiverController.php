@@ -5,7 +5,7 @@ use Request, Response, DB, Log;
 use App\User, App\Source, App\Channel, App\Entry;
 use p3k\XRay;
 
-class WebSubController extends Controller
+class WebSubReceiverController extends Controller
 {
 
   public function __construct() {
