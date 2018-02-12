@@ -89,12 +89,8 @@ class HomeController extends Controller
 
       $source = Source::where('id', Request::input('source_id'))->first();
 
-      if(Request::input('remove_entries')) {
-
-      }
-
       if($source) {
-        $channel->remove_source($source);
+        $channel->remove_source($source, (bool)Request::input('remove_entries'));
       }
 
       return response()->json([

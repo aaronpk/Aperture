@@ -31,7 +31,14 @@ class Channel extends Model {
     ];
   }
 
-  public function remove_source(Source $source) {
+  public function remove_source(Source $source, $remove_entries=false) {
+    if($remove_entries) {
+      DB::table('channel_entry')
+        ->join('entries', 'channel_entry.entry_id', '=', 'entries.id')
+        ->where('channel_entry.channel_id', $this->id)
+        ->where('entries.source_id', $source->id)
+        ->delete();
+    }
     $this->sources()->detach($source->id);
     event(new SourceRemoved($source, $this));
   }
