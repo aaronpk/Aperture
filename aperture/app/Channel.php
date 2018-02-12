@@ -68,10 +68,9 @@ class Channel extends Model {
   public function mark_entries_read_before(Entry $entry, $channel_entry) {
     // TODO: Need some other method for sorting entries since the entry published date is used 
     // to sort when returning items in the timeline.
-    // Hoping that sorting by ID in the channel_entry table will be close enough to resolve conflicts.
     return DB::table('channel_entry')
       ->where('channel_id', $this->id)
-      ->where('id', '<=', $channel_entry->id)
+      ->where('created_at', '<=', $channel_entry->created_at)
       ->update(['seen' => 1]);
   }
 
