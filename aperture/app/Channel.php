@@ -27,7 +27,7 @@ class Channel extends Model {
     return [
       'uid' => $this->uid,
       'name' => $this->name,
-      '_unread' => $this->entries()->where('seen', 0)->count(),
+      'unread' => $this->entries()->where('seen', 0)->count(),
     ];
   }
 
