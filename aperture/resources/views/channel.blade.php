@@ -164,7 +164,10 @@ var channel_id = {{ $channel->id }};
 
 $(function(){
   $('#new-source').click(function(e){
+    $("#new-source-feeds ul").empty();
+    $("#source-url").val("");
     $('#new-source-modal').addClass('is-active');
+    $("#source-url").focus();
     e.preventDefault();
   });
   $('#new-apikey').click(function(e){
