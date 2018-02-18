@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "48214ab973aa2de7c5d44806582cedc2",
+    "content-hash": "ea25be00202d508233f1d3ad833b856e",
     "packages": [
         {
             "name": "barnabywalters/mf-cleaner",
@@ -758,17 +758,11 @@
         },
         {
             "name": "ezyang/htmlpurifier",
-            "version": "v4.9.3",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ezyang/htmlpurifier.git",
-                "reference": "95e1bae3182efc0f3422896a3236e991049dac69"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/95e1bae3182efc0f3422896a3236e991049dac69",
-                "reference": "95e1bae3182efc0f3422896a3236e991049dac69",
-                "shasum": ""
+                "reference": "6d6d88512a8146939a9161bb03e95e3e97840439"
             },
             "require": {
                 "php": ">=5.2"
@@ -785,7 +779,6 @@
                     "library/HTMLPurifier.composer.php"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "LGPL"
             ],
@@ -801,7 +794,7 @@
             "keywords": [
                 "html"
             ],
-            "time": "2017-06-03T02:28:16+00:00"
+            "time": "2017-12-30T05:23:44+00:00"
         },
         {
             "name": "facebook/graph-sdk",
@@ -1928,22 +1921,22 @@
         },
         {
             "name": "p3k/xray",
-            "version": "v1.4.12",
+            "version": "v1.4.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aaronpk/XRay.git",
-                "reference": "0decb9dcb4ddf90b6bf7967fab43dc13d69285ab"
+                "reference": "73ad0e6e2112e911a9de5e97b7f83f16c1e9c08d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aaronpk/XRay/zipball/0decb9dcb4ddf90b6bf7967fab43dc13d69285ab",
-                "reference": "0decb9dcb4ddf90b6bf7967fab43dc13d69285ab",
+                "url": "https://api.github.com/repos/aaronpk/XRay/zipball/73ad0e6e2112e911a9de5e97b7f83f16c1e9c08d",
+                "reference": "73ad0e6e2112e911a9de5e97b7f83f16c1e9c08d",
                 "shasum": ""
             },
             "require": {
                 "cebe/markdown": "1.1.*",
                 "dg/twitter-php": "3.6.*",
-                "ezyang/htmlpurifier": "4.*",
+                "ezyang/htmlpurifier": "dev-master#6d6d88512a8146939a9161bb03e95e3e97840439@dev",
                 "facebook/graph-sdk": "^5.5",
                 "indieweb/link-rel-parser": "0.1.*",
                 "mf2/mf2": "^0.3.2",
@@ -1972,7 +1965,7 @@
             ],
             "description": "X-Ray returns structured data from any URL",
             "homepage": "https://github.com/aaronpk/XRay",
-            "time": "2018-02-18T15:36:17+00:00"
+            "time": "2018-02-18T17:26:38+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -4996,7 +4989,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "ezyang/htmlpurifier": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
