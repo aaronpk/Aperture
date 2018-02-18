@@ -208,6 +208,7 @@ $(function(){
 
   $("#new-source-find-feeds-btn").click(function(){
     $(this).addClass("is-loading");
+    $("#new-source-feeds ul").empty();
     $.post("{{ route('find_feeds') }}", {
       _token: csrf_token(),
       url: $("#source-url").val()
