@@ -160,7 +160,7 @@ class HomeController extends Controller
     $url = \p3k\url\normalize($url);
 
     $http = new \p3k\HTTP(env('USER_AGENT'));
-    $http->timeout = 10;
+    $http->set_timeout(10);
     $xray = new \p3k\XRay();
     $xray->http = $http;
     $response = $xray->feeds($url);
