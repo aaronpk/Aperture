@@ -173,6 +173,8 @@ class HomeController extends Controller
 
     return response()->json([
       'feeds' => $feeds,
+      'error' => $response['error'] ?? false,
+      'error_description' => $response['error_description'] ?? false,
     ]);
   }
 
