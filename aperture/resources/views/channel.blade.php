@@ -40,7 +40,7 @@
         <p class="help">Use this API key to create entries in this channel with a POST request. See <a href="/docs">the documentation</a> for more details.</p>
       @endif
     </div>
-  @endforeach  
+  @endforeach
 
 </div>
 </section>

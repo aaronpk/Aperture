@@ -121,7 +121,7 @@ class HomeController extends Controller
   public function set_channel_order() {
     if(!is_array(Request::input('channels')))
       return response()->json(['result'=>'error']);
-    
+
     $sorted = Auth::user()->set_channel_order(Request::input('channels'));
     if($sorted) {
       return response()->json(['result'=>'ok']);
@@ -148,7 +148,7 @@ class HomeController extends Controller
       ]);
     } else {
       abort(401);
-    }    
+    }
   }
 
   public function find_feeds() {
