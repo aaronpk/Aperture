@@ -15,7 +15,7 @@
         "p3k/http": ">=0.1.5",
         "p3k/micropub": ">=0.0.2",
         "p3k/utils": ">=1.0",
-        "p3k/xray": ">=1.4.14",
+        "p3k/xray": ">=1.4.17",
         "ezyang/htmlpurifier": "dev-master#6d6d88512a8146939a9161bb03e95e3e97840439@dev",
         "predis/predis": "^1.1"
     },
