@@ -443,6 +443,8 @@ class MicrosubController extends Controller
 
           if(!is_array(Request::input('entry'))) {
             $entryIds = [Request::input('entry')];
+          } else {
+              $entryIds = Request::input('entry');
           }
 
           $result = $channel->mark_entries_read($entryIds);
@@ -459,6 +461,8 @@ class MicrosubController extends Controller
 
           if(!is_array(Request::input('entry'))) {
             $entryIds = [Request::input('entry')];
+          } else {
+              $entryIds = Request::input('entry');
           }
 
           $result = $channel->mark_entries_unread($entryIds);
