@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "21400ef64866fccca018c49e329bc15c",
+    "content-hash": "08062d00c6090662b2e03108f06a6d77",
     "packages": [
         {
             "name": "barnabywalters/mf-cleaner",
@@ -758,11 +758,11 @@
         },
         {
             "name": "ezyang/htmlpurifier",
-            "version": "dev-master",
+            "version": "v4.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ezyang/htmlpurifier.git",
-                "reference": "6d6d88512a8146939a9161bb03e95e3e97840439"
+                "reference": "d85d39da4576a6934b72480be6978fb10c860021"
             },
             "require": {
                 "php": ">=5.2"
@@ -794,7 +794,7 @@
             "keywords": [
                 "html"
             ],
-            "time": "2017-12-30T05:23:44+00:00"
+            "time": "2018-02-23T01:58:20+00:00"
         },
         {
             "name": "facebook/graph-sdk",
@@ -1921,22 +1921,22 @@
         },
         {
             "name": "p3k/xray",
-            "version": "v1.4.17",
+            "version": "v1.4.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aaronpk/XRay.git",
-                "reference": "c68c7661c8c7cceda3d47c29ff673a485f569646"
+                "reference": "a50cd6284b67560c57cd6f35c40e5d96ea1589e3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aaronpk/XRay/zipball/c68c7661c8c7cceda3d47c29ff673a485f569646",
-                "reference": "c68c7661c8c7cceda3d47c29ff673a485f569646",
+                "url": "https://api.github.com/repos/aaronpk/XRay/zipball/a50cd6284b67560c57cd6f35c40e5d96ea1589e3",
+                "reference": "a50cd6284b67560c57cd6f35c40e5d96ea1589e3",
                 "shasum": ""
             },
             "require": {
                 "cebe/markdown": "1.1.*",
                 "dg/twitter-php": "3.6.*",
-                "ezyang/htmlpurifier": "dev-master#6d6d88512a8146939a9161bb03e95e3e97840439@dev",
+                "ezyang/htmlpurifier": "4.10.*",
                 "facebook/graph-sdk": "^5.5",
                 "indieweb/link-rel-parser": "0.1.*",
                 "mf2/mf2": "^0.3.2",
@@ -1965,7 +1965,7 @@
             ],
             "description": "X-Ray returns structured data from any URL",
             "homepage": "https://github.com/aaronpk/XRay",
-            "time": "2018-02-19T16:01:43+00:00"
+            "time": "2018-03-03T02:59:36+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -4989,9 +4989,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "ezyang/htmlpurifier": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
