@@ -147,8 +147,8 @@
             <label class="label">Read Tracking</label>
             <div class="select">
               <select id="channel-read-tracking-mode">
-                <option value="count" {{ $channel->read_tracking_mode == 'count' ? 'selected="selected"' : '' }}>Count Unread Entries</option>
-                <option value="boolean" {{ $channel->read_tracking_mode == 'boolean' ? 'selected="selected"' : '' }}>Only Yes/No</option>
+                <option value="count" {{ $channel->read_tracking_mode == 'count' ? 'selected="selected"' : '' }}>Show Unread Count</option>
+                <option value="boolean" {{ $channel->read_tracking_mode == 'boolean' ? 'selected="selected"' : '' }}>Show Unread Indicator</option>
                 <option value="disabled" {{ $channel->read_tracking_mode == 'disabled' ? 'selected="selected"' : '' }}>Disabled</option>
               </select>
             </div>
