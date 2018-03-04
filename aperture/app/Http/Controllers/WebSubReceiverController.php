@@ -78,7 +78,7 @@ class WebSubReceiverController extends Controller
               // order to avoid flooding the channel with new posts
               $channel->entries()->attach($entry->id, [
                 'created_at' => ($source_is_empty && $entry->published ? $entry->published : date('Y-m-d H:i:s')),
-                'seen' => ($source_is_empty ? 1 : 0)
+                'seen' => ($channel->read_tracking_mode == 'disabled' || $source_is_empty ? 1 : 0)
               ]);
             } else {
               Log::info("  Skipping channel '".$channel->name." #".$channel->id.' due to filter');
