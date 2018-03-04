@@ -29,7 +29,7 @@ class Entry extends Model {
     // Include some Microsub info
     $data['_id'] = (string)$this->id;
 
-    if($channel) {
+    if($channel && $channel->read_tracking_mode != 'disabled') {
       $ce = DB::table('channel_entry')
         ->where('channel_id', $channel->id)
         ->where('entry_id', $this->id)

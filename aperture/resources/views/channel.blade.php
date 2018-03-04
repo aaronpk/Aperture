@@ -144,6 +144,19 @@
 
         <div class="field">
           <div class="control">
+            <label class="label">Read Tracking</label>
+            <div class="select">
+              <select id="channel-read-tracking-mode">
+                <option value="count" {{ $channel->read_tracking_mode == 'count' ? 'selected="selected"' : '' }}>Count Unread Entries</option>
+                <option value="boolean" {{ $channel->read_tracking_mode == 'boolean' ? 'selected="selected"' : '' }}>Only Yes/No</option>
+                <option value="disabled" {{ $channel->read_tracking_mode == 'disabled' ? 'selected="selected"' : '' }}>Disabled</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="control">
             <label class="label">Include</label>
             <div class="select">
               <select id="channel-include-only">
@@ -252,6 +265,7 @@ $(function(){
     $.post("{{ route('save_channel', $channel) }}", {
       _token: csrf_token(),
       name: $("#channel-name").val(),
+      read_tracking_mode: $("#channel-read-tracking-mode").val(),
       include_only: $("#channel-include-only").val(),
       include_keywords: $("#channel-include-keywords").val(),
       exclude_types: exclude_types.join(" "),

@@ -83,6 +83,8 @@ class HomeController extends Controller
       $keywords = preg_split('/[ ,]+/', Request::input('exclude_keywords'));
       $channel->exclude_keywords = implode(' ', $keywords);
 
+      $channel->read_tracking_mode = Request::input('read_tracking_mode') ?: 'counts';
+
       $channel->save();
 
       return response()->json([

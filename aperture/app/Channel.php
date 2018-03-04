@@ -8,7 +8,7 @@ use DB;
 class Channel extends Model {
 
   protected $fillable = [
-    'name', 'icon', 'sparkline', 'include_only', 'include_keywords', 'exclude_types', 'exclude_keywords'
+    'name', 'icon', 'sparkline', 'read_tracking_mode', 'include_only', 'include_keywords', 'exclude_types', 'exclude_keywords'
   ];
 
   public function user() {
@@ -34,11 +34,19 @@ class Channel extends Model {
   }
 
   public function to_array() {
-    return [
+    $array = [
       'uid' => $this->uid,
       'name' => $this->name,
-      'unread' => $this->entries()->where('seen', 0)->count(),
     ];
+    switch($this->read_tracking_mode) {
+      case 'count':
+        $array['unread'] = $this->entries()->where('seen', 0)->count();
+        break;
+      case 'boolean':
+        $array['unread'] = $this->entries()->where('seen', 0)->count() > 0;
+        break;
+    }
+    return $array;
   }
 
   public function remove_source(Source $source, $remove_entries=false) {
