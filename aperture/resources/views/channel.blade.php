@@ -177,28 +177,28 @@
 
             <div>
               <label class="checkbox">
-                <input type="checkbox" id="exclude-reposts" {{ in_array('reposts', $channel->excluded_types()) ? 'checked="checked"' : '' }}>
+                <input type="checkbox" id="exclude-reposts" {{ in_array('repost', $channel->excluded_types()) ? 'checked="checked"' : '' }}>
                 Reposts
               </label>
             </div>
 
             <div>
               <label class="checkbox">
-                <input type="checkbox" id="exclude-likes" {{ in_array('likes', $channel->excluded_types()) ? 'checked="checked"' : '' }}>
+                <input type="checkbox" id="exclude-likes" {{ in_array('like', $channel->excluded_types()) ? 'checked="checked"' : '' }}>
                 Likes
               </label>
             </div>
 
             <div>
               <label class="checkbox">
-                <input type="checkbox" id="exclude-bookmarks" {{ in_array('bookmarks', $channel->excluded_types()) ? 'checked="checked"' : '' }}>
+                <input type="checkbox" id="exclude-bookmarks" {{ in_array('bookmark', $channel->excluded_types()) ? 'checked="checked"' : '' }}>
                 Bookmarks
               </label>
             </div>
 
             <div>
               <label class="checkbox">
-                <input type="checkbox" id="exclude-checkins" {{ in_array('checkins', $channel->excluded_types()) ? 'checked="checked"' : '' }}>
+                <input type="checkbox" id="exclude-checkins" {{ in_array('checkin', $channel->excluded_types()) ? 'checked="checked"' : '' }}>
                 Checkins
               </label>
             </div>
@@ -249,16 +249,16 @@ $(function(){
   $("#channel-settings-modal .save").click(function(){
     var exclude_types = [];
     if(document.getElementById("exclude-reposts").checked) {
-      exclude_types.push("reposts");
+      exclude_types.push("repost");
     }
     if(document.getElementById("exclude-likes").checked) {
-      exclude_types.push("likes");
+      exclude_types.push("like");
     }
     if(document.getElementById("exclude-bookmarks").checked) {
-      exclude_types.push("bookmarks");
+      exclude_types.push("bookmark");
     }
     if(document.getElementById("exclude-checkins").checked) {
-      exclude_types.push("checkins");
+      exclude_types.push("checkin");
     }
 
     $(this).addClass("is-loading");
