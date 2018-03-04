@@ -45,14 +45,21 @@ class SourceAddedListener implements ShouldQueue
 
         // Add any existing entries to this channel
         Log::info("This source has ".$event->source->entries()->count()." existing entries. Adding to channel ".$event->channel->id);
+        $added = 0;
         if($event->source->entries()->count()) {
             foreach($event->source->entries()->orderByDesc('published')->orderByDesc('created_at')->get() as $entry) {
                 if(!$event->channel->entries()->where('entry_id', $entry->id)->first()) {
-                    $event->channel->entries()->attach($entry->id, [
-                      'created_at' => $entry->published ?: date('Y-m-d H:i:s')
-                    ]);
+                    $shouldAdd = $event->channel->should_add_entry($entry);
+                    if($shouldAdd) {
+                      $event->channel->entries()->attach($entry->id, [
+                        'created_at' => $entry->published ?: date('Y-m-d H:i:s'),
+                        'seen' => 1
+                      ]);
+                      $added++;
+                    }
                 }
             }
         }
+        Log::info("Added $added matching entries to channel");
     }
 }

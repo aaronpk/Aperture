@@ -69,12 +69,20 @@ class WebSubReceiverController extends Controller
           Log::info("Adding entry ".$entry->unique." to channels");
           // Loop through each channel associates with this source and add the entry
           foreach($source->channels()->get() as $channel) {
-            Log::info("  Adding to channel #".$channel->id);
-            // If the source was previously empty, use the published date on the entry in
-            // order to avoid flooding the channel with new posts
-            $channel->entries()->attach($entry->id, [
-              'created_at' => ($source_is_empty && $entry->published ? $entry->published : date('Y-m-d H:i:s'))
-            ]);
+
+            $shouldAdd = $channel->should_add_entry($entry);
+
+            if($shouldAdd) {
+              Log::info("  Adding to channel '".$channel->name." #".$channel->id);
+              // If the source was previously empty, use the published date on the entry in
+              // order to avoid flooding the channel with new posts
+              $channel->entries()->attach($entry->id, [
+                'created_at' => ($source_is_empty && $entry->published ? $entry->published : date('Y-m-d H:i:s')),
+                'seen' => ($source_is_empty ? 1 : 0)
+              ]);
+            } else {
+              Log::info("  Skipping channel '".$channel->name." #".$channel->id.' due to filter');
+            }
           }
         } else {
           #Log::info("Already seen this item");

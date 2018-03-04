@@ -84,4 +84,56 @@ class Channel extends Model {
       ->update(['seen' => 1]);
   }
 
+  public function should_add_entry(Entry $entry) {
+    $shouldAdd = true;
+
+    // If the channel has type or keyword filters, check them now before adding
+    if($this->include_only) {
+      switch($this->include_only) {
+        case 'photos_videos':
+          $shouldAdd = in_array($entry->post_type(), ['photo','video']); break;
+        case 'articles':
+          $shouldAdd = $entry->post_type() == 'article'; break;
+        case 'checkins':
+          $shouldAdd = $entry->post_type() == 'checkin'; break;
+      }
+    }
+
+    // at least one keyword must match to have the post included,
+    // but don't let keyword whitelist override the type filter
+    if($shouldAdd && $this->include_keywords) {
+      $shouldAdd = false;
+      $keywords = explode(' ', $this->include_keywords);
+      foreach($keywords as $kw) {
+        if($entry->matches_keyword($kw)) {
+          $shouldAdd = true;
+          break;
+        }
+      }
+    }
+
+    if($this->exclude_types) {
+      // if the post is any one of the excluded types, reject it now
+      foreach($this->excluded_types() as $type) {
+        if($entry->post_type() == $type) {
+          $shouldAdd = false;
+          break;
+        }
+      }
+    }
+
+    if($this->exclude_keywords) {
+      // if the post matches any of the blacklisted terms, reject it now
+      $keywords = explode(' ', $this->exclude_keywords);
+      foreach($keywords as $kw) {
+        if($entry->matches_keyword($kw)) {
+          $shouldAdd = false;
+          break;
+        }
+      }
+    }
+
+    return $shouldAdd;
+  }
+
 }
