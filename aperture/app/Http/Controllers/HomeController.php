@@ -73,7 +73,16 @@ class HomeController extends Controller
     if(Gate::allows('edit-channel', $channel)) {
 
       $channel->name = Request::input('name');
-      #$channel->domain = Request::input('domain');
+
+      $channel->include_only = Request::input('include_only') ?: '';
+      $channel->exclude_types = Request::input('exclude_types') ?: '';
+
+      $keywords = preg_split('/[ ,]+/', Request::input('include_keywords'));
+      $channel->include_keywords = implode(' ', $keywords);
+
+      $keywords = preg_split('/[ ,]+/', Request::input('exclude_keywords'));
+      $channel->exclude_keywords = implode(' ', $keywords);
+
       $channel->save();
 
       return response()->json([

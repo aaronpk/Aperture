@@ -34,13 +34,14 @@
 
     h2 {
       font-size: 1.4em;
+      word-wrap: break-word;
     }
 
     .source-stats {
       color: $text-color-light;
       font-size: 0.8em;
-    }  
-  }  
+    }
+  }
 }
 
 #new-source-modal {

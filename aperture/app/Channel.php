@@ -8,7 +8,7 @@ use DB;
 class Channel extends Model {
 
   protected $fillable = [
-    'name', 'icon', 'sparkline'
+    'name', 'icon', 'sparkline', 'include_only', 'include_keywords', 'exclude_types', 'exclude_keywords'
   ];
 
   public function user() {
@@ -21,6 +21,16 @@ class Channel extends Model {
 
   public function entries() {
     return $this->belongsToMany('\App\Entry');
+  }
+
+  public function excluded_types() {
+    $types = [];
+
+    if($this->exclude_types) {
+      $types = explode(' ', $this->exclude_types);
+    }
+
+    return $types;
   }
 
   public function to_array() {
@@ -66,7 +76,7 @@ class Channel extends Model {
   }
 
   public function mark_entries_read_before(Entry $entry, $channel_entry) {
-    // TODO: Need some other method for sorting entries since the entry published date is used 
+    // TODO: Need some other method for sorting entries since the entry published date is used
     // to sort when returning items in the timeline.
     return DB::table('channel_entry')
       ->where('channel_id', $this->id)

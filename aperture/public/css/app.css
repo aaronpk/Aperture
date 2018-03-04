@@ -11476,6 +11476,7 @@ label.panel-block:hover {
 
 .container.channel .source h2 {
   font-size: 1.4em;
+  word-wrap: break-word;
 }
 
 .container.channel .source .source-stats {

@@ -134,10 +134,64 @@
             <input class="input" type="text" name="name" id="channel-name" required="required" value="{{ $channel->name }}">
           </div>
         </div>
+
         <div class="field">
           <div class="control">
             <label class="label">UID</label>
             <input class="input" type="text" readonly="readonly" id="channel-uid" value="{{ $channel->uid }}">
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="control">
+            <label class="label">Include</label>
+            <div class="select">
+              <select id="channel-include-only">
+                <option value="" {{ $channel->include_only == '' ? 'selected="selected"' : '' }}>Everything</option>
+                <option value="photos_videos" {{ $channel->include_only == 'photos_videos' ? 'selected="selected"' : '' }}>Only Photos and Videos</option>
+                <option value="articles" {{ $channel->include_only == 'articles' ? 'selected="selected"' : '' }}>Only Articles</option>
+                <option value="checkins" {{ $channel->include_only == 'checkins' ? 'selected="selected"' : '' }}>Only Checkins</option>
+              </select>
+            </div>
+
+            <input class="input" type="text" id="channel-include-keywords" value="{{ $channel->include_keywords }}" placeholder="enter keywords to require" style="margin-top: 6px;">
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="control">
+            <label class="label">Exclude</label>
+
+            <div>
+              <label class="checkbox">
+                <input type="checkbox" id="exclude-reposts" {{ in_array('reposts', $channel->excluded_types()) ? 'checked="checked"' : '' }}>
+                Reposts
+              </label>
+            </div>
+
+            <div>
+              <label class="checkbox">
+                <input type="checkbox" id="exclude-likes" {{ in_array('likes', $channel->excluded_types()) ? 'checked="checked"' : '' }}>
+                Likes
+              </label>
+            </div>
+
+            <div>
+              <label class="checkbox">
+                <input type="checkbox" id="exclude-bookmarks" {{ in_array('bookmarks', $channel->excluded_types()) ? 'checked="checked"' : '' }}>
+                Bookmarks
+              </label>
+            </div>
+
+            <div>
+              <label class="checkbox">
+                <input type="checkbox" id="exclude-checkins" {{ in_array('checkins', $channel->excluded_types()) ? 'checked="checked"' : '' }}>
+                Checkins
+              </label>
+            </div>
+
+            <input class="input" type="text" id="channel-exclude-keywords" value="{{ $channel->exclude_keywords }}" placeholder="enter keywords to block" style="margin-top: 6px;">
+
           </div>
         </div>
       </div>
@@ -180,11 +234,28 @@ $(function(){
   });
 
   $("#channel-settings-modal .save").click(function(){
+    var exclude_types = [];
+    if(document.getElementById("exclude-reposts").checked) {
+      exclude_types.push("reposts");
+    }
+    if(document.getElementById("exclude-likes").checked) {
+      exclude_types.push("likes");
+    }
+    if(document.getElementById("exclude-bookmarks").checked) {
+      exclude_types.push("bookmarks");
+    }
+    if(document.getElementById("exclude-checkins").checked) {
+      exclude_types.push("checkins");
+    }
+
     $(this).addClass("is-loading");
     $.post("{{ route('save_channel', $channel) }}", {
       _token: csrf_token(),
       name: $("#channel-name").val(),
-      domain: $("#channel-domain").val()
+      include_only: $("#channel-include-only").val(),
+      include_keywords: $("#channel-include-keywords").val(),
+      exclude_types: exclude_types.join(" "),
+      exclude_keywords: $("#channel-exclude-keywords").val(),
     }, function(response) {
       reload_window();
     });
