@@ -27,7 +27,7 @@ class MicropubController extends Controller
 
     if($micropub->error) {
       return Response::json([
-        'error' => $micropub->error, 
+        'error' => $micropub->error,
         'error_property' => $micropub->error_property,
         'error_description' => $micropub->error_description,
       ], 400);
@@ -39,19 +39,34 @@ class MicropubController extends Controller
     $parsed = $xray->process(false, $mf2);
     $item = $parsed['data'];
 
-    $entry = new Entry();
-    $entry->source_id = $source->id;
-    $entry->unique = str_random(32);
+    $entry = false;
+    $new = false;
+
+    if(isset($item['url'])) {
+      $entry = Entry::where('source_id', $source->id)->where('unique', md5($item['url']))->first();
+    }
+
+    if(!$entry) {
+      $entry = new Entry();
+      $entry->source_id = $source->id;
+      $entry->unique = isset($item['url']) ? md5($item['url']) : str_random(32);
+      $new = true;
+    }
+
     $entry->data = json_encode($item, JSON_PRETTY_PRINT+JSON_UNESCAPED_SLASHES);
     if(isset($item['published']))
       $entry->published = date('Y-m-d H:i:s', strtotime($item['published']));
     $entry->save();
 
-    Log::info("Adding entry ".$entry->unique." to channels");
-    foreach($source->channels()->get() as $channel) {
-      Log::info("  Adding to channel #".$channel->id);
-      $channel->entries()->attach($entry->id, ['created_at'=>date('Y-m-d H:i:s')]);
+    if($new) {
+      Log::info("Adding entry ".$entry->unique." to channels");
+      foreach($source->channels()->get() as $channel) {
+        Log::info("  Adding to channel #".$channel->id);
+        $channel->entries()->attach($entry->id, ['created_at'=>date('Y-m-d H:i:s')]);
+      }
     }
+
+    Log::info(json_encode($item, JSON_PRETTY_PRINT));
 
     return Response::json([
       'url' => $entry->permalink()
