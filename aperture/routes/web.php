@@ -7,6 +7,9 @@ Route::middleware('web')->group(function(){
 
     Route::get('/dashboard', 'HomeController@dashboard')->name('dashboard');
 
+    Route::get('/settings', 'SettingsController@index')->name('settings');
+    Route::post('/settings/save', 'SettingsController@save')->name('settings_save');
+
     Route::post('/channel/new', 'HomeController@create_channel')->name('create_channel');
     Route::get('/channel/{channel}', 'HomeController@channel')->name('channel');
     Route::post('/channel/{channel}/save', 'HomeController@save_channel')->name('save_channel');

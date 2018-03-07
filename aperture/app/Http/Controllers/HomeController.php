@@ -12,9 +12,7 @@ class HomeController extends Controller
   }
 
   public function dashboard() {
-    $channels = Auth::user()->channels()
-      ->orderBy('sort')
-      ->get();
+    $channels = Auth::user()->channels()->get();
 
     return view('dashboard', [
       'channels' => $channels
@@ -84,6 +82,8 @@ class HomeController extends Controller
       $channel->exclude_keywords = implode(' ', $keywords);
 
       $channel->read_tracking_mode = Request::input('read_tracking_mode') ?: 'counts';
+
+      $channel->hide_in_demo_mode = Request::input('hide_in_demo_mode') ? 1 : 0;
 
       $channel->save();
 

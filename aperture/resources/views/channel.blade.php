@@ -207,6 +207,18 @@
 
           </div>
         </div>
+
+        <div class="field">
+          <div class="control">
+            <div>
+              <label class="checkbox">
+                <input type="checkbox" id="hide-in-demo-mode" {{ $channel->hide_in_demo_mode ? 'checked="checked"' : '' }}>
+                Hide this channel when account is in "Demo Mode"
+              </label>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       <div id="delete-channel-confirm" class="hidden">
@@ -270,6 +282,7 @@ $(function(){
       include_keywords: $("#channel-include-keywords").val(),
       exclude_types: exclude_types.join(" "),
       exclude_keywords: $("#channel-exclude-keywords").val(),
+      hide_in_demo_mode: document.getElementById('hide-in-demo-mode').checked ? 1 : 0
     }, function(response) {
       reload_window();
     });

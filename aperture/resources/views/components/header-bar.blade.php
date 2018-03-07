@@ -18,6 +18,7 @@
     </div>
     <div class="navbar-end">
       @auth
+        <a href="{{ route('settings') }}" class="navbar-item">Settings</a>
         <a href="{{ route('logout') }}" class="navbar-item">Log Out</a>
       @endauth
     </div>

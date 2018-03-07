@@ -34,7 +34,11 @@ class User extends Authenticatable
     ];
 
     public function channels() {
-        return $this->hasMany('App\Channel')->orderBy('sort');
+        $channels = $this->hasMany('App\Channel')->orderBy('sort');
+        if($this->demo_mode_enabled) {
+          $channels = $channels->where('hide_in_demo_mode', 0);
+        }
+        return $channels;
     }
 
     public function create_channel($name) {
