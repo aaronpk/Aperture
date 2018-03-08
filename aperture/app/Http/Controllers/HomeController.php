@@ -85,6 +85,8 @@ class HomeController extends Controller
 
       $channel->hide_in_demo_mode = Request::input('hide_in_demo_mode') ? 1 : 0;
 
+      $channel->default_destination = Request::input('default_destination') ?: '';
+
       $channel->save();
 
       return response()->json([

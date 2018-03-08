@@ -46,6 +46,9 @@ class Channel extends Model {
         $array['unread'] = $this->entries()->where('seen', 0)->count() > 0;
         break;
     }
+    if($this->default_destination) {
+      $array['destination'] = $this->default_destination;
+    }
     return $array;
   }
 

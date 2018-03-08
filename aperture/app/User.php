@@ -107,4 +107,12 @@ class User extends Authenticatable
         $this->micropub_config = json_encode($config, JSON_PRETTY_PRINT+JSON_UNESCAPED_SLASHES);
     }
 
+    public function get_micropub_config($key) {
+      if(!$this->micropub_config) return false;
+      $config = json_decode($this->micropub_config, true);
+      if(isset($config[$key]))
+        return $config[$key];
+      return false;
+    }
+
 }

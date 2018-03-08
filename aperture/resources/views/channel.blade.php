@@ -208,6 +208,22 @@
           </div>
         </div>
 
+        @if($destinations=Auth::user()->get_micropub_config('destination'))
+        <div class="field">
+          <div class="control">
+            <label class="label">Default Destination</label>
+            <div class="select">
+              <select id="default-destination">
+                <option value="" {{ $channel->default_destination == '' ? 'selected="selected"' : '' }}>Primary Account</option>
+                @foreach($destinations as $dest)
+                  <option value="{{ $dest['uid'] }}" {{ $channel->default_destination == $dest['uid'] ? 'selected="selected"' : '' }}>{{ $dest['name'] }}</option>
+                @endforeach
+              </select>
+            </div>
+          </div>
+        </div>
+        @endif
+
         <div class="field">
           <div class="control">
             <div>
@@ -282,6 +298,7 @@ $(function(){
       include_keywords: $("#channel-include-keywords").val(),
       exclude_types: exclude_types.join(" "),
       exclude_keywords: $("#channel-exclude-keywords").val(),
+      default_destination: $("#default-destination").val(),
       hide_in_demo_mode: document.getElementById('hide-in-demo-mode').checked ? 1 : 0
     }, function(response) {
       reload_window();
