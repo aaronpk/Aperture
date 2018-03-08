@@ -35,6 +35,7 @@ class LoginController extends Controller
 
     $authorizationEndpoint = IndieAuth\Client::discoverAuthorizationEndpoint($url);
     $tokenEndpoint = IndieAuth\Client::discoverTokenEndpoint($url);
+    $micropubEndpoint = IndieAuth\Client::discoverMicropubEndpoint($url);
 
     if(!$authorizationEndpoint) {
       return redirect('login')->with('auth_error', 'missing authorization endpoint')
@@ -53,13 +54,14 @@ class LoginController extends Controller
       'state' => $state,
       'authorization_endpoint' => $authorizationEndpoint,
       'token_endpoint' => $tokenEndpoint,
+      'micropub_endpoint' => $micropubEndpoint,
       'indieauth_url' => $url,
     ]);
 
     $redirect_uri = route('login_callback');
     $client_id = route('index');
 
-    $authorizationURL = IndieAuth\Client::buildAuthorizationURL($authorizationEndpoint, $url, $redirect_uri, $client_id, $state, '');
+    $authorizationURL = IndieAuth\Client::buildAuthorizationURL($authorizationEndpoint, $url, $redirect_uri, $client_id, $state, 'read');
 
     return redirect($authorizationURL);
   }
@@ -84,7 +86,7 @@ class LoginController extends Controller
     }
 
     // Check the authorization code at the endpoint previously discovered
-    $auth = IndieAuth\Client::verifyIndieAuthCode(session('authorization_endpoint'), Request::input('code'), null, route('login_callback'), route('index'));
+    $auth = IndieAuth\Client::getAccessToken(session('token_endpoint'), Request::input('code'), session('indieauth_url'), route('login_callback'), route('index'));
 
     if(isset($auth['me'])) {
 
@@ -96,12 +98,6 @@ class LoginController extends Controller
         ]);
       }
 
-      session([
-        'state' => false,
-        'authorization_endpoint' => false,
-        'indieauth_url' => false
-      ]);
-
       $auth['me'] = IndieAuth\Client::normalizeMeURL($auth['me']);
 
       // Load or create the user record
@@ -112,7 +108,22 @@ class LoginController extends Controller
       }
 
       $user->token_endpoint = session('token_endpoint');
+
+      if(session('micropub_endpoint') && isset($auth['access_token'])) {
+        $user->micropub_endpoint = session('micropub_endpoint');
+        $user->reload_micropub_config($auth['access_token']);
+      }
+
       $user->save();
+
+      session([
+        'access_token' => $auth['access_token'] ?? false,
+        'state' => false,
+        'authorization_endpoint' => false,
+        'token_endpoint' => false,
+        'micropub_endpoint' => false,
+        'indieauth_url' => false
+      ]);
 
       Auth::login($user);
 

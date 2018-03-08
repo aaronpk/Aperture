@@ -29,6 +29,29 @@
     {{ csrf_field() }}
   </form>
 
+  <br><br>
+
+  <h3 class="subtitle">Micropub Config</h3>
+  <pre style="margin-bottom: 6px;" id="micropub-config">{{ json_encode(json_decode(Auth::user()->micropub_config), JSON_PRETTY_PRINT+JSON_UNESCAPED_SLASHES) }}</pre>
+  <div class="control"><button class="button is-primary" id="reload-micropub-config">Reload</button></div>
+
 </div>
 </section>
+@endsection
+
+@section('scripts')
+<script>
+$(function(){
+  $("#reload-micropub-config").click(function(){
+    var btn = $(this)
+    btn.addClass("is-loading");
+    $.post("{{ route('reload_micropub_config') }}", {
+      _csrf: csrf_token(),
+    }, function(response){
+      btn.removeClass("is-loading");
+      $("#micropub-config").text(response.config);
+    });
+  });
+});
+</script>
 @endsection

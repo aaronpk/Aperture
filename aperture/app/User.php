@@ -87,4 +87,24 @@ class User extends Authenticatable
         return $channelUIDs;
     }
 
+    public function reload_micropub_config($token) {
+      if(!$this->micropub_endpoint)
+        return;
+
+      $config = false;
+
+      $http = new \p3k\HTTP();
+      $response = $http->get(\p3k\url\add_query_params_to_url($this->micropub_endpoint, ['q'=>'config']), [
+          'Authorization: Bearer '.$token,
+          'Accept: application/json'
+      ]);
+
+      if($response['body']) {
+        $config = json_decode($response['body']);
+      }
+
+      if($config)
+        $this->micropub_config = json_encode($config, JSON_PRETTY_PRINT+JSON_UNESCAPED_SLASHES);
+    }
+
 }

@@ -35,4 +35,13 @@ class SettingsController extends Controller
     return redirect('settings');
   }
 
+  public function reload_micropub_config() {
+    if(session('access_token')) {
+      $user = Auth::user();
+      $user->reload_micropub_config(session('access_token'));
+      $user->save();
+    }
+    return response()->json(['config' => json_decode($user->micropub_config)]);
+  }
+
 }

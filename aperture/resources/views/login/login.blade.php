@@ -20,13 +20,13 @@
 
     <div class="hero-body">
         <div class="container has-text-centered">
-            <div class="column is-4 is-offset-4">
+            <div class="column is-6 is-offset-3">
                 <h3 class="title has-text-grey">Sign in to Aperture</h3>
                 <div class="box">
 
                     @if(session('auth_error'))
                       <div class="notification is-danger">
-                        <strong>{{ session('auth_error') }}</strong> 
+                        <strong>{{ session('auth_error') }}</strong>
                         <p>{{ session('auth_error_description') }}</p>
                       </div>
                     @endif

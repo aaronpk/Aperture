@@ -9,6 +9,7 @@ Route::middleware('web')->group(function(){
 
     Route::get('/settings', 'SettingsController@index')->name('settings');
     Route::post('/settings/save', 'SettingsController@save')->name('settings_save');
+    Route::post('/settings/reload_micropub_config', 'SettingsController@reload_micropub_config')->name('reload_micropub_config');
 
     Route::post('/channel/new', 'HomeController@create_channel')->name('create_channel');
     Route::get('/channel/{channel}', 'HomeController@channel')->name('channel');
