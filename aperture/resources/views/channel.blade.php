@@ -214,7 +214,6 @@
             <label class="label">Default Destination</label>
             <div class="select">
               <select id="default-destination">
-                <option value="" {{ $channel->default_destination == '' ? 'selected="selected"' : '' }}>Primary Account</option>
                 @foreach($destinations as $dest)
                   <option value="{{ $dest['uid'] }}" {{ $channel->default_destination == $dest['uid'] ? 'selected="selected"' : '' }}>{{ $dest['name'] }}</option>
                 @endforeach
