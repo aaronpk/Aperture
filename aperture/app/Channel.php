@@ -83,6 +83,13 @@ class Channel extends Model {
       ->update(['seen' => 0]);
   }
 
+  public function remove_entries(array $entry_ids) {
+    return  DB::table('channel_entry')
+      ->where('channel_id', $this->id)
+      ->whereIn('entry_id', $entry_ids)
+      ->delete();
+  }
+
   public function mark_entries_read_before(Entry $entry, $channel_entry) {
     // TODO: Need some other method for sorting entries since the entry published date is used
     // to sort when returning items in the timeline.

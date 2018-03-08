@@ -36,7 +36,7 @@ class MicrosubController extends Controller
     $actions = self::_actions();
     if(!array_key_exists($action, $actions)) {
       return Response::json([
-        'error' => 'bad_request', 
+        'error' => 'bad_request',
         'error_description' => 'This operation is not supported'
       ], 400);
     }
@@ -125,7 +125,7 @@ class MicrosubController extends Controller
         'error' => 'not_implemented',
         'error_description' => 'This method has not yet been implemented'
       ], 400);
-    
+
     if(!$this->_verifyScopeForAction($scopeKey)) {
       return Response::json([
         'error' => 'unauthorized',
@@ -391,7 +391,7 @@ class MicrosubController extends Controller
 
       if($i < $limit)
         $items[] = $entry->to_array($channel);
-      
+
       if($i == $limit) // Don't add the last item, but return a cursor for the next page
         $newafter = $this->_buildEntryCursor($entry);
     }
@@ -444,7 +444,7 @@ class MicrosubController extends Controller
           if(!is_array(Request::input('entry'))) {
             $entryIds = [Request::input('entry')];
           } else {
-              $entryIds = Request::input('entry');
+            $entryIds = Request::input('entry');
           }
 
           $result = $channel->mark_entries_read($entryIds);
@@ -462,7 +462,7 @@ class MicrosubController extends Controller
           if(!is_array(Request::input('entry'))) {
             $entryIds = [Request::input('entry')];
           } else {
-              $entryIds = Request::input('entry');
+            $entryIds = Request::input('entry');
           }
 
           $result = $channel->mark_entries_unread($entryIds);
@@ -473,10 +473,29 @@ class MicrosubController extends Controller
           return Response::json(['error' => 'invalid_input', 'error_description' => 'To mark one or more entries as unread, include an entry id'], 400);
         }
 
+      case 'remove':
+
+        if(Request::input('entry')) {
+
+          if(!is_array(Request::input('entry'))) {
+            $entryIds = [Request::input('entry')];
+          } else {
+            $entryIds = Request::input('entry');
+          }
+
+          $result = $channel->remove_entries($entryIds);
+
+          return Response::json(['result' => 'ok', 'updated' => $result]);
+
+        } else {
+          return Response::json(['error' => 'invalid_input', 'error_description' => 'To mark one or more entries as unread, include an entry id'], 400);
+        }
+
+
       default:
         return Response::json(['error' => 'invalid_method', 'error_description' => 'The specified method was not found for this action'], 400);
     }
-  }  
+  }
 
   private function get_follow() {
     $channel = $this->_getRequestChannel();
