@@ -43,13 +43,13 @@
 <script>
 $(function(){
   $("#reload-micropub-config").click(function(){
-    var btn = $(this)
+    var btn = $(this);
     btn.addClass("is-loading");
     $.post("{{ route('reload_micropub_config') }}", {
-      _csrf: csrf_token(),
+      _token: csrf_token(),
     }, function(response){
       btn.removeClass("is-loading");
-      $("#micropub-config").text(response.config);
+      $("#micropub-config").text(response.json);
     });
   });
 });

@@ -41,7 +41,7 @@ class SettingsController extends Controller
       $user->reload_micropub_config(session('access_token'));
       $user->save();
     }
-    return response()->json(['config' => json_decode($user->micropub_config)]);
+    return response()->json(['json' => $user->micropub_config]);
   }
 
 }
