@@ -22,22 +22,41 @@ class MicropubController extends Controller
   public function post(Request $request) {
     $source = $this->_getRequestSource();
 
+    if(get_class($source) == 'Illuminate\Http\JsonResponse')
+      return $source;
+
     $input = file_get_contents('php://input');
-    $micropub = \p3k\Micropub\Request::createFromString($input);
 
-    if($micropub->error) {
-      return Response::json([
-        'error' => $micropub->error,
-        'error_property' => $micropub->error_property,
-        'error_description' => $micropub->error_description,
-      ], 400);
+    // If the content type is application/jf2+json then accept the JSON directly.
+    // This is probably dangerous and we should validate the jf2 document first,
+    // but that is more work than I want to do right now so we'll deal with that later.
+    if(Request::header('Content-Type') == 'application/jf2+json') {
+
+      $item = json_decode($input, true);
+
+      if(!$item || !isset($item['type'])) {
+        return Response::json([
+          'error' => 'invalid_input',
+          'error_description' => 'The jf2 input was invalid',
+        ], 400);
+      }
+    } else {
+      $micropub = \p3k\Micropub\Request::createFromString($input);
+
+      if($micropub->error) {
+        return Response::json([
+          'error' => $micropub->error,
+          'error_property' => $micropub->error_property,
+          'error_description' => $micropub->error_description,
+        ], 400);
+      }
+
+      $mf2 = ['items' => [$micropub->toMf2()]];
+
+      $xray = new XRay();
+      $parsed = $xray->process(false, $mf2);
+      $item = $parsed['data'];
     }
-
-    $mf2 = ['items' => [$micropub->toMf2()]];
-
-    $xray = new XRay();
-    $parsed = $xray->process(false, $mf2);
-    $item = $parsed['data'];
 
     $entry = false;
     $new = false;
