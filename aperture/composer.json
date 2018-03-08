@@ -8,20 +8,25 @@
         "php": ">=7.0.0",
         "doctrine/dbal": "^2.6",
         "fideloper/proxy": "~3.3",
-        "indieauth/client": "0.2.*",
+        "indieauth/client": "0.4.0-alpha",
         "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0",
         "mnabialek/laravel-sql-logger": "^1.1",
         "p3k/http": ">=0.1.5",
         "p3k/micropub": ">=0.0.2",
         "p3k/utils": ">=1.0",
-        "p3k/xray": ">=1.4.20",
-        "predis/predis": "^1.1"
+        "predis/predis": "^1.1",
+        "p3k/xray": "dev-mf2-dev",
+        "mf2/mf2": "0.4.0-alpha"
     },
     "repositories": [
         {
             "type": "git",
             "url": "https://github.com/ezyang/htmlpurifier.git"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/aaronpk/php-mf2.git"
         }
     ],
     "require-dev": {
@@ -65,6 +70,7 @@
     "config": {
         "preferred-install": "dist",
         "sort-packages": true,
+        "minimum-stability": "alpha",
         "optimize-autoloader": true
     }
 }

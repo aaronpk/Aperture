@@ -4,48 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "08062d00c6090662b2e03108f06a6d77",
+    "content-hash": "8b07ad8376b04d12d32f995da791c2af",
     "packages": [
-        {
-            "name": "barnabywalters/mf-cleaner",
-            "version": "v0.1.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/barnabywalters/php-mf-cleaner.git",
-                "reference": "ef6a16628db6e8aee2b4f8bb8093d18c24b74cd4"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/barnabywalters/php-mf-cleaner/zipball/ef6a16628db6e8aee2b4f8bb8093d18c24b74cd4",
-                "reference": "ef6a16628db6e8aee2b4f8bb8093d18c24b74cd4",
-                "shasum": ""
-            },
-            "require-dev": {
-                "php": ">=5.3",
-                "phpunit/phpunit": "*"
-            },
-            "suggest": {
-                "mf2/mf2": "To parse microformats2 structures from (X)HTML"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "src/BarnabyWalters/Mf2/Functions.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Barnaby Walters",
-                    "email": "barnaby@waterpigs.co.uk"
-                }
-            ],
-            "description": "Cleans up microformats2 array structures",
-            "time": "2014-10-06T23:11:15+00:00"
-        },
         {
             "name": "cebe/markdown",
             "version": "1.1.2",
@@ -913,23 +873,26 @@
         },
         {
             "name": "indieauth/client",
-            "version": "0.2.3",
+            "version": "0.4.0-alpha",
             "source": {
                 "type": "git",
                 "url": "https://github.com/indieweb/indieauth-client-php.git",
-                "reference": "f04cb872dd6f1f1bcc7d02b8b543aea0b7c0851f"
+                "reference": "dfe079aa8d25e98665507bbe3bf43d5e91e5711f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/indieweb/indieauth-client-php/zipball/f04cb872dd6f1f1bcc7d02b8b543aea0b7c0851f",
-                "reference": "f04cb872dd6f1f1bcc7d02b8b543aea0b7c0851f",
+                "url": "https://api.github.com/repos/indieweb/indieauth-client-php/zipball/dfe079aa8d25e98665507bbe3bf43d5e91e5711f",
+                "reference": "dfe079aa8d25e98665507bbe3bf43d5e91e5711f",
                 "shasum": ""
             },
             "require": {
-                "barnabywalters/mf-cleaner": "0.*",
-                "indieweb/link-rel-parser": "0.1.*",
-                "mf2/mf2": "~0.3",
+                "indieweb/representative-h-card": "^0.1.2",
+                "mf2/mf2": ">=0.3.2",
+                "p3k/http": ">=0.1.6",
                 "php": ">5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.8.*"
             },
             "type": "library",
             "autoload": {
@@ -939,16 +902,16 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "Apache 2.0"
+                "Apache-2.0"
             ],
             "authors": [
                 {
                     "name": "Aaron Parecki",
-                    "homepage": "http://aaronparecki.com"
+                    "homepage": "https://aaronparecki.com"
                 }
             ],
             "description": "IndieAuth Client Library",
-            "time": "2017-10-27T20:42:01+00:00"
+            "time": "2018-03-08T14:41:04+00:00"
         },
         {
             "name": "indieweb/link-rel-parser",
@@ -995,6 +958,51 @@
                 "microformats2"
             ],
             "time": "2017-01-11T17:14:49+00:00"
+        },
+        {
+            "name": "indieweb/representative-h-card",
+            "version": "0.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/indieweb/representative-h-card-php.git",
+                "reference": "b70b01bd0dd7f2a940602137335dbf46ab6e2e38"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/indieweb/representative-h-card-php/zipball/b70b01bd0dd7f2a940602137335dbf46ab6e2e38",
+                "reference": "b70b01bd0dd7f2a940602137335dbf46ab6e2e38",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "mf2/mf2": "0.2.*",
+                "phpunit/phpunit": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/mf2/representative-h-card.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Aaron Parecki",
+                    "homepage": "http://aaronparecki.com"
+                }
+            ],
+            "keywords": [
+                "h-card",
+                "indieweb",
+                "mf2",
+                "microformats"
+            ],
+            "time": "2015-12-23T18:11:19+00:00"
         },
         {
             "name": "jakub-onderka/php-console-color",
@@ -1362,16 +1370,16 @@
         },
         {
             "name": "mf2/mf2",
-            "version": "v0.3.2",
+            "version": "v0.4.0-alpha",
             "source": {
                 "type": "git",
-                "url": "https://github.com/indieweb/php-mf2.git",
-                "reference": "dc0d90d4ee30864bcf37cd3a8fc8db94f9134cc4"
+                "url": "https://github.com/aaronpk/php-mf2.git",
+                "reference": "5cbfdd4a1075b5113f2a1f4a1d6b8d7c86b93acb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/indieweb/php-mf2/zipball/dc0d90d4ee30864bcf37cd3a8fc8db94f9134cc4",
-                "reference": "dc0d90d4ee30864bcf37cd3a8fc8db94f9134cc4",
+                "url": "https://api.github.com/repos/aaronpk/php-mf2/zipball/5cbfdd4a1075b5113f2a1f4a1d6b8d7c86b93acb",
+                "reference": "5cbfdd4a1075b5113f2a1f4a1d6b8d7c86b93acb",
                 "shasum": ""
             },
             "require": {
@@ -1395,9 +1403,8 @@
                     "Mf2/Parser.php"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "CC0"
+                "CC0-1.0"
             ],
             "authors": [
                 {
@@ -1413,7 +1420,7 @@
                 "parser",
                 "semantic"
             ],
-            "time": "2017-05-27T15:27:47+00:00"
+            "time": "2018-03-08T13:43:49+00:00"
         },
         {
             "name": "mnabialek/laravel-sql-logger",
@@ -1698,16 +1705,16 @@
         },
         {
             "name": "p3k/http",
-            "version": "0.1.6",
+            "version": "0.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aaronpk/p3k-http.git",
-                "reference": "171fe2e71a83b1155cdfc93cdc3156ad97165712"
+                "reference": "1826647c4902a18dea5ec532f21509ba4d51210b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aaronpk/p3k-http/zipball/171fe2e71a83b1155cdfc93cdc3156ad97165712",
-                "reference": "171fe2e71a83b1155cdfc93cdc3156ad97165712",
+                "url": "https://api.github.com/repos/aaronpk/p3k-http/zipball/1826647c4902a18dea5ec532f21509ba4d51210b",
+                "reference": "1826647c4902a18dea5ec532f21509ba4d51210b",
                 "shasum": ""
             },
             "require": {
@@ -1732,7 +1739,7 @@
             ],
             "description": "A simple wrapper API around the PHP curl functions",
             "homepage": "https://github.com/aaronpk/p3k-http",
-            "time": "2018-01-22T20:06:21+00:00"
+            "time": "2018-03-04T15:21:58+00:00"
         },
         {
             "name": "p3k/micropub",
@@ -1921,16 +1928,16 @@
         },
         {
             "name": "p3k/xray",
-            "version": "v1.4.20",
+            "version": "dev-mf2-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aaronpk/XRay.git",
-                "reference": "a50cd6284b67560c57cd6f35c40e5d96ea1589e3"
+                "reference": "391b515a5db6c51a1ce248c2dc8474b248d2f120"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aaronpk/XRay/zipball/a50cd6284b67560c57cd6f35c40e5d96ea1589e3",
-                "reference": "a50cd6284b67560c57cd6f35c40e5d96ea1589e3",
+                "url": "https://api.github.com/repos/aaronpk/XRay/zipball/391b515a5db6c51a1ce248c2dc8474b248d2f120",
+                "reference": "391b515a5db6c51a1ce248c2dc8474b248d2f120",
                 "shasum": ""
             },
             "require": {
@@ -1939,8 +1946,8 @@
                 "ezyang/htmlpurifier": "4.10.*",
                 "facebook/graph-sdk": "^5.5",
                 "indieweb/link-rel-parser": "0.1.*",
-                "mf2/mf2": "^0.3.2",
-                "p3k/http": "0.1.*",
+                "mf2/mf2": "0.4.0-alpha",
+                "p3k/http": ">=0.1.7",
                 "p3k/picofeed": ">=0.1.38",
                 "p3k/timezone": "*"
             },
@@ -1965,7 +1972,7 @@
             ],
             "description": "X-Ray returns structured data from any URL",
             "homepage": "https://github.com/aaronpk/XRay",
-            "time": "2018-03-03T02:59:36+00:00"
+            "time": "2018-03-08T14:36:32+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -3310,6 +3317,46 @@
         }
     ],
     "packages-dev": [
+        {
+            "name": "barnabywalters/mf-cleaner",
+            "version": "v0.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/barnabywalters/php-mf-cleaner.git",
+                "reference": "ef6a16628db6e8aee2b4f8bb8093d18c24b74cd4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/barnabywalters/php-mf-cleaner/zipball/ef6a16628db6e8aee2b4f8bb8093d18c24b74cd4",
+                "reference": "ef6a16628db6e8aee2b4f8bb8093d18c24b74cd4",
+                "shasum": ""
+            },
+            "require-dev": {
+                "php": ">=5.3",
+                "phpunit/phpunit": "*"
+            },
+            "suggest": {
+                "mf2/mf2": "To parse microformats2 structures from (X)HTML"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/BarnabyWalters/Mf2/Functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Barnaby Walters",
+                    "email": "barnaby@waterpigs.co.uk"
+                }
+            ],
+            "description": "Cleans up microformats2 array structures",
+            "time": "2014-10-06T23:11:15+00:00"
+        },
         {
             "name": "doctrine/instantiator",
             "version": "1.1.0",
@@ -4989,7 +5036,11 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "indieauth/client": 15,
+        "p3k/xray": 20,
+        "mf2/mf2": 15
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
