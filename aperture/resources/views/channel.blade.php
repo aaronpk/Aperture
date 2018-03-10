@@ -217,6 +217,7 @@
                 @foreach($destinations as $dest)
                   <option value="{{ $dest['uid'] }}" {{ $channel->default_destination == $dest['uid'] ? 'selected="selected"' : '' }}>{{ $dest['name'] }}</option>
                 @endforeach
+                <option value="none" {{ $channel->default_destination == 'none' ? 'selected="selected"' : '' }}>None (Responses Disabled)</option>
               </select>
             </div>
           </div>
