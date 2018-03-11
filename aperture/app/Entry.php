@@ -74,6 +74,12 @@ class Entry extends Model {
     return $matches;
   }
 
+  public function has_photo() {
+    $data = json_decode($this->data, true);
+
+    return isset($data['photo']);
+  }
+
   public function post_type() {
     $data = json_decode($this->data, true);
 

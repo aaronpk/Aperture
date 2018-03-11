@@ -109,7 +109,8 @@ class Channel extends Model {
     if($this->include_only) {
       switch($this->include_only) {
         case 'photos_videos':
-          $shouldAdd = in_array($entry->post_type(), ['photo','video']); break;
+          // allow any post with a photo, not just photo posts. e.g. a checkin with a photo
+          $shouldAdd = in_array($entry->post_type(), ['photo','video']) || $entry->has_photo(); break;
         case 'articles':
           $shouldAdd = $entry->post_type() == 'article'; break;
         case 'checkins':
