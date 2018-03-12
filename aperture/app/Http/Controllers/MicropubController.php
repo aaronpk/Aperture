@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use Request, Response, DB, Log, Auth;
 use App\User, App\Source, App\Channel, App\Entry, App\ChannelToken;
+use App\Events\EntrySaved;
 use p3k\XRay;
 
 class MicropubController extends Controller
@@ -27,6 +28,8 @@ class MicropubController extends Controller
 
     $input = file_get_contents('php://input');
 
+    #Log::info('raw input: '.$input);
+
     // If the content type is application/jf2+json then accept the JSON directly.
     // This is probably dangerous and we should validate the jf2 document first,
     // but that is more work than I want to do right now so we'll deal with that later.
@@ -42,6 +45,8 @@ class MicropubController extends Controller
       }
     } else {
       $micropub = \p3k\Micropub\Request::createFromString($input);
+
+      #Log::info('micropub request: '.json_encode($micropub->toMf2()));
 
       if($micropub->error) {
         return Response::json([
@@ -77,11 +82,15 @@ class MicropubController extends Controller
       $entry->published = date('Y-m-d H:i:s', strtotime($item['published']));
     $entry->save();
 
+    event(new EntrySaved($entry));
+
     if($new) {
       Log::info("Adding entry ".$entry->unique." to channels");
       foreach($source->channels()->get() as $channel) {
         Log::info("  Adding to channel #".$channel->id);
         $channel->entries()->attach($entry->id, ['created_at'=>date('Y-m-d H:i:s')]);
+        // TODO: send websub notification for the channel
+        // try to wait until after the EntryCreated listener is done downloading images
       }
     }
 

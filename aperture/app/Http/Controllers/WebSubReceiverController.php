@@ -65,6 +65,8 @@ class WebSubReceiverController extends Controller
 
         $entry->save();
 
+        event(new EntrySaved($entry));
+
         if($is_new) {
           Log::info("Adding entry ".$entry->unique." to channels");
           // Loop through each channel associates with this source and add the entry

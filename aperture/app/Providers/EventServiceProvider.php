@@ -13,6 +13,9 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
+        'App\Events\EntrySaved' => [
+            'App\Listeners\EntrySavedListener',
+        ],
         'App\Events\SourceAdded' => [
             'App\Listeners\SourceAddedListener',
         ],
