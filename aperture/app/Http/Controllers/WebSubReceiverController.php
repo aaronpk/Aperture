@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Request, Response, DB, Log;
 use App\User, App\Source, App\Channel, App\Entry;
 use p3k\XRay;
+use App\Events\EntrySaved;
 
 class WebSubReceiverController extends Controller
 {
