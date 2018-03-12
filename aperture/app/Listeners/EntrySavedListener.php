@@ -27,6 +27,8 @@ class EntrySavedListener implements ShouldQueue
      */
     public function handle(EntrySaved $event)
     {
+        $modified = false;
+
         $data = json_decode($event->entry->data, true);
 
         // Find any external image and video URLs, download a copy, and rewrite the entry
@@ -35,7 +37,9 @@ class EntrySavedListener implements ShouldQueue
             if(!is_array($data['photo']))
                 $data['photo'] = [$data['photo']];
             foreach($data['photo'] as $i=>$photo) {
-                $data['photo'][$i] = $this->_download($event->entry, $photo);
+                $url = $this->_download($event->entry, $photo);
+                $modified = $modified || ($url != $photo);
+                $data['photo'][$i] = $url;
             }
         }
 
@@ -43,7 +47,9 @@ class EntrySavedListener implements ShouldQueue
             if(!is_array($data['video']))
                 $data['video'] = [$data['video']];
             foreach($data['video'] as $i=>$video) {
-                $data['video'][$i] = $this->_download($event->entry, $video);
+                $url = $this->_download($event->entry, $video);
+                $modified = $modified || ($url != $video);
+                $data['video'][$i] = $url;
             }
         }
 
@@ -51,17 +57,22 @@ class EntrySavedListener implements ShouldQueue
             if(!is_array($data['audio']))
                 $data['audio'] = [$data['audio']];
             foreach($data['audio'] as $i=>$audio) {
-                $data['audio'][$i] = $this->_download($event->entry, $audio);
+                $url = $this->_download($event->entry, $audio);
+                $modified = $modified || ($url != $audio);
+                $data['audio'][$i] = $url;
             }
         }
 
         if(isset($data['author']['photo']) && $data['author']['photo']) {
             $url = $this->_download($event->entry, $data['author']['photo'], 256);
+            $modified = $modified || ($url != $data['author']['photo']);
             $data['author']['photo'] = $url;
         }
 
-        $event->entry->data = json_encode($data, JSON_PRETTY_PRINT+JSON_UNESCAPED_SLASHES);
-        $event->entry->save();
+        if($modified) {
+            $event->entry->data = json_encode($data, JSON_PRETTY_PRINT+JSON_UNESCAPED_SLASHES);
+            $event->entry->save();
+        }
     }
 
     private function _download(Entry $entry, $url, $maxSize=false) {
