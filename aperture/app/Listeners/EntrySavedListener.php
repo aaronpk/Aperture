@@ -32,18 +32,24 @@ class EntrySavedListener implements ShouldQueue
         // Find any external image and video URLs, download a copy, and rewrite the entry
 
         if(isset($data['photo'])) {
+            if(!is_array($data['photo']))
+                $data['photo'] = [$data['photo']];
             foreach($data['photo'] as $i=>$photo) {
                 $data['photo'][$i] = $this->_download($event->entry, $photo);
             }
         }
 
         if(isset($data['video'])) {
+            if(!is_array($data['video']))
+                $data['video'] = [$data['video']];
             foreach($data['video'] as $i=>$video) {
                 $data['video'][$i] = $this->_download($event->entry, $video);
             }
         }
 
         if(isset($data['audio'])) {
+            if(!is_array($data['audio']))
+                $data['audio'] = [$data['audio']];
             foreach($data['audio'] as $i=>$audio) {
                 $data['audio'][$i] = $this->_download($event->entry, $audio);
             }
