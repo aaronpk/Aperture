@@ -63,6 +63,12 @@ class EntrySavedListener implements ShouldQueue
             }
         }
 
+        // TODO: dive into refs and extract URLs from there
+
+
+        // TODO: parse HTML content and extract <img> and other media
+
+
         if(isset($data['author']['photo']) && $data['author']['photo']) {
             $url = $this->_download($event->entry, $data['author']['photo'], 256);
             $modified = $modified || ($url != $data['author']['photo']);
