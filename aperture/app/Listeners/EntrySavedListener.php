@@ -68,6 +68,9 @@ class EntrySavedListener implements ShouldQueue
 
         $host = parse_url($url, PHP_URL_HOST);
 
+        if($host == parse_url(env('MEDIA_URL'), PHP_URL_HOST))
+            return $url;
+
         $filedata = tempnam(sys_get_temp_dir(), 'aperture');
         $fileheader = tempnam(sys_get_temp_dir(), 'aperture');
 
@@ -80,6 +83,9 @@ class EntrySavedListener implements ShouldQueue
         curl_setopt($ch, CURLOPT_FILE, $fd);
         curl_setopt($ch, CURLOPT_WRITEHEADER, $fh);
         curl_exec($ch);
+
+        if(curl_errno($ch))
+            return $url;
 
         fclose($fd);
         fclose($fh);
