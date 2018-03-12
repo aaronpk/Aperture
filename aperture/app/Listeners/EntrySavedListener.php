@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Log, Storage, File;
 use IMagick;
 use App\Entry, App\Media;
+use DOMXPath, DOMDocument;
 
 class EntrySavedListener implements ShouldQueue
 {
@@ -66,7 +67,27 @@ class EntrySavedListener implements ShouldQueue
         // TODO: dive into refs and extract URLs from there
 
 
-        // TODO: parse HTML content and extract <img> and other media
+        // parse HTML content and find <img> tags
+        if(isset($data['content']['html']) && $data['content']['html']) {
+            $map = [];
+
+            $doc = new DOMDocument();
+            @$doc->loadHTML(self::toHtmlEntities($data['content']['html']));
+            if($doc) {
+                $xpath = new DOMXPath($doc);
+                foreach($xpath->query('//img') as $el) {
+                    $src = ''.$el->getAttribute('src');
+                    if($src) {
+                        Log::info('Found img in html: '.$src);
+                        $map[$src] = $this->_download($event->entry, $src);
+                    }
+                }
+            }
+
+            foreach($map as $original=>$new) {
+                $data['content']['html'] = str_replace($original, $new, $data['content']['html']);
+            }
+        }
 
 
         if(isset($data['author']['photo']) && $data['author']['photo']) {
@@ -79,6 +100,10 @@ class EntrySavedListener implements ShouldQueue
             $event->entry->data = json_encode($data, JSON_PRETTY_PRINT+JSON_UNESCAPED_SLASHES);
             $event->entry->save();
         }
+    }
+
+    private static function toHtmlEntities($input) {
+        return mb_convert_encoding($input, 'HTML-ENTITIES', mb_detect_encoding($input));
     }
 
     private function _download(Entry $entry, $url, $maxSize=false) {
