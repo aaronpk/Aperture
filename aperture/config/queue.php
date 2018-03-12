@@ -60,7 +60,7 @@ return [
         'redis' => [
             'driver' => 'redis',
             'connection' => 'default',
-            'queue' => 'default',
+            'queue' => parse_url(env('APP_URL'), PHP_URL_HOST),
             'retry_after' => 90,
         ],
 
