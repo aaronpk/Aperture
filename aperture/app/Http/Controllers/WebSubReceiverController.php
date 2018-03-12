@@ -46,6 +46,8 @@ class WebSubReceiverController extends Controller
         // TODO: If the entry reports a URL that is different from the domain that the feed is from,
         // kick off a job to fetch the original post and process it rather than using the data from the feed.
 
+        $data = json_encode($item, JSON_PRETTY_PRINT+JSON_UNESCAPED_SLASHES);
+
         $entry = Entry::where('source_id', $source->id)
           ->where('unique', $unique)->first();
 
@@ -56,17 +58,19 @@ class WebSubReceiverController extends Controller
           $is_new = true;
         } else {
           $is_new = false;
+          $hash = md5($data);
         }
 
-        $entry->data = json_encode($item, JSON_PRETTY_PRINT+JSON_UNESCAPED_SLASHES);
+        $entry->data = $data;
 
         // Also cache the published date for sorting
         if(isset($item['published']))
           $entry->published = date('Y-m-d H:i:s', strtotime($item['published']));
 
-        $entry->save();
-
-        event(new EntrySaved($entry));
+        if($is_new || md5($entry->data) != $hash) {
+          $entry->save();
+          event(new EntrySaved($entry));
+        }
 
         if($is_new) {
           Log::info("Adding entry ".$entry->unique." to channels");
