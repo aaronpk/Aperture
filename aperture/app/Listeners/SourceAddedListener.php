@@ -47,13 +47,14 @@ class SourceAddedListener implements ShouldQueue
         Log::info("This source has ".$event->source->entries()->count()." existing entries. Adding to channel ".$event->channel->id);
         $added = 0;
         if($event->source->entries()->count()) {
-            foreach($event->source->entries()->orderByDesc('published')->orderByDesc('created_at')->get() as $entry) {
+            foreach($event->source->entries()->orderByDesc('created_at')->orderByDesc('batch_order')->get() as $i=>$entry) {
                 if(!$event->channel->entries()->where('entry_id', $entry->id)->first()) {
                     $shouldAdd = $event->channel->should_add_entry($entry);
                     if($shouldAdd) {
                       $event->channel->entries()->attach($entry->id, [
                         'created_at' => $entry->published ?: date('Y-m-d H:i:s'),
-                        'seen' => 1
+                        'seen' => 1,
+                        'batch_order' => $i,
                       ]);
                       $added++;
                     }

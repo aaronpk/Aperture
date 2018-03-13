@@ -16,6 +16,79 @@ class PagingTest extends TestCase
     ])->get('/microsub/'.$user_id.'?'.http_build_query($params));
   }
 
+  public function testPagingWithBatchOrdering() {
+    $user = factory(User::class)->create();
+    $channel = $user->channels()->where('user_id', $user->id)->where('uid', '!=', 'notifications')->first();
+
+    Cache::shouldReceive('get')
+      ->with('token:1234')
+      ->andReturn('{"scope": ["create", "update", "media", "read"], "client_id": "https://aperture.p3k.io", "me": "https://aaronparecki.com/","user_id": '.$user->id.'}');
+
+    $source = factory(Source::class)->create();
+
+    // Generate 30 entries all with the same created_at date
+    $entries = [];
+    for($i=30; $i>=1; $i--) {
+      $date = '2017-10-01 08:00:00';
+      $published = '2017-12-'.sprintf('%02d',$i).' 08:00:00';
+      $entries[] = factory(Entry::class)->create([
+        'source_id' => $source->id,
+        'published' => $published,
+        'created_at' => $date,
+        'updated_at' => $date,
+      ]);
+    }
+
+    // Add all the entries to the channel with different batch_orders
+    foreach($entries as $i=>$entry) {
+      $channel->entries()->attach($entry->id, ['created_at'=>$entry->created_at, 'batch_order'=>$i]);
+    }
+
+    // Retrieve the latest 20 entries
+    $response = $this->_microsub($user->id, [
+      'action' => 'timeline',
+      'channel' => $channel->uid,
+      'limit' => 5
+    ]);
+
+    $response->assertStatus(200);
+
+    $data = json_decode($response->content(), true);
+
+    $this->assertArrayHasKey('items', $data);
+    $this->assertCount(5, $data['items']);
+
+    // Check the timestamps of the first and last item
+    $this->assertEquals('2017-12-30T08:00:00+00:00', $data['items'][0]['published']);
+    $this->assertEquals('2017-12-26T08:00:00+00:00', $data['items'][4]['published']);
+
+    $this->assertArrayHasKey('before', $data['paging']);
+    $this->assertArrayHasKey('after', $data['paging']);
+
+    $before = $data['paging']['before'];
+    $after = $data['paging']['after'];
+
+    // Fetch the next page of data
+
+    $response = $this->_microsub($user->id, [
+      'action' => 'timeline',
+      'channel' => $channel->uid,
+      'limit' => 5,
+      'after' => $after
+    ]);
+
+    $response->assertStatus(200);
+    $data = json_decode($response->content(), true);
+    $this->assertArrayHasKey('items', $data);
+
+    // The next 5 items should be returned
+    $this->assertCount(5, $data['items']);
+
+    // Check the timestamps of the first and last item
+    $this->assertEquals('2017-12-25T08:00:00+00:00', $data['items'][0]['published']);
+    $this->assertEquals('2017-12-21T08:00:00+00:00', $data['items'][4]['published']);
+  }
+
   public function testPagingParameters()
   {
     $user = factory(User::class)->create();
@@ -28,7 +101,8 @@ class PagingTest extends TestCase
     $source = factory(Source::class)->create();
 
     // Generate 30 entries all dated different days in October
-    for($i=1; $i<=30; $i++) {
+    $entries = [];
+    for($i=30; $i>=1; $i--) {
       $date = '2017-10-'.sprintf('%02d',$i).' 08:00:00';
       $entries[] = factory(Entry::class)->create([
         'source_id' => $source->id,
@@ -39,8 +113,8 @@ class PagingTest extends TestCase
     }
 
     // Add all the entries to the channel
-    foreach($entries as $entry) {
-      $channel->entries()->attach($entry->id, ['created_at'=>$entry->created_at]);
+    foreach($entries as $i=>$entry) {
+      $channel->entries()->attach($entry->id, ['created_at'=>$entry->created_at, 'batch_order'=>0]);
     }
 
     // Retrieve the latest 20 entries
@@ -53,6 +127,7 @@ class PagingTest extends TestCase
     $response->assertStatus(200);
 
     $data = json_decode($response->content(), true);
+
     $this->assertArrayHasKey('items', $data);
     $this->assertCount(20, $data['items']);
 
@@ -101,6 +176,7 @@ class PagingTest extends TestCase
     ]);
     $response->assertStatus(200);
     $data = json_decode($response->content(), true);
+
     $this->assertArrayHasKey('items', $data);
     $this->assertCount(0, $data['items']);
     $this->assertArrayNotHasKey('after', $data['paging']);
@@ -110,7 +186,8 @@ class PagingTest extends TestCase
     // Add 30 new entries newer than the existing ones
 
     // Generate 30 entries all dated different days in November
-    for($i=1; $i<=30; $i++) {
+    $entries = [];
+    for($i=30; $i>=1; $i--) {
       $date = '2017-11-'.sprintf('%02d',$i).' 07:00:00';
       $entries[] = factory(Entry::class)->create([
         'source_id' => $source->id,
@@ -121,8 +198,8 @@ class PagingTest extends TestCase
     }
 
     // Add all the entries to the channel
-    foreach($entries as $entry) {
-      $channel->entries()->attach($entry->id, ['created_at'=>$entry->created_at]);
+    foreach($entries as $i=>$entry) {
+      $channel->entries()->attach($entry->id, ['created_at'=>$entry->created_at, 'batch_order'=>0]);
     }
 
     // Request newer items in the timeline using the previously stored "before"
@@ -157,8 +234,12 @@ class PagingTest extends TestCase
       'after' => $after    // use the new "after"
     ]);
 
+    echo "\nREQUEST FOR NEW PAGE\n";
+    echo "\nBEFORE: $before\nAFTER: $after\n\n";
+
     $response->assertStatus(200);
     $data = json_decode($response->content(), true);
+
     $this->assertArrayHasKey('items', $data);
 
     // The remaining 10 items should be returned, none from October

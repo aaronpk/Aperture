@@ -355,9 +355,9 @@ class MicrosubController extends Controller
     $limit = ((int)Request::input('limit')) ?: 20;
 
     $entries = $channel->entries()
-      ->select('entries.*', 'channel_entry.created_at AS added_to_channel_at')
+      ->select('entries.*', 'channel_entry.created_at AS added_to_channel_at', 'channel_entry.batch_order')
       ->orderByDesc('channel_entry.created_at')
-      ->orderByDesc('entries.published')
+      ->orderBy('channel_entry.batch_order')
       ->limit($limit+1); // fetch 1 more than the limit so we know if we've reached the end
 
     if(Request::input('before')) {
@@ -365,8 +365,13 @@ class MicrosubController extends Controller
         return Response::json(['error' => 'invalid_cursor'], 400);
       }
 
-      $entries = $entries->where('channel_entry.created_at', '>', $before[0])
-        ->where('entries.published', '>', $before[1]);
+      $entries = $entries->where(function($query) use($before){
+        $query->where('channel_entry.created_at', '>', $before[0])
+          ->orWhere(function($query) use($before) {
+            $query->where('channel_entry.created_at', '=', $before[0])
+              ->where('channel_entry.batch_order', '<', $before[1]);
+          });
+        });
     }
 
     if(Request::input('after')) {
@@ -374,8 +379,13 @@ class MicrosubController extends Controller
         return Response::json(['error' => 'invalid_cursor'], 400);
       }
 
-      $entries = $entries->where('channel_entry.created_at', '<=', $after[0])
-        ->where('entries.published', '<=', $after[1]);
+      $entries = $entries->where(function($query) use($after){
+        $query->where('channel_entry.created_at', '<', $after[0])
+          ->orWhere(function($query) use($after) {
+            $query->where('channel_entry.created_at', '=', $after[0])
+              ->where('channel_entry.batch_order', '>=', $after[1]);
+          });
+        });
     }
 
     #Log::info('timeline request: before='.Request::input('before').' after='.Request::input('after'));

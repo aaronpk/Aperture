@@ -75,7 +75,7 @@ class WebSubReceiverController extends Controller
         if($is_new) {
           Log::info("Adding entry ".$entry->unique." to channels");
           // Loop through each channel associates with this source and add the entry
-          foreach($source->channels()->get() as $channel) {
+          foreach($source->channels()->get() as $i=>$channel) {
 
             $shouldAdd = $channel->should_add_entry($entry);
 
@@ -83,9 +83,14 @@ class WebSubReceiverController extends Controller
               Log::info("  Adding to channel '".$channel->name." #".$channel->id);
               // If the source was previously empty, use the published date on the entry in
               // order to avoid flooding the channel with new posts
+              // TODO: it's possible that this will create a conflicting record based on the published_date and batch_order.
+              // To really solve this, we'd need to first query the channel_entry table to find any records that match
+              // the `created_at` we're about to use, and increment the `batch_order` higher than any that were found.
+              // This is likely rare enough that I'm not going to worry about it for now.
               $channel->entries()->attach($entry->id, [
                 'created_at' => ($source_is_empty && $entry->published ? $entry->published : date('Y-m-d H:i:s')),
-                'seen' => ($channel->read_tracking_mode == 'disabled' || $source_is_empty ? 1 : 0)
+                'seen' => ($channel->read_tracking_mode == 'disabled' || $source_is_empty ? 1 : 0),
+                'batch_order' => $i,
               ]);
             } else {
               Log::info("  Skipping channel '".$channel->name." #".$channel->id.' due to filter');
