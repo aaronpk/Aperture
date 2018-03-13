@@ -10,20 +10,20 @@ class PagingTest extends TestCase
 {
   use RefreshDatabase;
 
-  private function _microsub($channel_id, $params) {
+  private function _microsub($user_id, $params) {
     return $this->withHeaders([
       'Authorization' => 'Bearer 1234'
-    ])->get('/microsub/'.$channel_id.'?'.http_build_query($params));
+    ])->get('/microsub/'.$user_id.'?'.http_build_query($params));
   }
 
   public function testPagingParameters()
   {
     $user = factory(User::class)->create();
-    $channel = $user->channels()->where('uid', 'default')->first();
+    $channel = $user->channels()->where('user_id', $user->id)->where('uid', '!=', 'notifications')->first();
 
     Cache::shouldReceive('get')
       ->with('token:1234')
-      ->andReturn('{"scope": ["create", "update", "media"], "client_id": "https://monocle.p3k.io", "me": "https://aaronparecki.com/","user_id": '.$user->id.'}');
+      ->andReturn('{"scope": ["create", "update", "media", "read"], "client_id": "https://aperture.p3k.io", "me": "https://aaronparecki.com/","user_id": '.$user->id.'}');
 
     $source = factory(Source::class)->create();
 
@@ -43,10 +43,10 @@ class PagingTest extends TestCase
       $channel->entries()->attach($entry->id, ['created_at'=>$entry->created_at]);
     }
 
-
     // Retrieve the latest 20 entries
-    $response = $this->_microsub($channel->id, [
+    $response = $this->_microsub($user->id, [
       'action' => 'timeline',
+      'channel' => $channel->uid,
       'limit' => 20
     ]);
 
@@ -68,8 +68,9 @@ class PagingTest extends TestCase
     $after = $data['paging']['after'];
 
     // Fetch the next page of data
-    $response = $this->_microsub($channel->id, [
+    $response = $this->_microsub($user->id, [
       'action' => 'timeline',
+      'channel' => $channel->uid,
       'limit' => 20,
       'after' => $after
     ]);
@@ -92,8 +93,9 @@ class PagingTest extends TestCase
 
 
     // Poll for new items, there should be none
-    $response = $this->_microsub($channel->id, [
+    $response = $this->_microsub($user->id, [
       'action' => 'timeline',
+      'channel' => $channel->uid,
       'limit' => 20,
       'before' => $before
     ]);
@@ -124,8 +126,9 @@ class PagingTest extends TestCase
     }
 
     // Request newer items in the timeline using the previously stored "before"
-    $response = $this->_microsub($channel->id, [
+    $response = $this->_microsub($user->id, [
       'action' => 'timeline',
+      'channel' => $channel->uid,
       'limit' => 20,
       'before' => $before,
     ]);
@@ -143,11 +146,12 @@ class PagingTest extends TestCase
     $this->assertArrayHasKey('before', $data['paging']);
     $this->assertArrayHasKey('after', $data['paging']);
 
-    // Use the new "after" and make a request to load the next set      
+    // Use the new "after" and make a request to load the next set
     $after = $data['paging']['after'];
 
-    $response = $this->_microsub($channel->id, [
+    $response = $this->_microsub($user->id, [
       'action' => 'timeline',
+      'channel' => $channel->uid,
       'limit' => 20,
       'before' => $before, // use the same "before" we used previously
       'after' => $after    // use the new "after"
