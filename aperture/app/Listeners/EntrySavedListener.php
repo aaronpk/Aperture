@@ -140,7 +140,7 @@ class EntrySavedListener implements ShouldQueue
         $storagefilename = 'media/'.$filename;
 
         // Check if the file exists already
-        if(!Storage::exists($storagefilename)) {
+        if(!Storage::exists($storagefilename) || Storage::lastModified($storagefilename) == 0) {
             $media = new Media();
             $media->entry_id = $entry->id;
             $media->original_url = $url;
