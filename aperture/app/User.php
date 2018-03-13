@@ -51,7 +51,7 @@ class User extends Authenticatable
         $channel = new Channel;
         $channel->user_id = $this->id;
         $channel->name = $name;
-        $channel->uid = str_random(32);
+        $channel->uid = str_random(24);
         $channel->sort = 1;
         $channel->save();
 

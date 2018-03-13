@@ -17,7 +17,7 @@ class UserCreated
 
         $channel = new Channel();
         $channel->user_id = $user->id;
-        $channel->uid = str_random(32);
+        $channel->uid = str_random(24);
         $channel->name = 'Home';
         $channel->sort = 1;
         $channel->save();
