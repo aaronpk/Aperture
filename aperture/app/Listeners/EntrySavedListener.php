@@ -158,13 +158,22 @@ class EntrySavedListener implements ShouldQueue
                 $media->width = $d['width'];
                 $media->height = $d['height'];
 
-                $im->setImageFormat('jpg');
+                switch($ext) {
+                  case '.jpg':
+                    $im->setImageFormat('jpg');
+                    break;
+                  case '.gif':
+                  case '.png':
+                    $im->setImageFormat('png');
+                    $ext = '.png';
+                    break;
+                }
                 $im->setImageCompressionQuality(85);
 
                 $im->setGravity(\Imagick::GRAVITY_CENTER);
                 $im->cropThumbnailImage($maxSize, $maxSize);
 
-                $resized = tempnam(sys_get_temp_dir(), 'aperture').'.jpg';
+                $resized = tempnam(sys_get_temp_dir(), 'aperture').$ext;
                 $im->writeImage($resized);
                 $im->destroy();
                 $fp = fopen($resized, 'r');
