@@ -5,7 +5,7 @@
 <div class="container dashboard">
 
   <div class="notification is-info">
-    Thanks for joining the alpha of Aperture! It's a little sparse around here so you'll have to excuse the lack of polish in the UI. In the mean time, feel free to poke around, and feedback is always appreciated! You can contact Aaron at <a href="mailto:aaron@parecki.com">aaron@parecki.com</a> or in the <a href="https://indieweb.org/discuss">IndieWeb chat</a>!
+    Thanks for running this pre-release version of Aperture! It's a little sparse around here at the moment, but things mostly work regardless. Feedback is always appreciated! You can contact Aaron at <a href="mailto:aaron@parecki.com">aaron@parecki.com</a> or in the <a href="https://indieweb.org/discuss">IndieWeb chat</a>!
   </div>
 
   <div class="buttons is-right">
@@ -54,13 +54,14 @@
 
     <ul class="methods">
       <li><a href="https://indieweb.org/Microsub-spec#Timelines">GET action=timeline</a> - retrieve the list of items in a channel</li>
+      <li><a href="https://indieweb.org/Microsub-spec#Timelines">POST action=timeline</a> - mark entries as read, or remove an entry from a channel</li>
       <li><a href="https://indieweb.org/Microsub-spec#Search">POST action=search</a> - search for a new feed to add</li>
       <li><a href="https://indieweb.org/Microsub-spec#Preview">GET action=preview</a> - preview a feed before following it</li>
       <li><a href="https://indieweb.org/Microsub-spec#Following">GET action=follow</a> - retrieve the list of feeds followed in a channel</li>
       <li><a href="https://indieweb.org/Microsub-spec#Following">POST action=follow</a> - follow a new feed in a channel</li>
       <li><a href="https://indieweb.org/Microsub-spec#Unfollowing">POST action=unfollow</a> - unfollow a feed in a channel (existing items from that feed are left in the channel, like IRC/Slack)</li>
       <li><a href="https://indieweb.org/Microsub-spec#Channels_2">GET action=channels</a> - retrieve the list of channels for a user</li>
-      <li><a href="https://indieweb.org/Microsub-spec#Channels_2">POST action=channels</a> - create, update or delete channels</li>
+      <li><a href="https://indieweb.org/Microsub-spec#Channels_2">POST action=channels</a> - create, update, and delete channels, or set the order of the channels</li>
     </ul>
   </div>
 
