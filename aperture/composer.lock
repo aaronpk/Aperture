@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "b4437f9ba1f60c97a721cc60ac0c36cd",
+    "content-hash": "91c9c662fd281c171e20b46fc6afb223",
     "packages": [
         {
             "name": "cebe/markdown",
@@ -873,16 +873,16 @@
         },
         {
             "name": "indieauth/client",
-            "version": "0.4.0-alpha",
+            "version": "0.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/indieweb/indieauth-client-php.git",
-                "reference": "dfe079aa8d25e98665507bbe3bf43d5e91e5711f"
+                "reference": "3e47004ccfccddc5760639f4faf9ed5ceadb460e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/indieweb/indieauth-client-php/zipball/dfe079aa8d25e98665507bbe3bf43d5e91e5711f",
-                "reference": "dfe079aa8d25e98665507bbe3bf43d5e91e5711f",
+                "url": "https://api.github.com/repos/indieweb/indieauth-client-php/zipball/3e47004ccfccddc5760639f4faf9ed5ceadb460e",
+                "reference": "3e47004ccfccddc5760639f4faf9ed5ceadb460e",
                 "shasum": ""
             },
             "require": {
@@ -911,7 +911,7 @@
                 }
             ],
             "description": "IndieAuth Client Library",
-            "time": "2018-03-08T14:41:04+00:00"
+            "time": "2018-03-13T23:39:55+00:00"
         },
         {
             "name": "indieweb/link-rel-parser",
@@ -1370,16 +1370,16 @@
         },
         {
             "name": "mf2/mf2",
-            "version": "v0.4.0-alpha",
+            "version": "v0.4.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/aaronpk/php-mf2.git",
-                "reference": "5cbfdd4a1075b5113f2a1f4a1d6b8d7c86b93acb"
+                "url": "https://github.com/indieweb/php-mf2.git",
+                "reference": "42ef6eb9777bffe654a70cbbc1dbd777a61c1445"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aaronpk/php-mf2/zipball/5cbfdd4a1075b5113f2a1f4a1d6b8d7c86b93acb",
-                "reference": "5cbfdd4a1075b5113f2a1f4a1d6b8d7c86b93acb",
+                "url": "https://api.github.com/repos/indieweb/php-mf2/zipball/42ef6eb9777bffe654a70cbbc1dbd777a61c1445",
+                "reference": "42ef6eb9777bffe654a70cbbc1dbd777a61c1445",
                 "shasum": ""
             },
             "require": {
@@ -1403,6 +1403,7 @@
                     "Mf2/Parser.php"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "CC0-1.0"
             ],
@@ -1420,7 +1421,7 @@
                 "parser",
                 "semantic"
             ],
-            "time": "2018-03-08T13:43:49+00:00"
+            "time": "2018-03-13T23:33:15+00:00"
         },
         {
             "name": "mnabialek/laravel-sql-logger",
@@ -1928,16 +1929,16 @@
         },
         {
             "name": "p3k/xray",
-            "version": "dev-mf2-dev",
+            "version": "v1.4.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aaronpk/XRay.git",
-                "reference": "391b515a5db6c51a1ce248c2dc8474b248d2f120"
+                "reference": "adfc8fa5bddc275f28ffc8cef7383eb49ac70b90"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aaronpk/XRay/zipball/391b515a5db6c51a1ce248c2dc8474b248d2f120",
-                "reference": "391b515a5db6c51a1ce248c2dc8474b248d2f120",
+                "url": "https://api.github.com/repos/aaronpk/XRay/zipball/adfc8fa5bddc275f28ffc8cef7383eb49ac70b90",
+                "reference": "adfc8fa5bddc275f28ffc8cef7383eb49ac70b90",
                 "shasum": ""
             },
             "require": {
@@ -1946,7 +1947,7 @@
                 "ezyang/htmlpurifier": "4.10.*",
                 "facebook/graph-sdk": "^5.5",
                 "indieweb/link-rel-parser": "0.1.*",
-                "mf2/mf2": "0.4.0-alpha",
+                "mf2/mf2": ">=0.4.0",
                 "p3k/http": ">=0.1.7",
                 "p3k/picofeed": ">=0.1.38",
                 "p3k/timezone": "*"
@@ -1972,7 +1973,7 @@
             ],
             "description": "X-Ray returns structured data from any URL",
             "homepage": "https://github.com/aaronpk/XRay",
-            "time": "2018-03-08T14:36:32+00:00"
+            "time": "2018-03-13T23:51:57+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -5036,11 +5037,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "indieauth/client": 15,
-        "p3k/xray": 20,
-        "mf2/mf2": 15
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
