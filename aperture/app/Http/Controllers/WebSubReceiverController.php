@@ -87,7 +87,7 @@ class WebSubReceiverController extends Controller
               // To really solve this, we'd need to first query the channel_entry table to find any records that match
               // the `created_at` we're about to use, and increment the `batch_order` higher than any that were found.
               // This is likely rare enough that I'm not going to worry about it for now.
-              $created_at = ($source_is_empty && $entry->published ? $entry->published : date('Y-m-d H:i:s'))
+              $created_at = ($source_is_empty && $entry->published ? $entry->published : date('Y-m-d H:i:s'));
               if(strtotime($created_at) <= 0) $created_at = '1970-01-01 00:00:01';
 
               $channel->entries()->attach($entry->id, [
