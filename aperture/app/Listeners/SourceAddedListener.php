@@ -51,8 +51,12 @@ class SourceAddedListener implements ShouldQueue
                 if(!$event->channel->entries()->where('entry_id', $entry->id)->first()) {
                     $shouldAdd = $event->channel->should_add_entry($entry);
                     if($shouldAdd) {
+
+                      $created_at = $entry->published ?: date('Y-m-d H:i:s');
+                      if(strtotime($created_at) <= 0) $created_at = '1970-01-01 00:00:01';
+
                       $event->channel->entries()->attach($entry->id, [
-                        'created_at' => $entry->published ?: date('Y-m-d H:i:s'),
+                        'created_at' => $created_at,
                         'seen' => 1,
                         'batch_order' => $i,
                       ]);
