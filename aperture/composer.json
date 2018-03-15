@@ -16,7 +16,7 @@
         "p3k/micropub": ">=0.0.2",
         "p3k/utils": ">=1.0",
         "predis/predis": "^1.1",
-        "p3k/xray": ">=1.4.22"
+        "p3k/xray": ">=1.4.23"
     },
     "require-dev": {
         "filp/whoops": "~2.0",
