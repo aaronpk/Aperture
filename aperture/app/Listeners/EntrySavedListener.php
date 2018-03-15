@@ -28,6 +28,9 @@ class EntrySavedListener implements ShouldQueue
      */
     public function handle(EntrySaved $event)
     {
+        if(!env('MEDIA_URL'))
+            return;
+
         $modified = false;
 
         $data = json_decode($event->entry->data, true);
