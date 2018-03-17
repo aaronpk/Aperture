@@ -78,8 +78,10 @@ class MicropubController extends Controller
     }
 
     $entry->data = json_encode($item, JSON_PRETTY_PRINT+JSON_UNESCAPED_SLASHES);
+
     if(isset($item['published']))
       $entry->published = date('Y-m-d H:i:s', strtotime($item['published']));
+
     $entry->save();
 
     event(new EntrySaved($entry));
@@ -94,7 +96,7 @@ class MicropubController extends Controller
       }
     }
 
-    Log::info(json_encode($item, JSON_PRETTY_PRINT));
+    #Log::info(json_encode($item, JSON_PRETTY_PRINT));
 
     return Response::json([
       'url' => $entry->permalink()
