@@ -167,7 +167,7 @@
               </select>
             </div>
 
-            <input class="input" type="text" id="channel-include-keywords" value="{{ $channel->include_keywords }}" placeholder="enter keywords to require" style="margin-top: 6px;">
+            <input class="input" type="text" id="channel-include-keywords" value="{{ $channel->include_keywords }}" placeholder="enter keywords to require (space-separated)" style="margin-top: 6px;">
           </div>
         </div>
 
@@ -203,7 +203,7 @@
               </label>
             </div>
 
-            <input class="input" type="text" id="channel-exclude-keywords" value="{{ $channel->exclude_keywords }}" placeholder="enter keywords to block" style="margin-top: 6px;">
+            <input class="input" type="text" id="channel-exclude-keywords" value="{{ $channel->exclude_keywords }}" placeholder="enter keywords to block (space-separated)" style="margin-top: 6px;">
 
           </div>
         </div>
