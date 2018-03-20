@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use Closure, Log, Response, Auth, Cache;
+use Closure, Log, Request, Response, Auth, Cache;
 use App\User, App\ChannelToken;
 use p3k\HTTP;
 
@@ -29,15 +29,18 @@ class VerifyIndieAuthAccessToken
 
         // Check the given access token at the token endpoint
         $authorization = $request->header('Authorization');
-
-        if(!$authorization) {
-            return Response::json(['error'=>'unauthorized'], 401);
+        if($authorization) {
+            if(!preg_match('/Bearer (.+)/', $authorization, $match)) {
+                return Response::json(['error'=>'unauthorized'], 401);
+            }
+            $token = $match[1];
+        } else {
+            $token = Request::input('access_token');
         }
 
-        if(!preg_match('/Bearer (.+)/', $authorization, $match)) {
+        if(!$token) {
             return Response::json(['error'=>'unauthorized'], 401);
         }
-        $token = $match[1];
 
         // Check the cache
         if($cache_data=Cache::get('token:'.$token)) {
