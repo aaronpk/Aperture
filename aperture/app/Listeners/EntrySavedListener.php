@@ -191,6 +191,9 @@ class EntrySavedListener implements ShouldQueue
             $media->save();
         }
 
+        unlink($fd);
+        unlink($fh);
+
         return $path;
     }
 
