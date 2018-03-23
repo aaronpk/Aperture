@@ -127,6 +127,8 @@ class EntrySavedListener implements ShouldQueue
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_FILE, $fd);
         curl_setopt($ch, CURLOPT_WRITEHEADER, $fh);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, 4000);
+        curl_setopt($ch, CURLOPT_TIMEOUT_MS, 10000);
         curl_exec($ch);
 
         if(curl_errno($ch))
