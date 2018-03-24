@@ -33,7 +33,7 @@ class WebSubReceiverController extends Controller
 
       // Check each entry in the feed to see if we've already seen it
       // Add new entries to any channels that include this source
-      foreach($parsed['data']['items'] as $item) {
+      foreach($parsed['data']['items'] as $i=>$item) {
 
         // Prefer uid, then url, then hash the content
         if(isset($item['uid']))
@@ -75,7 +75,7 @@ class WebSubReceiverController extends Controller
         if($is_new) {
           Log::info("Adding entry ".$entry->unique." to channels");
           // Loop through each channel associates with this source and add the entry
-          foreach($source->channels()->get() as $i=>$channel) {
+          foreach($source->channels()->get() as $channel) {
 
             $shouldAdd = $channel->should_add_entry($entry);
 
