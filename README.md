@@ -27,3 +27,9 @@ Credits
 Aperture logo by Gregor Cresnar from the Noun Project.
 
 
+License
+-------
+
+Copyright 2018 by Aaron parecki.
+
+Available under the Apache 2.0 license.
