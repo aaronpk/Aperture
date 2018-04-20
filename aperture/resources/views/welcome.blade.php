@@ -157,7 +157,7 @@
                     <input type="submit" value="Keep me updated!" name="subscribe" id="mc-embedded-subscribe" class="button">
                   </div>
                 </div>
-                <input type="hidden" name="SOURCE" value="monocle">
+                <input type="hidden" name="SOURCE" value="aperture">
               </form>
             </div>
             <!--End mc_embed_signup-->
