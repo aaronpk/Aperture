@@ -48,11 +48,21 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   /* add http:// to URL fields on blur */
+  /* add http:// to URL fields on blur or when enter is pressed */
+  function addDefaultScheme(target) {
+    if(target.value.match(/^(?!https?:).+\..+/)) {
+      target.value = "http://"+target.value;
+    }
+  }
   var elements = document.querySelectorAll("input[type=url]");
   Array.prototype.forEach.call(elements, function(el, i){
     el.addEventListener("blur", function(e){
-      if(e.target.value.match(/^(?!https?:).+\..+/)) {
-        e.target.value = "http://"+e.target.value;
+      addDefaultScheme(e.target);
+    });
+    el.addEventListener("keydown", function(e){
+      console.log(e.keyCode);
+      if(e.keyCode == 13) {
+        addDefaultScheme(e.target);
       }
     });
   });
