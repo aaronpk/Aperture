@@ -47,4 +47,10 @@ document.addEventListener('DOMContentLoaded', function() {
     e.preventDefault();
   });
 
+  $("input[type=url]").on("blur", function(){
+    if(!$(this).val().match(/^https?:/)) {
+      $(this).val("http://"+$(this).val());
+    }
+  });
+
 });
