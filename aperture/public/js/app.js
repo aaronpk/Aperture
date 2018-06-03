@@ -801,10 +801,14 @@ document.addEventListener('DOMContentLoaded', function () {
     e.preventDefault();
   });
 
-  $("input[type=url]").on("blur", function () {
-    if (!$(this).val().match(/^https?:/)) {
-      $(this).val("http://" + $(this).val());
-    }
+  /* add http:// to URL fields on blur */
+  var elements = document.querySelectorAll("input[type=url]");
+  Array.prototype.forEach.call(elements, function (el, i) {
+    el.addEventListener("blur", function (e) {
+      if (e.target.value.match(/^(?!https?:).+\..+/)) {
+        e.target.value = "http://" + e.target.value;
+      }
+    });
   });
 });
 
