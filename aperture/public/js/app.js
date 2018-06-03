@@ -814,7 +814,6 @@ document.addEventListener('DOMContentLoaded', function () {
       addDefaultScheme(e.target);
     });
     el.addEventListener("keydown", function (e) {
-      console.log(e.keyCode);
       if (e.keyCode == 13) {
         addDefaultScheme(e.target);
       }
