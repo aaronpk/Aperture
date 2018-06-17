@@ -67,6 +67,7 @@ class CreateUser extends Command
     $user = new User();
     $user->url = $url;
     $user->token_endpoint = $tokenEndpoint;
+    $user->retention_days = 0; // unlimited
     $user->save();
 
     $this->info('Done!');
