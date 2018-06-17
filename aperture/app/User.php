@@ -34,7 +34,19 @@ class User extends Authenticatable
     ];
 
     public function channels() {
-        $channels = $this->hasMany('App\Channel')->orderBy('sort');
+        $channels = $this->hasMany('App\Channel')
+          ->where('archived', 0)
+          ->orderBy('sort');
+        if($this->demo_mode_enabled) {
+          $channels = $channels->where('hide_in_demo_mode', 0);
+        }
+        return $channels;
+    }
+
+    public function archived_channels() {
+        $channels = $this->hasMany('App\Channel')
+          ->where('archived', 1)
+          ->orderBy('sort');
         if($this->demo_mode_enabled) {
           $channels = $channels->where('hide_in_demo_mode', 0);
         }

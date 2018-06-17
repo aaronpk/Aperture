@@ -41,6 +41,17 @@
   @endforeach
   </div>
 
+  @if(count($archived))
+    <div style="margin-top: 2em;">
+      <h2 class="subtitle">Archived Channels</h2>
+      <ul>
+      @foreach($archived as $channel)
+        <li><a href="{{ route('channel', $channel) }}">{{ $channel->name }}</a></li>
+      @endforeach
+      </ul>
+    </div>
+  @endif
+
   <hr>
 
   <div class="helpsection">

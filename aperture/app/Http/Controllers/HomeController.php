@@ -13,9 +13,11 @@ class HomeController extends Controller
 
   public function dashboard() {
     $channels = Auth::user()->channels()->get();
+    $archived = Auth::user()->archived_channels()->get();
 
     return view('dashboard', [
-      'channels' => $channels
+      'channels' => $channels,
+      'archived' => $archived
     ]);
   }
 
@@ -84,6 +86,7 @@ class HomeController extends Controller
       $channel->read_tracking_mode = Request::input('read_tracking_mode') ?: 'counts';
 
       $channel->hide_in_demo_mode = Request::input('hide_in_demo_mode') ? 1 : 0;
+      $channel->archived = Request::input('archived') ? 1 : 0;
 
       $channel->default_destination = Request::input('default_destination') ?: '';
 

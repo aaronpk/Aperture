@@ -235,6 +235,17 @@
           </div>
         </div>
 
+        <div class="field">
+          <div class="control">
+            <div>
+              <label class="checkbox">
+                <input type="checkbox" id="channel-archived" {{ $channel->archived ? 'checked="checked"' : '' }}>
+                Archive channel (The channel will be hidden until it is un-archived.)
+              </label>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       <div id="delete-channel-confirm" class="hidden">
@@ -299,7 +310,8 @@ $(function(){
       exclude_types: exclude_types.join(" "),
       exclude_keywords: $("#channel-exclude-keywords").val(),
       default_destination: $("#default-destination").val(),
-      hide_in_demo_mode: document.getElementById('hide-in-demo-mode').checked ? 1 : 0
+      hide_in_demo_mode: document.getElementById('hide-in-demo-mode').checked ? 1 : 0,
+      archived: document.getElementById('channel-archived').checked ? 1 : 0
     }, function(response) {
       reload_window();
     });
