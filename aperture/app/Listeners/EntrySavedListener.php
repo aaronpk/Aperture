@@ -41,7 +41,8 @@ class EntrySavedListener implements ShouldQueue
             if(!is_array($data['photo']))
                 $data['photo'] = [$data['photo']];
             foreach($data['photo'] as $i=>$photo) {
-                $url = $this->_download($event->entry, $photo);
+                $file = $this->_download($event->entry, $photo);
+                $url = $file->url();
                 $modified = $modified || ($url != $photo);
                 $data['photo'][$i] = $url;
             }
@@ -51,7 +52,8 @@ class EntrySavedListener implements ShouldQueue
             if(!is_array($data['video']))
                 $data['video'] = [$data['video']];
             foreach($data['video'] as $i=>$video) {
-                $url = $this->_download($event->entry, $video);
+                $file = $this->_download($event->entry, $video);
+                $url = $file->url();
                 $modified = $modified || ($url != $video);
                 $data['video'][$i] = $url;
             }
@@ -61,7 +63,8 @@ class EntrySavedListener implements ShouldQueue
             if(!is_array($data['audio']))
                 $data['audio'] = [$data['audio']];
             foreach($data['audio'] as $i=>$audio) {
-                $url = $this->_download($event->entry, $audio);
+                $file = $this->_download($event->entry, $audio);
+                $url = $file->url();
                 $modified = $modified || ($url != $audio);
                 $data['audio'][$i] = $url;
             }
@@ -82,7 +85,8 @@ class EntrySavedListener implements ShouldQueue
                     $src = ''.$el->getAttribute('src');
                     if($src) {
                         Log::info('Found img in html: '.$src);
-                        $map[$src] = $this->_download($event->entry, $src);
+                        $file = $this->_download($event->entry, $src);
+                        $map[$src] = $file->url();
                     }
                 }
             }
@@ -94,7 +98,8 @@ class EntrySavedListener implements ShouldQueue
 
 
         if(isset($data['author']['photo']) && $data['author']['photo']) {
-            $url = $this->_download($event->entry, $data['author']['photo'], 256);
+            $file = $this->_download($event->entry, $data['author']['photo'], 256);
+            $url = $file->url();
             $modified = $modified || ($url != $data['author']['photo']);
             $data['author']['photo'] = $url;
         }
@@ -141,13 +146,12 @@ class EntrySavedListener implements ShouldQueue
         $ext = $this->_file_extension($filedata);
 
         $filename = $host.'/'.$hash.$ext;
-        $path = env('MEDIA_URL').'/'.$filename;
         $storagefilename = 'media/'.$filename;
+        $resized = false;
 
         // Check if the file exists already
         if(!Storage::exists($storagefilename) || Storage::lastModified($storagefilename) == 0) {
             $media = new Media();
-            $media->entry_id = $entry->id;
             $media->original_url = $url;
             $media->filename = $filename;
             $media->hash = $hash;
@@ -183,16 +187,17 @@ class EntrySavedListener implements ShouldQueue
                 $im->destroy();
                 $fp = fopen($resized, 'r');
             } else {
-                $resized = false;
                 $fp = fopen($filedata, 'r');
             }
 
             Storage::makeDirectory(dirname($storagefilename));
             Storage::put($storagefilename, $fp);
-            Log::info("Entry ".$entry->id.": Stored file at url: $path");
             fclose($fp);
 
             $media->save();
+            Log::info("Entry ".$entry->id.": Stored file at url: ".$media->url());
+        } else {
+            $media = Media::where('filename', $filename)->first();
         }
 
         unlink($filedata);
@@ -200,7 +205,9 @@ class EntrySavedListener implements ShouldQueue
         if($resized)
           unlink($resized);
 
-        return $path;
+        $entry->media()->attach($media->id);
+
+        return $media;
     }
 
     private function _file_extension($filename) {

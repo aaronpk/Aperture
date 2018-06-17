@@ -53,6 +53,12 @@ class User extends Authenticatable
         return $channels;
     }
 
+    public function all_channels() {
+        $channels = $this->hasMany('App\Channel')
+          ->orderBy('sort');
+        return $channels;
+    }
+
     public function create_channel($name) {
         // Move the sort order of existing channels out of the way for the new channel
         DB::table('channels')

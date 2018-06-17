@@ -2,6 +2,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Storage;
+use App\Events\MediaDeleting;
 
 class Media extends Model {
 
@@ -9,8 +11,16 @@ class Media extends Model {
     'entry_id', 'filename'
   ];
 
-  public function entru() {
-    return $this->belongsTo('\App\Entry');
+  protected $dispatchesEvents = [
+    'deleting' => MediaDeleting::class
+  ];
+
+  public function entries() {
+    return $this->belongsToMany('\App\Entry');
+  }
+
+  public function url() {
+    return env('MEDIA_URL').'/'.$this->filename;
   }
 
 }

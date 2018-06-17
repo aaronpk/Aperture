@@ -3,11 +3,16 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use DB;
+use App\Events\EntryDeleting;
 
 class Entry extends Model {
 
   protected $fillable = [
     'source_id', 'unique', 'data'
+  ];
+
+  protected $dispatchesEvents = [
+    'deleting' => EntryDeleting::class
   ];
 
   public function source() {
@@ -16,6 +21,10 @@ class Entry extends Model {
 
   public function channels() {
     return $this->belongsToMany('\App\Channel');
+  }
+
+  public function media() {
+    return $this->belongsToMany('\App\Media');
   }
 
   public function permalink() {
