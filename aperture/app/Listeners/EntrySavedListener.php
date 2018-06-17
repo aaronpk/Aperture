@@ -116,8 +116,8 @@ class EntrySavedListener implements ShouldQueue
         if($host == parse_url(env('MEDIA_URL'), PHP_URL_HOST))
             return $url;
 
-        $filedata = tempnam(sys_get_temp_dir(), 'aperture');
-        $fileheader = tempnam(sys_get_temp_dir(), 'aperture');
+        $filedata = tempnam(sys_get_temp_dir(), 'aperture-data');
+        $fileheader = tempnam(sys_get_temp_dir(), 'aperture-header');
 
         $fd = fopen($filedata, 'w');
         $fh = fopen($fileheader, 'w');
@@ -178,23 +178,27 @@ class EntrySavedListener implements ShouldQueue
                 $im->setGravity(\Imagick::GRAVITY_CENTER);
                 $im->cropThumbnailImage($maxSize, $maxSize);
 
-                $resized = tempnam(sys_get_temp_dir(), 'aperture').$ext;
+                $resized = tempnam(sys_get_temp_dir(), 'aperture-resized-').$ext;
                 $im->writeImage($resized);
                 $im->destroy();
                 $fp = fopen($resized, 'r');
             } else {
+                $resized = false;
                 $fp = fopen($filedata, 'r');
             }
 
             Storage::makeDirectory(dirname($storagefilename));
             Storage::put($storagefilename, $fp);
             Log::info("Entry ".$entry->id.": Stored file at url: $path");
+            fclose($fp);
 
             $media->save();
         }
 
         unlink($filedata);
         unlink($fileheader);
+        if($resized)
+          unlink($resized);
 
         return $path;
     }
