@@ -48,6 +48,11 @@
 
     <pre><?= htmlspecialchars('<link rel="microsub" href="'.env('APP_URL').'/microsub/'.Auth::user()->id.'">') ?></pre>
 
+    <p>Then choose a <a href="https://indieweb.org/Microsub#Clients">reader</a> and log in, and the reader will find your subscriptions in Aperture.</p>
+
+
+    <h3 class="subtitle">Development</h3>
+
     <p>To test API calls, you can generate a token from your token endpoint yourself or by using this <a href="https://gimme-a-token.5eb.nl/">access token tool</a>.</p>
 
     <p>Aperture has implemented the following actions in the <a href="https://indieweb.org/Microsub-spec">Microsub spec</a>:</p>
