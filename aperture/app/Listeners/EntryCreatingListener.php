@@ -11,7 +11,7 @@ use App\Entry, App\Media;
 class EntryCreatingListener # implements ShouldQueue
 {
 
-  public function handle(EntryDeleting $event)
+  public function handle(EntryCreating $event)
   {
     Redis::incr(env('APP_URL').'::entries');
   }
