@@ -1,7 +1,7 @@
 <?php
 namespace App\Listeners;
 
-use App\Events\EntryDeleting;
+use App\Events\EntryCreating;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Redis;
