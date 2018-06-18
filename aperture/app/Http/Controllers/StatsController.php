@@ -38,7 +38,7 @@ users.min 0
   public function entries() {
     if(Request::input('mode') == 'config') {
       $response = "graph_title Aperture Entries
-graph_info Total number of entries stored in Aperture
+graph_info The max database id of entries stored in Aperture
 graph_vlabel Entries
 graph_category aperture
 graph_args --lower-limit 0
@@ -49,8 +49,8 @@ entries.type GAUGE
 entries.min 0
 ";
     } else {
-      $entries = Entry::count();
-      $response = 'entries.value '.$entries;
+      $entries = DB::SELECT('SELECT AUTO_INCREMENT FROM information_schema.tables WHERE table_schema="'.env("DB_DATABASE").'" AND table_name="entries"');
+      $response = 'entries.value '.$entries[0]->AUTO_INCREMENT;
     }
     return $this->_text($response);
   }
