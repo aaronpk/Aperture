@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Redis;
 use Log, Storage;
 use App\Entry, App\Media;
 
-class EntryDeletingListener # implements ShouldQueue
+class EntryCreatingListener # implements ShouldQueue
 {
 
   public function handle(EntryDeleting $event)
