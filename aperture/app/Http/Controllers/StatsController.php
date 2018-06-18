@@ -45,7 +45,7 @@ graph_args --lower-limit 0
 graph_scale yes
 
 entries.label Entries
-entries.type GAUGE
+entries.type DERIVE
 entries.min 0
 ";
     } else {
