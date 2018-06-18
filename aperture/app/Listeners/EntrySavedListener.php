@@ -42,7 +42,7 @@ class EntrySavedListener implements ShouldQueue
                 $data['photo'] = [$data['photo']];
             foreach($data['photo'] as $i=>$photo) {
                 $file = $this->_download($event->entry, $photo);
-                $url = $file->url();
+                $url = is_string($file) ? $file : $file->url();
                 $modified = $modified || ($url != $photo);
                 $data['photo'][$i] = $url;
             }
@@ -53,7 +53,7 @@ class EntrySavedListener implements ShouldQueue
                 $data['video'] = [$data['video']];
             foreach($data['video'] as $i=>$video) {
                 $file = $this->_download($event->entry, $video);
-                $url = $file->url();
+                $url = is_string($file) ? $file : $file->url();
                 $modified = $modified || ($url != $video);
                 $data['video'][$i] = $url;
             }
@@ -64,7 +64,7 @@ class EntrySavedListener implements ShouldQueue
                 $data['audio'] = [$data['audio']];
             foreach($data['audio'] as $i=>$audio) {
                 $file = $this->_download($event->entry, $audio);
-                $url = $file->url();
+                $url = is_string($file) ? $file : $file->url();
                 $modified = $modified || ($url != $audio);
                 $data['audio'][$i] = $url;
             }
@@ -86,7 +86,7 @@ class EntrySavedListener implements ShouldQueue
                     if($src) {
                         Log::info('Found img in html: '.$src);
                         $file = $this->_download($event->entry, $src);
-                        $map[$src] = $file->url();
+                        $map[$src] = is_string($file) ? $file : $file->url();
                     }
                 }
             }
@@ -99,7 +99,7 @@ class EntrySavedListener implements ShouldQueue
 
         if(isset($data['author']['photo']) && $data['author']['photo']) {
             $file = $this->_download($event->entry, $data['author']['photo'], 256);
-            $url = $file->url();
+            $url = is_string($file) ? $file : $file->url();
             $modified = $modified || ($url != $data['author']['photo']);
             $data['author']['photo'] = $url;
         }
