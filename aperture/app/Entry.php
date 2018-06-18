@@ -12,7 +12,8 @@ class Entry extends Model {
   ];
 
   protected $dispatchesEvents = [
-    'deleting' => EntryDeleting::class
+    'deleting' => EntryDeleting::class,
+    'creating' => EntryCreating::class,
   ];
 
   public function source() {

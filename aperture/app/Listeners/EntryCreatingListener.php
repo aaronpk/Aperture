@@ -13,15 +13,7 @@ class EntryDeletingListener # implements ShouldQueue
 
   public function handle(EntryDeleting $event)
   {
-    Redis::decr(env('APP_URL').'::entries');
-
-    $media = $event->entry->media()->get();
-    foreach($media as $file) {
-      // Check if this file is used by any other entries
-      if($file->entries()->count() == 1) {
-        $file->delete();
-      }
-    }
+    Redis::incr(env('APP_URL').'::entries');
   }
 
 }

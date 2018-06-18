@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use Request, Response, DB, Log;
 use App\User, App\Source, App\Channel, App\Entry, App\Media;
+use Illuminate\Support\Facades\Redis;
 
 class StatsController extends Controller
 {
@@ -35,23 +36,46 @@ users.min 0
     return $this->_text($response);
   }
 
+  public function new_entries() {
+    if(Request::input('mode') == 'config') {
+      $response = "graph_title Aperture New Entries
+graph_info The rate of new entries being added
+graph_vlabel Entries per hour
+graph_category aperture
+graph_args --lower-limit 0
+graph_scale yes
+graph_period hour
+
+entries.label Entries added per hour
+entries.type DERIVE
+entries.min 0
+";
+    } else {
+      $entries = Redis::get(env('APP_URL').'::entries');
+      $response = 'entries.value '.$entries;
+    }
+
+    return $this->_text($response);
+  }
+
   public function entries() {
     if(Request::input('mode') == 'config') {
       $response = "graph_title Aperture Entries
-graph_info The max database id of entries stored in Aperture
+graph_info The total entries currently stored
 graph_vlabel Entries
 graph_category aperture
 graph_args --lower-limit 0
 graph_scale yes
 
 entries.label New Entries
-entries.type DERIVE
+entries.type GAUGE
 entries.min 0
 ";
     } else {
-      $entries = DB::SELECT('SELECT AUTO_INCREMENT FROM information_schema.tables WHERE table_schema="'.env("DB_DATABASE").'" AND table_name="entries"');
-      $response = 'entries.value '.$entries[0]->AUTO_INCREMENT;
+      $entries = Redis::get(env('APP_URL').'::entries');
+      $response = 'entries.value '.$entries;
     }
+
     return $this->_text($response);
   }
 

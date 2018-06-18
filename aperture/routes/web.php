@@ -31,6 +31,7 @@ Route::middleware('web')->group(function(){
 Route::get('/entry/{source_id}/{entry}', 'MicropubController@entry')->name('entry');
 
 Route::get('/stats/users', 'StatsController@users');
+Route::get('/stats/new_entries', 'StatsController@new_entries');
 Route::get('/stats/entries', 'StatsController@entries');
 Route::get('/stats/entries_size', 'StatsController@entries_size');
 Route::get('/stats/sources', 'StatsController@sources');

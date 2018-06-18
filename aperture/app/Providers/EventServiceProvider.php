@@ -16,6 +16,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\EntrySaved' => [
             'App\Listeners\EntrySavedListener',
         ],
+        'App\Events\EntryCreating' => [
+            'App\Listeners\EntryCreatingListener',
+        ],
         'App\Events\EntryDeleting' => [
             'App\Listeners\EntryDeletingListener',
         ],
