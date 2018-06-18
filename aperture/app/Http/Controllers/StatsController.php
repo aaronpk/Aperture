@@ -7,6 +7,10 @@ use App\User, App\Source, App\Channel, App\Entry, App\Media;
 class StatsController extends Controller
 {
 
+  public function __construct() {
+    $this->middleware('munin');
+  }
+
   private function _text($text) {
     return response($text)->header('Content-type', 'text/plain');
   }
