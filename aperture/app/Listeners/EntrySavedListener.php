@@ -150,7 +150,9 @@ class EntrySavedListener implements ShouldQueue
         $resized = false;
 
         // Check if the file exists already
-        if(!Storage::exists($storagefilename) || Storage::lastModified($storagefilename) == 0) {
+        $media = Media::where('filename', $filename)->first();
+        if(!$media) {
+        //if(!Storage::exists($storagefilename) || Storage::lastModified($storagefilename) == 0) {
             $media = new Media();
             $media->original_url = $url;
             $media->filename = $filename;
@@ -196,8 +198,6 @@ class EntrySavedListener implements ShouldQueue
 
             $media->save();
             Log::info("Entry ".$entry->id.": Stored file at url: ".$media->url());
-        } else {
-            $media = Media::where('filename', $filename)->first();
         }
 
         unlink($filedata);
