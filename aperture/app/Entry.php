@@ -4,6 +4,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use DB;
 use App\Events\EntryDeleting;
+use App\Events\EntryCreating;
 
 class Entry extends Model {
 
