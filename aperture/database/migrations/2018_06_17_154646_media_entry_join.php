@@ -33,9 +33,10 @@ class MediaEntryJoin extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('media_entries');
+        Schema::dropIfExists('entry_media');
         Schema::table('media', function (Blueprint $table) {
             $table->integer('entry_id')->default(0);
+            $table->dropIndex('media_filename');
         });
     }
 }
