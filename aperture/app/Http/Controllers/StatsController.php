@@ -51,8 +51,8 @@ entries.type DERIVE
 entries.min 0
 ";
     } else {
-      $entries = Redis::get(env('APP_URL').'::entries');
-      $response = 'entries.value '.$entries;
+      $entries = DB::SELECT('SELECT AUTO_INCREMENT FROM information_schema.tables WHERE table_schema="'.env("DB_DATABASE").'" AND table_name="entries"');
+      $response = 'entries.value '.$entries[0]->AUTO_INCREMENT;
     }
 
     return $this->_text($response);
