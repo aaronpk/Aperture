@@ -46,13 +46,13 @@ graph_args --lower-limit 0
 graph_scale yes
 graph_period hour
 
-entries.label Entries added per hour
-entries.type DERIVE
-entries.min 0
+new_entries.label Entries added per hour
+new_entries.type DERIVE
+new_entries.min 0
 ";
     } else {
       $entries = DB::SELECT('SELECT AUTO_INCREMENT FROM information_schema.tables WHERE table_schema="'.env("DB_DATABASE").'" AND table_name="entries"');
-      $response = 'entries.value '.$entries[0]->AUTO_INCREMENT;
+      $response = 'new_entries.value '.$entries[0]->AUTO_INCREMENT;
     }
 
     return $this->_text($response);
