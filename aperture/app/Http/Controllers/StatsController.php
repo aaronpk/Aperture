@@ -44,13 +44,33 @@ graph_category aperture
 graph_args --lower-limit 0
 graph_scale yes
 
-entries.label Entries
+entries.label New Entries
 entries.type DERIVE
 entries.min 0
 ";
     } else {
       $entries = DB::SELECT('SELECT AUTO_INCREMENT FROM information_schema.tables WHERE table_schema="'.env("DB_DATABASE").'" AND table_name="entries"');
       $response = 'entries.value '.$entries[0]->AUTO_INCREMENT;
+    }
+    return $this->_text($response);
+  }
+
+  public function entries_size() {
+    if(Request::input('mode') == 'config') {
+      $response = "graph_title Aperture Entries
+graph_info The size on disk of entries
+graph_vlabel Entries
+graph_category aperture
+graph_args --lower-limit 0 --base 1024
+graph_scale yes
+
+size.label Size on Disk
+size.type GAUGE
+size.min 0
+";
+    } else {
+      $size = DB::SELECT('SELECT data_length - data_free AS bytes FROM information_schema.tables WHERE table_schema="aperture" AND table_name="entries"');
+      $response .= "size.value ".$size[0]->bytes;
     }
     return $this->_text($response);
   }
