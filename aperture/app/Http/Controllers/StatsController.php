@@ -70,7 +70,7 @@ size.min 0
 ";
     } else {
       $size = DB::SELECT('SELECT data_length - data_free AS bytes FROM information_schema.tables WHERE table_schema="aperture" AND table_name="entries"');
-      $response .= "size.value ".$size[0]->bytes;
+      $response = "size.value ".$size[0]->bytes;
     }
     return $this->_text($response);
   }
