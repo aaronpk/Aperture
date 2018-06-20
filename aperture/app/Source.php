@@ -2,6 +2,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Log;
 
 class Source extends Model {
 
@@ -38,6 +39,7 @@ class Source extends Model {
     ]), [
       'Authorization: Bearer '.env('WATCHTOWER_TOKEN')
     ]);
+    Log::info("Unsubscribed\n".$response['body']);
   }
 
 }

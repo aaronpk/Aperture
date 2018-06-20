@@ -18,7 +18,14 @@ class WebSubReceiverController extends Controller
 
     $source = Source::where('token', $token)->first();
     if(!$source) {
+      Log::warning('Source not found');
       return Response::json(['error'=>'not_found'], 404);
+    }
+
+    if($source->channels()->count() == 0) {
+      Log::warning('This source is not associated with any channels, skipping and unsubscribing');
+      \App\Jobs\UnsubscribeSource::dispatch($source);
+      return Response::json(['result'=>'empty'], 200);
     }
 
     $source_is_empty = $source->entries()->count() == 0;
