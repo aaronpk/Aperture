@@ -27,7 +27,7 @@ class Source extends Model {
     ]), [
       'Authorization: Bearer '.env('WATCHTOWER_TOKEN')
     ]);
-    Log::info("Subscribed to source:".$this->id."\n".$response['body']);
+    Log::info("Subscribed to source:".$this->id." (".parse_url($this->url,PHP_URL_HOST).")\n".$response['body']);
   }
 
   public function unsubscribe() {
@@ -39,7 +39,7 @@ class Source extends Model {
     ]), [
       'Authorization: Bearer '.env('WATCHTOWER_TOKEN')
     ]);
-    Log::info("Unsubscribed from source:".$this->id."\n".$response['body']);
+    Log::info("Unsubscribed from source:".$this->id." (".parse_url($this->url,PHP_URL_HOST).")\n".$response['body']);
   }
 
 }

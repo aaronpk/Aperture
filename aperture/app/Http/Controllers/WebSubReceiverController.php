@@ -23,7 +23,7 @@ class WebSubReceiverController extends Controller
     }
 
     if($source->channels()->count() == 0) {
-      Log::warning('Source:'.$source->id.' is not associated with any channels, skipping and unsubscribing');
+      Log::warning('Source:'.$source->id.' ('.parse_url($source->url,PHP_URL_HOST).') is not associated with any channels, skipping and unsubscribing');
       \App\Jobs\UnsubscribeSource::dispatch($source);
       return Response::json(['result'=>'empty'], 200);
     }
