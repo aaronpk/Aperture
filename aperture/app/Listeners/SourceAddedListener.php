@@ -32,15 +32,7 @@ class SourceAddedListener implements ShouldQueue
 
         // If this was a newly added source (belongs to just one channel), subscribe to updates
         if($event->source->url && $channels->count() == 1) {
-            $http = new \p3k\HTTP();
-            $response = $http->post(env('WATCHTOWER_URL'), http_build_query([
-                'hub.mode' => 'subscribe',
-                'hub.topic' => $event->source->url,
-                'hub.callback' => env('WATCHTOWER_CB').'/websub/source/'.$event->source->token
-            ]), [
-                'Authorization: Bearer '.env('WATCHTOWER_TOKEN')
-            ]);
-            Log::info($response['body']);
+            $event->source->subscribe();
         }
 
         // Add any existing entries to this channel
