@@ -114,12 +114,21 @@ class EntrySavedListener implements ShouldQueue
         return mb_convert_encoding($input, 'HTML-ENTITIES', mb_detect_encoding($input));
     }
 
+    private function _imageProxy($url) {
+      $signature = hash_hmac('sha1', $url, env('IMG_PROXY_KEY'));
+      $proxy = env('IMG_PROXY_URL').$signature.'/'.bin2hex($url);
+      return $proxy;
+    }
+
     private function _download(Entry $entry, $url, $maxSize=false) {
+
+        if(!$entry->source()->download_images || !env('MEDIA_URL'))
+          return $this->_imageProxy($url);
 
         $host = parse_url($url, PHP_URL_HOST);
 
         if($host == parse_url(env('MEDIA_URL'), PHP_URL_HOST))
-            return $url;
+          return $url;
 
         $filedata = tempnam(sys_get_temp_dir(), 'aperture-data');
         $fileheader = tempnam(sys_get_temp_dir(), 'aperture-header');
@@ -212,7 +221,7 @@ class EntrySavedListener implements ShouldQueue
           $entry->media()->attach($media->id);
           return $media;
         } else {
-          return $url;
+          return $this->_imageProxy($url);
         }
     }
 

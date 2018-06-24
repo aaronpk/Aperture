@@ -7,7 +7,7 @@ use Log;
 class Source extends Model {
 
   protected $fillable = [
-    'token', 'url', 'format', 'websub', 'created_by'
+    'token', 'url', 'format', 'websub', 'created_by', 'download_images'
   ];
 
   public function entries() {
