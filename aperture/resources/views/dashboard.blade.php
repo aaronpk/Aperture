@@ -5,7 +5,8 @@
 <div class="container dashboard">
 
   <div class="notification is-info">
-    Thanks for running this pre-release version of Aperture! It's a little sparse around here at the moment, but things mostly work regardless. Feedback is always appreciated! You can contact Aaron at <a href="mailto:aaron@parecki.com">aaron@parecki.com</a> or in the <a href="https://indieweb.org/discuss">IndieWeb chat</a>!
+    Thanks for trying out this beta version of Aperture! This instance will keep posts for 7 days. You should feel free to bookmark or favorite things so that they get permanently saved to your own site!
+    Feedback is always appreciated! If you have any problems, you can file an issue on GitHub, or get in touch with aaronpk via the <a href="https://indieweb.org/discuss">IndieWeb chat</a>!
   </div>
 
   <div class="buttons is-right">
