@@ -149,4 +149,28 @@ disk.min 0
     return $this->_text($response);
   }
 
+  public function proxy_bytes() {
+    if(env('IMG_PROXY_URL')) {
+      if(Request::input('mode') == 'config') {
+        $response = "graph_title Aperture Image Proxy
+graph_info Image proxy bandwidth usage
+graph_vlabel Bytes/Sec
+graph_category aperture
+graph_args --lower-limit 0
+graph_scale yes
+
+bandwidth.label bytes/sec
+bandwidth.type DERIVE
+bandwidth.min 0
+";
+      } else {
+        $stats = file_get_contents(env('IMG_PROXY_URL').'status');
+        if(preg_match('/, (\d+)/', $stats, $match)) {
+          $response = 'bandwidth.value '.$match[1];
+        }
+      }
+      return $this->_text($response);
+    }
+  }
+
 }

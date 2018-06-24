@@ -36,3 +36,4 @@ Route::get('/stats/entries', 'StatsController@entries');
 Route::get('/stats/entries_size', 'StatsController@entries_size');
 Route::get('/stats/sources', 'StatsController@sources');
 Route::get('/stats/media_size', 'StatsController@media_size');
+Route::get('/stats/proxy_bytes', 'StatsController@proxy_bytes');
