@@ -155,6 +155,8 @@ class HomeController extends Controller
       $source->name = Request::input('name') ?: '';
       $source->format = 'apikey';
       $source->created_by = Auth::user()->id;
+      // always download images when creating posts via micropub
+      $source->download_images = true;
       $source->save();
 
       $channel->sources()->attach($source->id, ['created_at'=>date('Y-m-d H:i:s')]);
