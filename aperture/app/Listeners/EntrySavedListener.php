@@ -122,7 +122,7 @@ class EntrySavedListener implements ShouldQueue
 
     private function _download(Entry $entry, $url, $maxSize=false) {
 
-        if(!$entry->source()->download_images || !env('MEDIA_URL'))
+        if(!$entry->source->download_images || !env('MEDIA_URL'))
           return $this->_imageProxy($url);
 
         $host = parse_url($url, PHP_URL_HOST);
