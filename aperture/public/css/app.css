@@ -11516,3 +11516,20 @@ label.panel-block:hover {
   display: none;
 }
 
+.hidden-secret {
+  color: whitesmoke;
+}
+
+.hidden-secret::before {
+  content: "Click to show";
+  color: #777;
+}
+
+.hidden-secret.reveal {
+  color: #777;
+}
+
+.hidden-secret.reveal::before {
+  content: "";
+}
+

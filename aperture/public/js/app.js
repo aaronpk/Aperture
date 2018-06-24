@@ -801,6 +801,10 @@ document.addEventListener('DOMContentLoaded', function () {
     e.preventDefault();
   });
 
+  $(".hidden-secret").click(function () {
+    $(this).addClass("reveal");
+  });
+
   /* add http:// to URL fields on blur */
   /* add http:// to URL fields on blur or when enter is pressed */
   function addDefaultScheme(target) {

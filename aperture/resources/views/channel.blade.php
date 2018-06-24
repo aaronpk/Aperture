@@ -36,7 +36,7 @@
       </div>
 
       @if($source->format == 'apikey')
-        <div><code>{{ $source->token }}</code></div>
+        <div><code class="hidden-secret">{{ $source->token }}</code></div>
         <p class="help">Use this API key to create entries in this channel with a POST request. See <a href="/docs">the documentation</a> for more details.</p>
       @endif
     </div>
@@ -89,6 +89,8 @@
           <p class="help">For your informational purposes only.</p>
         </div>
       </div>
+
+      <p>Adding an API key to the channel allows you to create posts in this channel from other scripts.</p>
 
     </section>
     <footer class="modal-card-foot">
