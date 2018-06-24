@@ -33,7 +33,7 @@ class TrimUserData extends Command
           ->get();
         if(count($entries)) {
           $this->info("  ".$channel->id." ".$channel->name." - removing ".count($entries)." entries");
-          if(!$this->confirm('Continue?')) { die(); }
+          #if(!$this->confirm('Continue?')) { die(); }
           foreach($entries as $entry) {
             $channel->remove_entries([$entry->entry_id]);
           }
