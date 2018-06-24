@@ -20,17 +20,26 @@ class GarbageCollect extends Command
     Entry::select('entries.*')
       ->leftJoin('channel_entry', ['channel_entry.entry_id'=>'entries.id'])
       ->whereNull('channel_entry.id')
-      ->chunk(100, function($entries){
+      ->orderBy('entries.id')
+      ->chunk(1000, function($entries){
 
       $this->info("Processing chunk");
       foreach($entries as $entry) {
         $this->info($entry->id.' '.$entry->created_at.' '.$entry->unique);
         // Delete the model which triggers deleting associated files
+        #if(!$this->confirm('Delete?')) { die(); }
         $entry->delete();
-        #if(!$this->confirm('Continue?')) { die(); }
       }
 
     });
+
+    $this->info("Finding orphaned records in channel_entry..");
+    $records = DB::table('channel_entry')
+      ->leftJoin('entries', ['channel_entry.entry_id'=>'entries.id'])
+      ->whereNull('entries.id')
+      ->get();
+    $this->info("Found ".count($records));
+
 
   }
 
