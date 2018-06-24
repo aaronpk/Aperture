@@ -40,13 +40,13 @@ users.min 0
     if(Request::input('mode') == 'config') {
       $response = "graph_title Aperture New Entries
 graph_info The rate of new entries being added
-graph_vlabel Entries per hour
+graph_vlabel Entries per minute
 graph_category aperture
 graph_args --lower-limit 0
 graph_scale yes
-graph_period hour
+graph_period minute
 
-new_entries.label Entries added per hour
+new_entries.label Entries added per minute
 new_entries.type DERIVE
 new_entries.min 0
 ";
@@ -67,7 +67,7 @@ graph_category aperture
 graph_args --lower-limit 0
 graph_scale yes
 
-entries.label New Entries
+entries.label Entries
 entries.type GAUGE
 entries.min 0
 ";
