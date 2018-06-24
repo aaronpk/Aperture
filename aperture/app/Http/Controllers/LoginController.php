@@ -27,10 +27,12 @@ class LoginController extends Controller
     // Discover the endpoints
     $url = IndieAuth\Client::normalizeMeURL(Request::input('url'));
 
-    $check = User::where('url', $url)->first();
-    if(!$check) {
-      return redirect('login')->with('auth_error', 'invalid url')
-        ->with('auth_error_description', 'Sorry, you do not have an account here');
+    if(env('PUBLIC_ACCESS') == false) {
+      $check = User::where('url', $url)->first();
+      if(!$check) {
+        return redirect('login')->with('auth_error', 'invalid url')
+          ->with('auth_error_description', 'Sorry, you do not have an account here');
+      }
     }
 
     $authorizationEndpoint = IndieAuth\Client::discoverAuthorizationEndpoint($url);
