@@ -56,30 +56,13 @@
   <hr>
 
   <div class="helpsection">
+    <h3 class="subtitle">Get Started</h3>
+
     <p>To use Aperture as your Microsub endpoint, add this HTML to your home page.</p>
 
     <pre><?= htmlspecialchars('<link rel="microsub" href="'.env('APP_URL').'/microsub/'.Auth::user()->id.'">') ?></pre>
 
-    <p>Then choose a <a href="https://indieweb.org/Microsub#Clients">reader</a> and log in, and the reader will find your subscriptions in Aperture.</p>
-
-
-    <h3 class="subtitle">Development</h3>
-
-    <p>To test API calls, you can generate a token from your token endpoint yourself or by using this <a href="https://gimme-a-token.5eb.nl/">access token tool</a>.</p>
-
-    <p>Aperture has implemented the following actions in the <a href="https://indieweb.org/Microsub-spec">Microsub spec</a>:</p>
-
-    <ul class="methods">
-      <li><a href="https://indieweb.org/Microsub-spec#Timelines">GET action=timeline</a> - retrieve the list of items in a channel</li>
-      <li><a href="https://indieweb.org/Microsub-spec#Timelines">POST action=timeline</a> - mark entries as read, or remove an entry from a channel</li>
-      <li><a href="https://indieweb.org/Microsub-spec#Search">POST action=search</a> - search for a new feed to add</li>
-      <li><a href="https://indieweb.org/Microsub-spec#Preview">GET action=preview</a> - preview a feed before following it</li>
-      <li><a href="https://indieweb.org/Microsub-spec#Following">GET action=follow</a> - retrieve the list of feeds followed in a channel</li>
-      <li><a href="https://indieweb.org/Microsub-spec#Following">POST action=follow</a> - follow a new feed in a channel</li>
-      <li><a href="https://indieweb.org/Microsub-spec#Unfollowing">POST action=unfollow</a> - unfollow a feed in a channel (existing items from that feed are left in the channel, like IRC/Slack)</li>
-      <li><a href="https://indieweb.org/Microsub-spec#Channels_2">GET action=channels</a> - retrieve the list of channels for a user</li>
-      <li><a href="https://indieweb.org/Microsub-spec#Channels_2">POST action=channels</a> - create, update, and delete channels, or set the order of the channels</li>
-    </ul>
+    <p>Then choose a <a href="https://indieweb.org/Microsub#Clients">reader</a> and log in, and the reader will find your subscriptions and data in Aperture.</p>
   </div>
 
 </div>

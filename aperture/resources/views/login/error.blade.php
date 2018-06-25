@@ -6,7 +6,7 @@
   <br>
 
   <div class="notification is-danger">
-    <strong>{{ $error }}</strong> 
+    <strong>{{ $error }}</strong>
     <p>{{ $description }}</p>
   </div>
 

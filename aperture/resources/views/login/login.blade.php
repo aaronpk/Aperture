@@ -29,6 +29,10 @@
                         <strong>{{ session('auth_error') }}</strong>
                         <p>{{ session('auth_error_description') }}</p>
                       </div>
+
+                      <div class="content">
+                        <p><a href="/docs" style="text-decoration: underline;">Setup Instructions</a></p>
+                      </div>
                     @endif
 
                     <form method="POST" action="{{ route('login') }}">

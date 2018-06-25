@@ -6,6 +6,8 @@ Route::middleware('web')->group(function(){
     })->name('index');
 
     Route::get('/dashboard', 'HomeController@dashboard')->name('dashboard');
+    Route::get('/docs', 'PublicController@docs')->name('docs');
+    Route::get('/pricing', 'PublicController@pricing')->name('pricing');
 
     Route::get('/settings', 'SettingsController@index')->name('settings');
     Route::post('/settings/save', 'SettingsController@save')->name('settings_save');
