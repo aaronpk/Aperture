@@ -101,7 +101,7 @@
             </div>
           </div>
 
-          <h3 class="subtitle">Use the reader of your choice, or more than one!</h3>
+          <h3 class="subtitle">Aperture makes it easy to get started using Together, Monocle, and more!</h3>
 
           <div class="tile is-ancestor">
             <div class="tile is-4 is-vertical is-parent">
