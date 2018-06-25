@@ -4,9 +4,9 @@
 <section class="section">
 <div class="container dashboard">
 
-  <div class="notification is-info">
-    Thanks for trying out this beta version of Aperture! This instance will keep posts for 7 days. You should feel free to bookmark or favorite things so that they get permanently saved to your own site!
-    Feedback is always appreciated! If you have any problems, you can file an issue on GitHub, or get in touch with aaronpk via the <a href="https://indieweb.org/discuss">IndieWeb chat</a>!
+  <div class="notification is-info content">
+    <p>Thanks for trying out this beta version of Aperture! Currently only the last 7 days of posts are saved. You should feel free to bookmark or favorite things so that they get permanently saved to your own site!</p>
+    <p>Feedback is always appreciated! If you have any problems, you can <a href="https://github.com/aaronpk/Aperture/issues">file an issue</a> on GitHub, or get in touch with aaronpk via the <a href="https://indieweb.org/discuss">IndieWeb chat</a>!</p>
   </div>
 
   <div class="buttons is-right">
