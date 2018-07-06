@@ -12,14 +12,12 @@
 
   <div id="navbar" class="navbar-menu">
     <div class="navbar-start">
-      @auth
-        <a href="{{ route('dashboard') }}" class="navbar-item">Dashboard</a>
-      @endauth
       <a href="{{ route('docs') }}" class="navbar-item">Docs</a>
       <a href="{{ route('pricing') }}" class="navbar-item">Pricing</a>
     </div>
     <div class="navbar-end">
       @auth
+        <a href="{{ route('dashboard') }}" class="navbar-item">Dashboard</a>
         <a href="{{ route('settings') }}" class="navbar-item">Settings</a>
         <a href="{{ route('logout') }}" class="navbar-item">Log Out</a>
       @else
