@@ -166,6 +166,7 @@
                 <option value="photos_videos" {{ $channel->include_only == 'photos_videos' ? 'selected="selected"' : '' }}>Only Photos and Videos</option>
                 <option value="articles" {{ $channel->include_only == 'articles' ? 'selected="selected"' : '' }}>Only Articles</option>
                 <option value="checkins" {{ $channel->include_only == 'checkins' ? 'selected="selected"' : '' }}>Only Checkins</option>
+                <option value="reposts" {{ $channel->include_only == 'reposts' ? 'selected="selected"' : '' }}>Only Reposts</option>
               </select>
             </div>
 

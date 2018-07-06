@@ -115,6 +115,8 @@ class Channel extends Model {
           $shouldAdd = $entry->post_type() == 'article'; break;
         case 'checkins':
           $shouldAdd = $entry->post_type() == 'checkin'; break;
+        case 'reposts':
+          $shouldAdd = $entry->post_type() == 'repost'; break;
       }
     }
 
