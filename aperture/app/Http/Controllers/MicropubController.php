@@ -85,10 +85,12 @@ class MicropubController extends Controller
       $new = true;
     }
 
+    if(!isset($item['published']))
+      $item['published'] = date('c');
+
     $entry->data = json_encode($item, JSON_PRETTY_PRINT+JSON_UNESCAPED_SLASHES);
 
-    if(isset($item['published']))
-      $entry->published = date('Y-m-d H:i:s', strtotime($item['published']));
+    $entry->published = date('Y-m-d H:i:s', strtotime($item['published']));
 
     $entry->save();
 
