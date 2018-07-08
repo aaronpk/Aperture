@@ -38,7 +38,7 @@
                 <div class="select">
                   <select name="channel">
                     @foreach($channels as $channel)
-                      <option value="{{ $channel->id }}">{{ $channel->name }}</option>
+                      <option value="{{ $channel->id }}"{{ $requested_channel == $channel->id ? ' selected="selected"' : '' }}>{{ $channel->name }}</option>
                     @endforeach
                   </select>
                 </div>

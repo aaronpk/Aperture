@@ -94,6 +94,32 @@ class IndieAuthController extends Controller
       ]), 400);
     }
 
+    // If they entered a specific IndieAuth URL in the login form, select that channel in the dropdown
+    $requested_channel = false;
+    if($me = Request::input('me')) {
+      if(preg_match('/\/([a-zA-Z0-9_]+)-([a-zA-Z0-9_]+)-([a-zA-Z0-9_]+)/', $me, $match)) {
+        $user_id = \p3k\b60to10($match[1]);
+        $channel_id = \p3k\b60to10($match[2]);
+
+        if($user_id != Auth::user()->id) {
+          return response(view('oauth/error', [
+            'error' => 'invalid URL',
+            'description' => 'The URL you entered does not belong to your Aperture account ('.$match[1].').'
+          ]), 400);
+        }
+
+        $channel = Auth::user()->channels()->where('id', $channel_id)->first();
+        if(!$channel) {
+          return response(view('oauth/error', [
+            'error' => 'invalid URL',
+            'description' => 'The URL you entered does not belong to a channel in your Aperture account.'
+          ]), 400);
+        }
+
+        $requested_channel = $channel->id;
+      }
+    }
+
     $channels = Auth::user()->channels()->get();
 
     return view('oauth/authorize', [
@@ -108,6 +134,7 @@ class IndieAuthController extends Controller
       'state' => $state,
       'create' => $create,
       'channels' => $channels,
+      'requested_channel' => $requested_channel,
     ]);
   }
 
