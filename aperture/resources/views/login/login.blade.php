@@ -44,6 +44,8 @@
                             </div>
                         </div>
 
+                        <input type="hidden" name="return" value="{{ $return }}">
+
                         <button type="submit" class="button is-primary">Log In</button>
                     </form>
 

@@ -10,7 +10,9 @@ class LoginController extends Controller
 {
 
   public function login() {
-    return view('login/login');
+    return view('login/login', [
+      'return' => Request::input('return')
+    ]);
   }
 
   public function logout() {
@@ -58,6 +60,7 @@ class LoginController extends Controller
       'token_endpoint' => $tokenEndpoint,
       'micropub_endpoint' => $micropubEndpoint,
       'indieauth_url' => $url,
+      'redirect_after_login' => Request::input('return'),
     ]);
 
     $redirect_uri = route('login_callback');
