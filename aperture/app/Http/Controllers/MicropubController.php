@@ -2,7 +2,7 @@
 namespace App\Http\Controllers;
 
 use Request, Response, DB, Log, Auth;
-use App\User, App\Source, App\Channel, App\Entry, App\ChannelToken;
+use App\User, App\Source, App\Channel, App\Entry, App\Media, App\ChannelToken;
 use App\Events\EntrySaved;
 use p3k\XRay;
 
@@ -17,6 +17,14 @@ class MicropubController extends Controller
         'error' => 'not_found',
         'error_description' => 'Channel not found'
       ], 404);
+    }
+  }
+
+  public function get() {
+    if(Request::input('q') == 'config') {
+      return response()->json([
+        'media-endpoint' => env('APP_URL').'/micropub/media'
+      ]);
     }
   }
 
@@ -103,11 +111,41 @@ class MicropubController extends Controller
     ], 201)->header('Location', $entry->permalink());
   }
 
-  public function entry(Request $request, $source_id, $unique) {
-    // TODO: Should this require authentication?
+  public function media() {
+    $source = $this->_getRequestSource();
 
+    if(get_class($source) == 'Illuminate\Http\JsonResponse')
+      return $source;
+
+    if(!Request::hasFile('file')) {
+      return response()->json([
+        'error' => 'invalid_request',
+        'error_description' => 'No file was in the request'
+      ], 400);
+    }
+
+    $file = Request::file('file');
+
+    $media = Media::createFromUpload($file->path());
+
+    if(!$media) {
+      return response()->json([
+        'error' => 'invalid_request',
+        'error_description' => 'There was a problem uploading the file'
+      ], 400);
+    }
+
+    $url = $media->url();
+
+    return response()->json([
+      'url' => $url,
+    ], 201)->header('Location', $url);
+  }
+
+  public function entry(Request $request, $source_id, $unique) {
     $entry = Entry::where('source_id', $source_id)->where('unique', $unique)->first();
 
+    // TODO: Should this require authentication?
     return Response::json($entry->to_array());
   }
 

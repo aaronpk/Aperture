@@ -111,7 +111,7 @@ class EntrySavedListener implements ShouldQueue
     }
 
     private static function toHtmlEntities($input) {
-        return mb_convert_encoding($input, 'HTML-ENTITIES', mb_detect_encoding($input));
+      return mb_convert_encoding($input, 'HTML-ENTITIES', mb_detect_encoding($input));
     }
 
     private function _imageProxy($url) {
@@ -121,133 +121,16 @@ class EntrySavedListener implements ShouldQueue
     }
 
     private function _download(Entry $entry, $url, $maxSize=false) {
+      if(!$entry->source->download_images || !env('MEDIA_URL'))
+        return $this->_imageProxy($url);
 
-        if(!$entry->source->download_images || !env('MEDIA_URL'))
-          return $this->_imageProxy($url);
+      $media = Media::createFromURL($url, $maxSize);
 
-        $host = parse_url($url, PHP_URL_HOST);
-
-        if($host == parse_url(env('MEDIA_URL'), PHP_URL_HOST))
-          return $url;
-
-        $filedata = tempnam(sys_get_temp_dir(), 'aperture-data');
-        $fileheader = tempnam(sys_get_temp_dir(), 'aperture-header');
-        $resized = false;
-
-        $fd = fopen($filedata, 'w');
-        $fh = fopen($fileheader, 'w');
-
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_FILE, $fd);
-        curl_setopt($ch, CURLOPT_WRITEHEADER, $fh);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, 4000);
-        curl_setopt($ch, CURLOPT_TIMEOUT_MS, 10000);
-        curl_exec($ch);
-
-        fclose($fd);
-        fclose($fh);
-
-        $media = false;
-
-        if(!curl_errno($ch)) {
-          if(curl_getinfo($ch, CURLINFO_HTTP_CODE) == 200) {
-            $hash = hash_file('sha256', $filedata);
-            $ext = $this->_file_extension($filedata);
-
-            $filename = $host.'/'.$hash.$ext;
-            $storagefilename = 'media/'.$filename;
-
-            // Check if the file exists already
-            $media = Media::where('filename', $filename)->first();
-            if(!$media) {
-            //if(!Storage::exists($storagefilename) || Storage::lastModified($storagefilename) == 0) {
-                $media = new Media();
-                $media->original_url = substr($url, 0, 1024);
-                $media->filename = $filename;
-                $media->hash = $hash;
-                $media->bytes = filesize($filedata);
-
-                // Resize and store a copy
-                if(in_array($ext, ['.jpg','.png','.gif']) && $maxSize) {
-                    $fp = fopen($filedata, 'r');
-                    $im = new Imagick();
-                    $im->readImageFile($fp);
-
-                    $d = $im->getImageGeometry();
-                    $media->width = $d['width'];
-                    $media->height = $d['height'];
-
-                    switch($ext) {
-                      case '.jpg':
-                        $im->setImageFormat('jpg');
-                        break;
-                      case '.gif':
-                      case '.png':
-                        $im->setImageFormat('png');
-                        $ext = '.png';
-                        break;
-                    }
-                    $im->setImageCompressionQuality(85);
-
-                    $im->setGravity(\Imagick::GRAVITY_CENTER);
-                    $im->cropThumbnailImage($maxSize, $maxSize);
-
-                    $resized = tempnam(sys_get_temp_dir(), 'aperture-resized-').$ext;
-                    $im->writeImage($resized);
-                    $im->destroy();
-                    $fp = fopen($resized, 'r');
-                } else {
-                    $fp = fopen($filedata, 'r');
-                }
-
-                Storage::makeDirectory(dirname($storagefilename));
-                Storage::put($storagefilename, $fp);
-                fclose($fp);
-
-                $media->save();
-                Log::info("Entry ".$entry->id.": Stored file at url: ".$media->url());
-            }
-          }
-        }
-
-        unlink($filedata);
-        unlink($fileheader);
-        if($resized)
-          unlink($resized);
-
-        if($media) {
-          $entry->media()->attach($media->id);
-          return $media;
-        } else {
-          return $this->_imageProxy($url);
-        }
-    }
-
-    private function _file_extension($filename) {
-        // Detect the file extension
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $mimetype = finfo_file($finfo, $filename);
-
-        if($mimetype) {
-            if(preg_match('/jpeg/', $mimetype))
-                $ext = '.' . str_replace('jpeg','jpg',explode('/', $mimetype)[1]);
-            elseif(preg_match('/gif/', $mimetype))
-                $ext = '.gif';
-            elseif(preg_match('/png/', $mimetype))
-                $ext = '.png';
-            elseif(preg_match('/svg/', $mimetype))
-                $ext = '.svg';
-            elseif($mimetype == 'audio/mpeg')
-                $ext = '.mp3';
-            elseif($mimetype == 'video/mp4')
-                $ext = '.mp4';
-            else
-                $ext = '.'.explode('/', $mimetype)[1];
-        } else {
-            $ext = '';
-        }
-        return $ext;
+      if($media) {
+        $entry->media()->attach($media->id);
+        return $media;
+      } else {
+        return $this->_imageProxy($url);
+      }
     }
 }
