@@ -28,9 +28,18 @@ Route::middleware('web')->group(function(){
     Route::get('/logout', 'LoginController@logout')->name('logout');
     Route::post('/login', 'LoginController@start');
     Route::get('/login/callback', 'LoginController@callback')->name('login_callback');
+
+    Route::get('/auth', 'IndieAuthController@auth_get')->name('auth_get');
+    Route::post('/auth/process', 'IndieAuthController@auth_process')->name('auth_process');
+
+    Route::get('/{user_b60}-{channel_b60}-{source_b60}', 'IndieAuthController@profile')->name('profile_url');
+
+    Route::get('/entry/{source_id}/{entry}', 'MicropubController@entry')->name('entry');
 });
 
-Route::get('/entry/{source_id}/{entry}', 'MicropubController@entry')->name('entry');
+// No cookies on these routes since they are used by API clients
+Route::post('/auth', 'IndieAuthController@auth_post')->name('auth_post');
+Route::post('/token', 'IndieAuthController@token_post')->name('token_post');
 
 Route::get('/stats/users', 'StatsController@users');
 Route::get('/stats/new_entries', 'StatsController@new_entries');

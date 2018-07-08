@@ -51,6 +51,12 @@ class VerifyChannelApiKey
                 if(!$user) {
                     return Response::json(['error'=>'not_found'], 404);
                 }
+
+                // If this source is in only one channel, add the channel_id to the token data too
+                if($source->channels()->count() == 1) {
+                  $token_data['channel_id'] = $source->channels()->first()->id;
+                }
+
             } else {
                 return Response::json(['error'=>'forbidden'], 403);
             }

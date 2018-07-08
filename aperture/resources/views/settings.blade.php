@@ -6,6 +6,8 @@
 
   <h2 class="title">Settings</h2>
 
+  <p>Logged in as {{ Auth::user()->url }}</p>
+
   @if(session('settings'))
     <div class="notification is-primary">
       {{ session('settings') }}

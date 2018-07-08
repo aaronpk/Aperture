@@ -11,6 +11,7 @@
     <title>{{ env('APP_NAME') }}</title>
 
     @include('components/favicon')
+    @yield('headtags')
 
     <script defer src="/font-awesome/js/fontawesome-all.js"></script>
 
