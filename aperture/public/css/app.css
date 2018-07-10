@@ -11533,3 +11533,20 @@ label.panel-block:hover {
   content: "";
 }
 
+/* Sticky Footer */
+
+html {
+  min-height: 100%;
+  position: relative;
+}
+
+body {
+  margin-bottom: 14rem;
+}
+
+footer.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
