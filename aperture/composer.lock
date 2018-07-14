@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "ec2625f1de25a784f96c4805ac10c446",
+    "content-hash": "991d7be86366ae0673d5dcdb02153113",
     "packages": [
         {
             "name": "cebe/markdown",
@@ -1995,16 +1995,16 @@
         },
         {
             "name": "p3k/xray",
-            "version": "v1.4.35",
+            "version": "v1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aaronpk/XRay.git",
-                "reference": "70f157692615568f6f8e0e6295bb496eab03e7a9"
+                "reference": "38d307de1ca4aba10ff73c4ea030c5c6605c8a10"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aaronpk/XRay/zipball/70f157692615568f6f8e0e6295bb496eab03e7a9",
-                "reference": "70f157692615568f6f8e0e6295bb496eab03e7a9",
+                "url": "https://api.github.com/repos/aaronpk/XRay/zipball/38d307de1ca4aba10ff73c4ea030c5c6605c8a10",
+                "reference": "38d307de1ca4aba10ff73c4ea030c5c6605c8a10",
                 "shasum": ""
             },
             "require": {
@@ -2040,7 +2040,7 @@
             ],
             "description": "X-Ray returns structured data from any URL",
             "homepage": "https://github.com/aaronpk/XRay",
-            "time": "2018-07-14T18:09:18+00:00"
+            "time": "2018-07-14T19:05:41+00:00"
         },
         {
             "name": "paragonie/random_compat",
