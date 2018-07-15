@@ -84,7 +84,7 @@ class EntrySavedListener implements ShouldQueue
                 foreach($xpath->query('//img') as $el) {
                     $src = ''.$el->getAttribute('src');
                     if($src) {
-                        Log::info('Found img in html: '.$src);
+                        #Log::info('Found img in html: '.$src);
                         $file = $this->_download($event->entry, $src);
                         $map[$src] = is_string($file) ? $file : $file->url();
                     }
@@ -115,8 +115,11 @@ class EntrySavedListener implements ShouldQueue
     }
 
     private function _imageProxy($url) {
+      $hex = bin2hex($url);
+      if(strlen($hex) > 255)
+        return $url;
       $signature = hash_hmac('sha1', $url, env('IMG_PROXY_KEY'));
-      $proxy = env('IMG_PROXY_URL').$signature.'/'.bin2hex($url);
+      $proxy = env('IMG_PROXY_URL').$signature.'/'.$hex;
       return $proxy;
     }
 
