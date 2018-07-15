@@ -126,7 +126,7 @@ class EntrySavedListener implements ShouldQueue
 
       $media = Media::createFromURL($url, $maxSize);
 
-      if($media) {
+      if($media && is_object($media)) {
         $entry->media()->attach($media->id);
         return $media;
       } else {
