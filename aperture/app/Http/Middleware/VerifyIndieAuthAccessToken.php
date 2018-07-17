@@ -59,7 +59,10 @@ class VerifyIndieAuthAccessToken
                         'channel_id' => $channel_token->channel->id
                     ];
                 } else {
-                    return Response::json(['error'=>'forbidden'], 403);
+                    return Response::json([
+                        'error' => 'forbidden',
+                        'error_description' => 'This token was issued to a different user'
+                    ], 403);
                 }
             } else {
                 $http = new HTTP();
@@ -70,7 +73,15 @@ class VerifyIndieAuthAccessToken
 
                 // The token endpoint returns 200 for a valid token
                 if($token_response['code'] != 200) {
-                    return Response::json(['error'=>'forbidden'], 403);
+                    return Response::json([
+                        'error' => 'forbidden',
+                        'error_description' => 'The token endpoint could not verify this access token',
+                        'token_endpoint' => [
+                            'url' => $user->token_endpoint,
+                            'code' => $token_response['code'],
+                            'response' => $token_response['body'],
+                        ]
+                    ], 403);
                 }
 
                 // Check that the user in the token matches what we expect
