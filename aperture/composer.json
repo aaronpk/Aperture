@@ -11,12 +11,12 @@
         "indieauth/client": ">=0.4.1",
         "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0",
-        "mf2/mf2": "v0.4.4-alpha",
+        "mf2/mf2": "^0.4",
         "mnabialek/laravel-sql-logger": "^1.1",
         "p3k/http": ">=0.1.5",
         "p3k/micropub": ">=0.0.2",
         "p3k/utils": ">=1.0",
-        "p3k/xray": ">=1.5.0",
+        "p3k/xray": ">=1.6.6",
         "predis/predis": "^1.1"
     },
     "require-dev": {

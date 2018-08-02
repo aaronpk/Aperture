@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "991d7be86366ae0673d5dcdb02153113",
+    "content-hash": "d4b3297c3d23d4c41d5501dc790023f8",
     "packages": [
         {
             "name": "cebe/markdown",
@@ -1435,16 +1435,16 @@
         },
         {
             "name": "mf2/mf2",
-            "version": "v0.4.4-alpha",
+            "version": "v0.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/indieweb/php-mf2.git",
-                "reference": "e8da04f93d548d26287a8980eca4216639cbc61d"
+                "reference": "35fee8b6481695438a44f336534b4cd782bcd518"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/indieweb/php-mf2/zipball/e8da04f93d548d26287a8980eca4216639cbc61d",
-                "reference": "e8da04f93d548d26287a8980eca4216639cbc61d",
+                "url": "https://api.github.com/repos/indieweb/php-mf2/zipball/35fee8b6481695438a44f336534b4cd782bcd518",
+                "reference": "35fee8b6481695438a44f336534b4cd782bcd518",
                 "shasum": ""
             },
             "require": {
@@ -1487,7 +1487,7 @@
                 "parser",
                 "semantic"
             ],
-            "time": "2018-03-29T20:48:28+00:00"
+            "time": "2018-08-02T17:12:58+00:00"
         },
         {
             "name": "mnabialek/laravel-sql-logger",
@@ -1995,16 +1995,16 @@
         },
         {
             "name": "p3k/xray",
-            "version": "v1.5.1",
+            "version": "v1.6.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aaronpk/XRay.git",
-                "reference": "b074d652e0d1b390492d11ce6a1b2d9e343b93b0"
+                "reference": "feee49364bd943a17583e6bf9ae0b705da728b9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aaronpk/XRay/zipball/b074d652e0d1b390492d11ce6a1b2d9e343b93b0",
-                "reference": "b074d652e0d1b390492d11ce6a1b2d9e343b93b0",
+                "url": "https://api.github.com/repos/aaronpk/XRay/zipball/feee49364bd943a17583e6bf9ae0b705da728b9e",
+                "reference": "feee49364bd943a17583e6bf9ae0b705da728b9e",
                 "shasum": ""
             },
             "require": {
@@ -2014,7 +2014,7 @@
                 "facebook/graph-sdk": "^5.5",
                 "indieweb/link-rel-parser": "0.1.*",
                 "masterminds/html5": "^2.3",
-                "mf2/mf2": "0.4.4-alpha",
+                "mf2/mf2": "^0.4",
                 "p3k/http": ">=0.1.7",
                 "p3k/picofeed": ">=0.1.38",
                 "p3k/timezone": "*"
@@ -2040,7 +2040,7 @@
             ],
             "description": "X-Ray returns structured data from any URL",
             "homepage": "https://github.com/aaronpk/XRay",
-            "time": "2018-07-15T23:12:29+00:00"
+            "time": "2018-08-02T17:17:19+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -5104,9 +5104,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "mf2/mf2": 15
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
