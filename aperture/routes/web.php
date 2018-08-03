@@ -41,6 +41,8 @@ Route::middleware('web')->group(function(){
 Route::post('/auth', 'IndieAuthController@auth_post')->name('auth_post');
 Route::post('/token', 'IndieAuthController@token_post')->name('token_post');
 
+Route::post('/api/register', 'LoginController@api_register');
+
 Route::get('/stats/users', 'StatsController@users');
 Route::get('/stats/new_entries', 'StatsController@new_entries');
 Route::get('/stats/entries', 'StatsController@entries');

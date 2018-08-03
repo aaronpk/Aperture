@@ -5,6 +5,7 @@ use Request, DB;
 use Auth;
 use IndieAuth;
 use App\User;
+use App\Jobs\VerifyAPIRegistration;
 
 class LoginController extends Controller
 {
@@ -145,6 +146,29 @@ class LoginController extends Controller
         'description' => 'The authoriation code was not able to be verified'
       ]);
     }
+  }
+
+  public function api_register() {
+    if(env('PUBLIC_ACCESS') == false) {
+      return 'This server does not allow public registrations';
+    }
+
+    /*
+      Inputs:
+      * code
+      * site
+      * verification_endpoint
+
+      A site like a WordPress site can send a POST request here to register for an account.
+      The "site" URL will be used as the identity.
+
+      Aperture will send the code and a challenge to the verification endpoint in a POST,
+      and expects a response with just the challenge string. Aperture will then create
+      the account, and send a second POST request to the verification endpoint with
+      the URL of the Microsub endpoint created for the user.
+    */
+
+    VerifyAPIRegistration::dispatch(Request::input('site'), Request::input('code'), Request::input('verification_endpoint'), Request::input('via'));
   }
 
 }
