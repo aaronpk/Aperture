@@ -87,6 +87,7 @@ class EntrySavedListener implements ShouldQueue
                         #Log::info('Found img in html: '.$src);
                         $file = $this->_download($event->entry, $src);
                         $map[$src] = is_string($file) ? $file : $file->url();
+                        $modified = $modified || ($src != $map[$src]);
                     }
                 }
             }
