@@ -31,9 +31,9 @@ class Media extends Model {
     if($host == parse_url(env('MEDIA_URL'), PHP_URL_HOST))
       return $url;
 
+    @mkdir(sys_get_temp_dir().'/aperture', 0755);
     $filedata = tempnam(sys_get_temp_dir().'/aperture', 'file-data');
     $fileheader = tempnam(sys_get_temp_dir().'/aperture', 'file-header');
-    @mkdir(sys_get_temp_dir().'/aperture', 0755);
 
     $fd = fopen($filedata, 'w');
     $fh = fopen($fileheader, 'w');
