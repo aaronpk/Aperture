@@ -14,7 +14,7 @@ class WebSubReceiverController extends Controller
   }
 
   public function source_callback($token) {
-    Log::info('WebSub callback: '.$token);
+    #Log::info('WebSub callback: '.$token);
 
     $source = Source::where('token', $token)->first();
     if(!$source) {
