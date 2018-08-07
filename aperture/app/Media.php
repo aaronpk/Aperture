@@ -51,9 +51,12 @@ class Media extends Model {
     fclose($fh);
 
     $media = false;
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-    if(!curl_errno($ch) && curl_getinfo($ch, CURLINFO_HTTP_CODE) == 200) {
+    if(!curl_errno($ch) && $code == 200) {
       $media = self::_createFromFile($url, $filedata, $maxSize);
+    } else {
+      Log::info('Media file '.$url.' returned '.$code);
     }
 
     unlink($filedata);
@@ -113,7 +116,7 @@ class Media extends Model {
           $im->setGravity(\Imagick::GRAVITY_CENTER);
           $im->cropThumbnailImage($maxSize, $maxSize);
 
-          $resized = tempnam(sys_get_temp_dir(), 'aperture-resized-').$ext;
+          $resized = tempnam(sys_get_temp_dir().'/aperture', 'resized-').$ext;
           $im->writeImage($resized);
           $im->destroy();
           $fp = fopen($resized, 'r');
@@ -129,7 +132,7 @@ class Media extends Model {
         unlink($resized);
 
       $media->save();
-      Log::info("Stored file at url: ".$media->url());
+      Log::info("Stored file ".$url." at url: ".$media->url());
     }
     return $media;
   }

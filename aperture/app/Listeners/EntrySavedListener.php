@@ -133,6 +133,7 @@ class EntrySavedListener implements ShouldQueue
         $entry->media()->attach($media->id);
         return $media;
       } else {
+        Log::info('Failed to download file, returning proxy URL instead');
         return $this->_imageProxy($url);
       }
     }
