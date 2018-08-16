@@ -30,7 +30,7 @@ class LoginController extends Controller
     // Discover the endpoints
     $url = Request::input('url');
     $url = IndieAuth\Client::normalizeMeURL($url);
-    $url = self::resolveMeURL($url); // follows redirects and uses the canonical one
+    $url = IndieAuth\Client::resolveMeURL($url); // follows redirects and uses the canonical one
 
     if(env('PUBLIC_ACCESS') == false) {
       $check = User::where('url', $url)->first();
