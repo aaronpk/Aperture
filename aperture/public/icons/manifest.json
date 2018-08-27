@@ -1,6 +1,7 @@
 {
-    "name": "",
-    "short_name": "",
+    "name": "Aperture",
+    "short_name": "Aperture",
+    "description": "Aperture is a Microsub server",
     "icons": [
         {
             "src": "/icons/android-chrome-192x192.png",
@@ -12,8 +13,5 @@
             "sizes": "512x512",
             "type": "image/png"
         }
-    ],
-    "theme_color": "#ffffff",
-    "background_color": "#ffffff",
-    "display": "standalone"
+    ]
 }
