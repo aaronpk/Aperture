@@ -26,8 +26,13 @@ class MicrosubController extends Controller
 
   private function _verifyScopeForAction($action) {
     $expect = self::_actions()[$action];
-    if($expect)
-      return in_array($expect, Request::get('token_data')['scope']);
+    if($expect) {
+      $tokenData = Request::get('token_data');
+      if(isset($tokenData['scope']) && is_array($tokenData['scope']))
+        return in_array($expect, $tokenData['scope']);
+      else
+        return false;
+    }
     else
       return true;
   }
