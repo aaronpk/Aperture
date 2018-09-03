@@ -1995,16 +1995,16 @@
         },
         {
             "name": "p3k/xray",
-            "version": "v1.6.8",
+            "version": "v1.6.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aaronpk/XRay.git",
-                "reference": "55df9053ee35b1e1bd68607f2e6fdfa7bf4e6893"
+                "reference": "8b4a38cef75d73c7826ea38e7d08d09e96279564"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aaronpk/XRay/zipball/55df9053ee35b1e1bd68607f2e6fdfa7bf4e6893",
-                "reference": "55df9053ee35b1e1bd68607f2e6fdfa7bf4e6893",
+                "url": "https://api.github.com/repos/aaronpk/XRay/zipball/8b4a38cef75d73c7826ea38e7d08d09e96279564",
+                "reference": "8b4a38cef75d73c7826ea38e7d08d09e96279564",
                 "shasum": ""
             },
             "require": {
@@ -2040,7 +2040,7 @@
             ],
             "description": "X-Ray returns structured data from any URL",
             "homepage": "https://github.com/aaronpk/XRay",
-            "time": "2018-08-24T14:57:27+00:00"
+            "time": "2018-08-30T20:12:41+00:00"
         },
         {
             "name": "paragonie/random_compat",
