@@ -52,7 +52,7 @@ class EntrySavedListener implements ShouldQueue
             if(!is_array($data['video']))
                 $data['video'] = [$data['video']];
             foreach($data['video'] as $i=>$video) {
-                $file = $this->_download($event->entry, $video);
+                $file = $this->_download($event->entry, $video, false, false);
                 $url = is_string($file) ? $file : $file->url();
                 $modified = $modified || ($url != $video);
                 $data['video'][$i] = $url;
@@ -63,7 +63,7 @@ class EntrySavedListener implements ShouldQueue
             if(!is_array($data['audio']))
                 $data['audio'] = [$data['audio']];
             foreach($data['audio'] as $i=>$audio) {
-                $file = $this->_download($event->entry, $audio);
+                $file = $this->_download($event->entry, $audio, false, false);
                 $url = is_string($file) ? $file : $file->url();
                 $modified = $modified || ($url != $audio);
                 $data['audio'][$i] = $url;
@@ -124,9 +124,13 @@ class EntrySavedListener implements ShouldQueue
       return $proxy;
     }
 
-    private function _download(Entry $entry, $url, $maxSize=false) {
-      if(!$entry->source->download_images || !env('MEDIA_URL'))
-        return $this->_imageProxy($url);
+    private function _download(Entry $entry, $url, $maxSize=false, $proxy=true) {
+      if(!$entry->source->download_images || !env('MEDIA_URL')) {
+        if($proxy)
+          return $this->_imageProxy($url);
+        else
+          return $url;
+      }
 
       $media = Media::createFromURL($url, $maxSize);
 
@@ -135,7 +139,10 @@ class EntrySavedListener implements ShouldQueue
         return $media;
       } else {
         Log::info('Failed to download file, returning proxy URL instead');
-        return $this->_imageProxy($url);
+        if($proxy)
+          return $this->_imageProxy($url);
+        else
+          return $url;
       }
     }
 }
