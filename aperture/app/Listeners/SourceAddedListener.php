@@ -26,9 +26,9 @@ class SourceAddedListener implements ShouldQueue
      */
     public function handle(SourceAdded $event)
     {
-        Log::info("Source added: ".$event->source->url." to channel: ".$event->channel->name);
+        Log::info("[".$event->source->url."] Source added to channel: ".$event->channel->name);
         $channels = $event->source->channels();
-        Log::info("Source now belongs to ".$channels->count()." channels");
+        Log::info("[".$event->source->url."] Source now belongs to ".$channels->count()." channels");
 
         // If this was a newly added source (belongs to just one channel), subscribe to updates
         if($event->source->url && $channels->count() == 1) {
@@ -36,7 +36,7 @@ class SourceAddedListener implements ShouldQueue
         }
 
         // Add any existing entries to this channel
-        Log::info("This source has ".($event->source->is_new ? 'no' : 'some')." existing entries. Adding to channel ".$event->channel->id);
+        Log::info("[".$event->source->url."] This source has ".($event->source->is_new ? 'no' : 'some')." existing entries. Adding to channel ".$event->channel->id);
         $added = 0;
         if($event->source->is_new == false) {
             foreach($event->source->entries()->orderByDesc('created_at')->limit(100)->get() as $i=>$entry) {
@@ -57,6 +57,6 @@ class SourceAddedListener implements ShouldQueue
                 }
             }
         }
-        Log::info("Added $added matching entries to channel");
+        Log::info("[".$event->source->url."] Added $added matching entries to channel");
     }
 }
