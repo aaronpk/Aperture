@@ -53,6 +53,7 @@ class HomeController extends Controller
         $source->url = Request::input('url');
         $source->format = Request::input('format');
         $source->token = str_random(32);
+        $source->is_new = true;
         $source->save();
       }
 

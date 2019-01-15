@@ -549,6 +549,7 @@ class MicrosubController extends Controller
       $source->created_by = Auth::user()->id;
       $source->url = Request::input('url');
       $source->token = str_random(32);
+      $source->is_new = true;
       $source->save();
     }
 

@@ -97,6 +97,11 @@ class MicropubController extends Controller
     event(new EntrySaved($entry));
 
     if($new) {
+      if($source->is_new == true) {
+        $source->is_new = false;
+        $source->save();
+      }
+
       Log::info("Adding entry ".$entry->unique." to channels");
       foreach($source->channels()->get() as $channel) {
         Log::info("  Adding to channel #".$channel->id);

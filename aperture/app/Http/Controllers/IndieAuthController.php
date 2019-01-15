@@ -286,6 +286,7 @@ class IndieAuthController extends Controller
       $source->name = $data['client_id'];
       $source->format = 'apikey';
       $source->created_by = $user->id;
+      $source->is_new = true;
       // always download images when creating posts via micropub
       $source->download_images = true;
       $source->save();
