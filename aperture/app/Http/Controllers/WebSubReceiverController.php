@@ -28,7 +28,7 @@ class WebSubReceiverController extends Controller
       return Response::json(['result'=>'empty'], 200);
     }
 
-    $source_is_empty = $source->entries()->count() == 0;
+    $source_is_empty = $source->is_new;
 
     $content_type = Request::header('Content-Type');
     $body = Request::getContent();
@@ -37,6 +37,8 @@ class WebSubReceiverController extends Controller
     $parsed = $xray->parse($source->url, $body, ['expect'=>'feed']);
 
     if($parsed && isset($parsed['data']['type']) && $parsed['data']['type'] == 'feed') {
+
+      $new_entries = 0;
 
       // Check each entry in the feed to see if we've already seen it
       // Add new entries to any channels that include this source
@@ -62,9 +64,10 @@ class WebSubReceiverController extends Controller
           $entry = new Entry;
           $entry->source_id = $source->id;
           $entry->unique = $unique;
-          $is_new = true;
+          $entry_is_new = true;
+          $new_entries++;
         } else {
-          $is_new = false;
+          $entry_is_new = false;
           $hash = md5($data);
         }
 
@@ -74,12 +77,12 @@ class WebSubReceiverController extends Controller
         if(isset($item['published']))
           $entry->published = date('Y-m-d H:i:s', strtotime($item['published']));
 
-        if($is_new || md5($entry->data) != $hash) {
+        if($entry_is_new || md5($entry->data) != $hash) {
           $entry->save();
           event(new EntrySaved($entry));
         }
 
-        if($is_new) {
+        if($entry_is_new) {
           Log::info("Adding entry ".$entry->unique." to channels");
           // Loop through each channel associated with this source and add the entry
           foreach($source->channels()->get() as $channel) {
@@ -110,6 +113,12 @@ class WebSubReceiverController extends Controller
           #Log::info("Already seen this item");
         }
 
+      }
+
+      if($new_entries > 0 && $source->is_new) {
+        // Mark the source as no longer new if we added any entries
+        $source->is_new = false;
+        $source->save();
       }
 
     } else {
