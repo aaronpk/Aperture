@@ -91,6 +91,11 @@ class HomeController extends Controller
 
       $channel->default_destination = Request::input('default_destination') ?: '';
 
+      // Users with an unlimited retention policy can override per channel
+      if(Auth::user()->retention_days == 0) {
+        $channel->retention_days = Request::input('retention_days') ?: 0;
+      }
+
       $channel->save();
 
       return response()->json([

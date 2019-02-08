@@ -227,6 +227,21 @@
         </div>
         @endif
 
+        @if(Auth::user()->retention_days == 0)
+        <div class="field">
+          <div class="control">
+            <label class="label">Days to Keep Entries</label>
+            <div class="select">
+              <select id="retention-days">
+                @foreach([0,1,2,3,7,14,30] as $day)
+                  <option value="{{ $day }}" {{ $channel->retention_days == $day ? 'selected="selected"' : '' }}>{{ $day == '0' ? 'Unlimited' : $day }}</option>
+                @endforeach
+              </select>
+            </div>
+          </div>
+        </div>
+        @endif
+
         <div class="field">
           <div class="control">
             <div>
@@ -314,6 +329,7 @@ $(function(){
       exclude_keywords: $("#channel-exclude-keywords").val(),
       default_destination: $("#default-destination").val(),
       hide_in_demo_mode: document.getElementById('hide-in-demo-mode').checked ? 1 : 0,
+      retention_days: $('#retention-days').val(),
       archived: document.getElementById('channel-archived').checked ? 1 : 0
     }, function(response) {
       reload_window();
