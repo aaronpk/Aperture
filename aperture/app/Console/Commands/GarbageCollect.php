@@ -20,6 +20,7 @@ class GarbageCollect extends Command
     Entry::select('entries.*')
       ->leftJoin('channel_entry', ['channel_entry.entry_id'=>'entries.id'])
       ->whereNull('channel_entry.id')
+      ->where('entries.currently_in_feed', false)
       ->orderBy('entries.id')
       ->chunk(1000, function($entries){
 

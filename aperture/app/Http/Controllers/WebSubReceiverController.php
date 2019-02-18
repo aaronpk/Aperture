@@ -39,6 +39,7 @@ class WebSubReceiverController extends Controller
     if($parsed && isset($parsed['data']['type']) && $parsed['data']['type'] == 'feed') {
 
       $new_entries = 0;
+      $entry_ids = []; // keep track of all entries in the currect snapshot
 
       // Check each entry in the feed to see if we've already seen it
       // Add new entries to any channels that include this source
@@ -72,6 +73,7 @@ class WebSubReceiverController extends Controller
         }
 
         $entry->data = $data;
+        $entry->currently_in_feed = true;
 
         // Also cache the published date for sorting
         if(isset($item['published']))
@@ -81,6 +83,8 @@ class WebSubReceiverController extends Controller
           $entry->save();
           event(new EntrySaved($entry));
         }
+
+        $entry_ids[] = $entry->id;
 
         if($entry_is_new) {
           Log::info("Adding entry ".$entry->unique." to channels");
@@ -120,6 +124,14 @@ class WebSubReceiverController extends Controller
         $source->is_new = false;
         $source->save();
       }
+
+      // Mark any entries that used to be in the feed as no longer in the feed
+      $entries = Entry::where('source_id', $source->id)
+        ->where('currently_in_feed', true)
+        ->whereNotIn('id', $entry_ids)
+        ->update([
+          'currently_in_feed' => false
+        ]);
 
     } else {
       Log::error('Error parsing source from '.$source->url);
