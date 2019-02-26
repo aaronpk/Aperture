@@ -146,7 +146,7 @@
     <div class="container content">
       <h2 class="title">Technical Details</h2>
 
-      <p>Aperture is a <a href="https://indieweb.org/Microsub">Microsub server</a>. Microsub is a spec that provides a standardized way for reader apps to interact with feeds. By splitting feed parsing and displaying posts into separate parts, a reader app can focus on presenting posts to the user instead of also having to parse feeds. A Microsub server manages the list of people you're following and collects their posts, and a Micropub app shows the posts to the user by fetching them from the server.</p>
+      <p>Aperture is a <a href="https://indieweb.org/Microsub">Microsub server</a>. Microsub is a spec that provides a standardized way for reader apps to interact with feeds. By splitting feed parsing and displaying posts into separate parts, a reader app can focus on presenting posts to the user instead of also having to parse feeds. A Microsub <i>server</i> manages the list of people you're following and collects their posts, and a Microsub <i>app</i> shows the posts to the user by fetching them from the server.</p>
 
       <p>Aperture is just one option for getting started in this ecosystem. You can find a list of other <a href="https://indieweb.org/Microsub#Servers">Microsub servers on indieweb.org</a>, many of which are able to be self-hosted.</p>
 
