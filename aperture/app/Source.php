@@ -42,4 +42,11 @@ class Source extends Model {
     Log::info("Unsubscribed from source:".$this->id." (".parse_url($this->url,PHP_URL_HOST).")\n".$response['body']);
   }
 
+  public function to_array() {
+    $name = $this->name ?: \p3k\url\display_url($this->url);
+    return [
+      'name' => $name
+    ];
+  }
+
 }

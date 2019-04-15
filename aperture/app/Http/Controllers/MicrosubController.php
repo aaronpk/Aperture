@@ -365,6 +365,12 @@ class MicrosubController extends Controller
       ->orderBy('channel_entry.batch_order')
       ->limit($limit+1); // fetch 1 more than the limit so we know if we've reached the end
 
+    // Return items in a particular source
+    if(Request::input('source')) {
+      $source_id = (int)Request::input('source');
+      $entries = $entries->where('source_id', $source_id);
+    }
+
     if(Request::input('before')) {
       if(!($before=$this->_parseEntryCursor(Request::input('before')))) {
         return Response::json(['error' => 'invalid_cursor'], 400);
@@ -415,6 +421,11 @@ class MicrosubController extends Controller
       'items' => $items,
       'paging' => []
     ];
+
+    if(Request::input('source')) {
+      $source = Source::where('id', (int)Request::input('source'))->first();
+      $response['source'] = $source->to_array();
+    }
 
     if($newbefore && $newbefore != Request::input('after'))
       $response['paging']['before'] = $newbefore;
