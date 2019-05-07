@@ -54,6 +54,8 @@ h=entry&content=Hello+World</pre>
 
     <p>To test API calls, you can generate a token from your token endpoint yourself or by using this <a href="https://gimme-a-token.5eb.nl/">access token tool</a>.</p>
 
+    <p>Your Microsub endpoint is unique to your account, and you can find it on your <a href="/dashboard">dashboard</a>.</p>
+
     <p>Aperture has implemented the following actions in the <a href="https://indieweb.org/Microsub-spec">Microsub spec</a>:</p>
 
     <ul class="methods">
