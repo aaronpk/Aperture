@@ -25,8 +25,8 @@
 
     <p>Next, add a link from your home page to your GitHub profile or email address (or both) like the below:</p>
 
-    <pre>&lt;a rel="me" href="https://github.com/username"&gt;
-&lt;a rel="me" href="mailto:you@example.com"&gt;</pre>
+    <pre>&lt;a rel="me" href="https://github.com/username"&gt;github&lt;/a&gt;
+&lt;a rel="me" href="mailto:you@example.com"&gt;email&lt;/a&gt;</pre>
 
     <p>Now you'll be able to sign in to Aperture, or any other IndieAuth app!</p>
 
