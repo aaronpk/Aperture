@@ -43,6 +43,7 @@ class EntrySavedListener implements ShouldQueue
             foreach($data['photo'] as $i=>$photo) {
                 $file = $this->_download($event->entry, $photo);
                 $url = is_string($file) ? $file : $file->url();
+                $this->_addImageMetaData($data, $file, $url);
                 $modified = $modified || ($url != $photo);
                 $data['photo'][$i] = $url;
             }
@@ -138,11 +139,91 @@ class EntrySavedListener implements ShouldQueue
         $entry->media()->attach($media->id);
         return $media;
       } else {
-        Log::info('Failed to download file, returning proxy URL instead');
+        Log::info('Failed to download file ('.$url.') returning proxy URL instead');
         if($proxy)
           return $this->_imageProxy($url);
         else
           return $url;
       }
+    }
+
+    private function _addImageMetaData(&$data, $file, $url) {
+      // Get the image dimensions and add to refs
+      $height = false; $width = false; $bytes = false; $dominant_color = false;
+      if(is_string($file)) {
+        // Fetch the file (from the original URL) and look at the metadata
+        $metadata = $this->_imageMetadata($url);
+        $width = $metadata['width'];
+        $height = $metadata['height'];
+        $bytes = $metadata['bytes'];
+      } else {
+        // the download function already creates a media object which has
+        // stored the size of the image in the database
+        $width = $file->width;
+        $height = $file->height;
+        $bytes = $file->bytes;
+      }
+
+      if($height && $width) {
+
+        Log::info('Found dimensions of image: '.$url.' '.round($width / $height, 2));
+
+        $data['refs'][$url] = [
+          'type' => 'image',
+          'ratio' => round($width / $height, 2),
+        ];
+        if($bytes)
+          $data['refs'][$url]['bytes'] = $bytes;
+        if($dominant_color)
+          $data['refs'][$url]['dominant-color'] = $dominant_color;
+      } else {
+        Log::info('Failed to get dimension of image: '.$url);
+      }
+    }
+
+    private function _imageMetadata($url) {
+      Log::info('Fetching metadata for '.$url);
+
+      $meta = [
+        'width' => false,
+        'height' => false,
+        'bytes' => false,
+        'dominant-color' => false
+      ];
+
+      @mkdir(sys_get_temp_dir().'/aperture', 0755);
+      $filedata = tempnam(sys_get_temp_dir().'/aperture', 'file-data');
+      $fd = fopen($filedata, 'w');
+
+      $ch = curl_init($url);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+      curl_setopt($ch, CURLOPT_FILE, $fd);
+      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, 4000);
+      curl_setopt($ch, CURLOPT_TIMEOUT_MS, 10000);
+      curl_exec($ch);
+      fclose($fd);
+
+      $meta['bytes'] = filesize($filedata);
+
+      Log::info('URL '.$url.' has size '.$meta['bytes']);
+
+      try {
+        $fp = fopen($filedata, 'r');
+        $im = new Imagick();
+        $im->readImageFile($fp);
+        $d = $im->getImageGeometry();
+
+        $meta['width'] = $d['width'];
+        $meta['height'] = $d['height'];
+
+      #$meta['dominant-color'] = '#000000';
+
+      } catch(\Exception $e) {
+        Log::info('Failed to get metatdata for '.$url);
+      }
+
+      return $meta;
     }
 }
