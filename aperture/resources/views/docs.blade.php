@@ -25,8 +25,8 @@
 
     <p>Next, add a link from your home page to your GitHub profile or email address (or both) like the below:</p>
 
-    <pre>&lt;a rel="me" href="https://github.com/username"&gt;
-&lt;a rel="me" href="mailto:you@example.com"&gt;</pre>
+    <pre>&lt;a rel="me" href="https://github.com/username"&gt;github&lt;/a&gt;
+&lt;a rel="me" href="mailto:you@example.com"&gt;email&lt;/a&gt;</pre>
 
     <p>Now you'll be able to sign in to Aperture, or any other IndieAuth app!</p>
 
@@ -53,6 +53,8 @@ h=entry&content=Hello+World</pre>
     <h2 class="subtitle">Microsub Client Development</h2>
 
     <p>To test API calls, you can generate a token from your token endpoint yourself or by using this <a href="https://gimme-a-token.5eb.nl/">access token tool</a>.</p>
+
+    <p>Your Microsub endpoint is unique to your account, and you can find it on your <a href="/dashboard">dashboard</a>.</p>
 
     <p>Aperture has implemented the following actions in the <a href="https://indieweb.org/Microsub-spec">Microsub spec</a>:</p>
 
