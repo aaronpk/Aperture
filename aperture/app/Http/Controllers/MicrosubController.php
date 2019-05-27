@@ -399,6 +399,10 @@ class MicrosubController extends Controller
         });
     }
 
+    if(Request::input('is_read') == 'false') {
+      $entries = $entries->where('seen', 0);
+    }
+
     #Log::info('timeline request: before='.Request::input('before').' after='.Request::input('after'));
 
     $entries = $entries->get();
