@@ -194,6 +194,13 @@
 
             <div>
               <label class="checkbox">
+                <input type="checkbox" id="exclude-replies" {{ in_array('reply', $channel->excluded_types()) ? 'checked="checked"' : '' }}>
+                Replies
+              </label>
+            </div>
+
+            <div>
+              <label class="checkbox">
                 <input type="checkbox" id="exclude-bookmarks" {{ in_array('bookmark', $channel->excluded_types()) ? 'checked="checked"' : '' }}>
                 Bookmarks
               </label>
@@ -310,6 +317,9 @@ $(function(){
     }
     if(document.getElementById("exclude-likes").checked) {
       exclude_types.push("like");
+    }
+    if(document.getElementById("exclude-replies").checked) {
+      exclude_types.push("reply");
     }
     if(document.getElementById("exclude-bookmarks").checked) {
       exclude_types.push("bookmark");
