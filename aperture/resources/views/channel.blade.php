@@ -22,16 +22,25 @@
   @foreach($sources as $source)
     <div class="source">
       <div class="buttons is-right">
+        <a href="#" class="button is-small source-settings" data-source="{{ $source->id }}">Settings</a>
         <a href="#" class="button is-small remove" data-source="{{ $source->id }}">Remove</a>
       </div>
 
-      <h2>{{ $source->name ?: $source->url }}</h2>
+      <h2>{{ $source->name ?: parse_url($source->url, PHP_URL_HOST) }}</h2>
 
       <div class="source-stats">
-        <span>{{ $source->format }}</span>
+        @if($source->name)
+          <span>{{ parse_url($source->url, PHP_URL_HOST) }}</span>
+          &bull;
+        @endif
+        @if($source->format)
+          <span>{{ $source->format }}</span>
+          &bull;
+        @endif
         <span>{{ $source->entries_count }} entries</span>
         @if($source->websub)
-          <span>websub</span>
+          &bull;
+          <span>websub enabled</span>
         @endif
       </div>
 
@@ -39,6 +48,11 @@
         <div><code class="hidden-secret">{{ $source->token }}</code></div>
         <p class="help">Use this API key to create entries in this channel with a POST request. See <a href="/docs">the documentation</a> for more details.</p>
       @endif
+
+      <data class="source-name" value="{{ $source->name }}"></data>
+      <data class="source-url" value="{{ $source->url }}"></data>
+      <data class="source-format" value="{{ $source->format }}"></data>
+      <data class="source-entries-count" value="{{ $source->entries_count }}"></data>
     </div>
   @endforeach
 
@@ -117,6 +131,39 @@
       <a href="#" class="remove-future button is-primary">Remove and Keep Old Entries</a>
       <a href="#" class="remove-all button is-danger">Delete Everything</a>
     </footer>
+  </div>
+</div>
+
+<div class="modal" id="source-settings-modal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+
+    <header class="modal-card-head">
+      <p class="modal-card-title">Source Settings</p>
+      <button class="delete" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+
+      <div id="channel-settings-section">
+        <div class="field">
+          <div class="control">
+            <label class="label">Name</label>
+            <input class="input" type="text" name="name" id="source-name" required="required" value="{{ $source->name }}">
+          </div>
+        </div>
+        <div class="field">
+          <div class="control">
+            <label class="label">URL</label>
+            <input class="input" type="text" name="url" id="source-url" readonly="readonly" value="{{ $source->url }}">
+          </div>
+        </div>
+      </div>
+
+    </section>
+    <footer class="modal-card-foot">
+      <a href="#" class="button save is-primary">Save</a>
+    </footer>
+
   </div>
 </div>
 
@@ -305,6 +352,24 @@ $(function(){
     $('#new-apikey-modal').addClass('is-active');
     e.preventDefault();
   });
+
+  $('.source-settings').click(function(e){
+    $('#source-name').val($(this).parents(".source").find('.source-name').attr('value'));
+    $('#source-settings-modal .save').data("source", $(this).data("source"));
+    $('#source-settings-modal').addClass('is-active');
+    e.preventDefault();
+  });
+
+  $("#source-settings-modal .save").click(function(){
+    $(this).addClass("is-loading");
+    $.post("/source/"+$(this).data("source")+"/save", {
+      _token: csrf_token(),
+      name: $("#source-name").val()
+    }, function(response) {
+      reload_window(); // cheap way out
+    });
+  });
+
   $('#channel-settings').click(function(e){
     $('#channel-settings-modal').addClass('is-active');
     e.preventDefault();

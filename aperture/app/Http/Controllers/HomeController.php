@@ -106,6 +106,22 @@ class HomeController extends Controller
     }
   }
 
+  public function save_source(Source $source) {
+    $channel = $source->channels()->where('user_id', Auth::user()->id)->first();
+
+    if(Gate::allows('edit-channel', $channel)) {
+
+      $source->name = Request::input('name');
+      $source->save();
+
+      return response()->json([
+        'result' => 'ok'
+      ]);
+    } else {
+      abort(401);
+    }
+  }
+
   public function remove_source(Channel $channel) {
     if(Gate::allows('edit-channel', $channel)) {
 

@@ -23,6 +23,7 @@ Route::middleware('web')->group(function(){
     Route::post('/channel/set_order', 'HomeController@set_channel_order')->name('set_channel_order');
 
     Route::post('/source/find_feeds', 'HomeController@find_feeds')->name('find_feeds');
+    Route::post('/source/{source}/save', 'HomeController@save_source')->name('save_source');
 
     Route::get('/login', 'LoginController@login')->name('login');
     Route::get('/logout', 'LoginController@logout')->name('logout');

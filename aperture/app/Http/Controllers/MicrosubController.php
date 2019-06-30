@@ -540,10 +540,15 @@ class MicrosubController extends Controller
       ->get();
 
     foreach($sources as $s) {
-      $following[] = [
+      $feed = [
         'type' => 'feed',
         'url' => $s->url
       ];
+
+      if($s->name)
+        $feed['name'] = $s->name;
+
+      $following[] = $feed;
     }
 
     return [
