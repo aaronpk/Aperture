@@ -16,7 +16,7 @@ class Channel extends Model {
   }
 
   public function sources() {
-    return $this->belongsToMany('\App\Source');
+    return $this->belongsToMany('\App\Source')->withPivot('name');
   }
 
   public function entries() {

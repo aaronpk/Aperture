@@ -545,8 +545,8 @@ class MicrosubController extends Controller
         'url' => $s->url
       ];
 
-      if($s->name)
-        $feed['name'] = $s->name;
+      if($s->pivot->name)
+        $feed['name'] = $s->pivot->name;
 
       $following[] = $feed;
     }

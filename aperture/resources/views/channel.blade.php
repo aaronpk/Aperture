@@ -26,7 +26,7 @@
         <a href="#" class="button is-small remove" data-source="{{ $source->id }}">Remove</a>
       </div>
 
-      <h2>{{ $source->name ?: parse_url($source->url, PHP_URL_HOST) }}</h2>
+      <h2>{{ $source->pivot->name ? $source->pivot->name : parse_url($source->url, PHP_URL_HOST) }}</h2>
 
       <div class="source-stats">
         @if($source->name)
@@ -49,7 +49,7 @@
         <p class="help">Use this API key to create entries in this channel with a POST request. See <a href="/docs">the documentation</a> for more details.</p>
       @endif
 
-      <data class="source-name" value="{{ $source->name }}"></data>
+      <data class="source-name" value="{{ $source->pivot->name }}"></data>
       <data class="source-url" value="{{ $source->url }}"></data>
       <data class="source-format" value="{{ $source->format }}"></data>
       <data class="source-entries-count" value="{{ $source->entries_count }}"></data>
@@ -363,7 +363,7 @@ $(function(){
 
   $("#source-settings-modal .save").click(function(){
     $(this).addClass("is-loading");
-    $.post("/source/"+$(this).data("source")+"/save", {
+    $.post("/channel/{{ $channel->id }}/source/"+$(this).data("source")+"/save", {
       _token: csrf_token(),
       name: $("#source-name").val()
     }, function(response) {

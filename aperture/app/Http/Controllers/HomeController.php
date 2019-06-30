@@ -106,13 +106,15 @@ class HomeController extends Controller
     }
   }
 
-  public function save_source(Source $source) {
-    $channel = $source->channels()->where('user_id', Auth::user()->id)->first();
-
+  public function save_source(Channel $channel, Source $source) {
     if(Gate::allows('edit-channel', $channel)) {
 
-      $source->name = Request::input('name');
-      $source->save();
+      $subscription = DB::table('channel_source')
+        ->where('channel_id', $channel->id)
+        ->where('source_id', $source->id)
+        ->update([
+          'name' => Request::input('name')
+        ]);
 
       return response()->json([
         'result' => 'ok'
