@@ -148,13 +148,13 @@
         <div class="field">
           <div class="control">
             <label class="label">Name</label>
-            <input class="input" type="text" name="name" id="source-name" required="required" value="{{ $source->name }}">
+            <input class="input" type="text" name="name" id="source-name" required="required" value="">
           </div>
         </div>
         <div class="field">
           <div class="control">
             <label class="label">URL</label>
-            <input class="input" type="text" name="url" id="source-url" readonly="readonly" value="{{ $source->url }}">
+            <input class="input" type="text" name="url" id="source-url-readonly" readonly="readonly" value="">
           </div>
         </div>
       </div>
@@ -355,6 +355,7 @@ $(function(){
 
   $('.source-settings').click(function(e){
     $('#source-name').val($(this).parents(".source").find('.source-name').attr('value'));
+    $('#source-url-readonly').val($(this).parents(".source").find('.source-url').attr('value'));
     $('#source-settings-modal .save').data("source", $(this).data("source"));
     $('#source-settings-modal').addClass('is-active');
     e.preventDefault();
