@@ -32,6 +32,9 @@
         @if($source->name)
           <span>{{ $source->name }}</span>
           &bull;
+        @elseif($source->pivot->name)
+          <span>{{ parse_url($source->url, PHP_URL_HOST) }}</span>
+          &bull;
         @endif
         @if($source->format)
           <span>{{ $source->format }}</span>
