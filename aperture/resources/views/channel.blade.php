@@ -30,7 +30,7 @@
 
       <div class="source-stats">
         @if($source->name)
-          <span>{{ parse_url($source->url, PHP_URL_HOST) }}</span>
+          <span>{{ $source->name }}</span>
           &bull;
         @endif
         @if($source->format)
