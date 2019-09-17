@@ -221,8 +221,10 @@ class EntrySavedListener implements ShouldQueue
       #$meta['dominant-color'] = '#000000';
 
       } catch(\Exception $e) {
-        Log::info('Failed to get metatdata for '.$url);
+        Log::info('Failed to get metadata for '.$url);
       }
+
+      @unlink($filedata);
 
       return $meta;
     }
