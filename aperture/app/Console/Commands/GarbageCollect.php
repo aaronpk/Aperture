@@ -31,17 +31,31 @@ class GarbageCollect extends Command
         #if(!$this->confirm('Delete?')) { die(); }
         $entry->delete();
       }
-
     });
+
+    $this->info("Finding orphaned files...");
+    Media::select('media.*')
+      ->leftJoin('entry_media', ['entry_media.media_id'=>'media.id'])
+      ->whereNull('entry_media.id')
+      ->orderBy('media.id')
+      ->chunk(1000, function($files){
+        $this->info("Processing chunk");
+        foreach($files as $file) {
+          $this->info($file->id.' '.$file->created_at);
+          $file->delete();
+        }
+      });
 
     $this->info("Finding orphaned records in channel_entry..");
     $records = DB::table('channel_entry')
       ->leftJoin('entries', ['channel_entry.entry_id'=>'entries.id'])
       ->whereNull('entries.id')
-      ->get();
-    $this->info("Found ".count($records));
-
-
+      ->count();
+    $this->info("Found ".$records);
+    // $records = DB::table('channel_entry')
+    //   ->leftJoin('entries', ['channel_entry.entry_id'=>'entries.id'])
+    //   ->whereNull('entries.id')
+    //   ->delete();
   }
 
 }
