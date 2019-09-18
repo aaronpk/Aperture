@@ -41,7 +41,7 @@ class GarbageCollect extends Command
       ->chunk(1000, function($files){
         $this->info("Processing chunk");
         foreach($files as $file) {
-          $this->info($file->id.' '.$file->created_at);
+          $this->info($file->id.' '.$file->created_at.' '.$file->filename);
           $file->delete();
         }
       });
