@@ -116,21 +116,9 @@ class EntrySavedListener implements ShouldQueue
       return mb_convert_encoding($input, 'HTML-ENTITIES', mb_detect_encoding($input));
     }
 
-    private function _imageProxy($url) {
-      $hex = bin2hex($url);
-      if(strlen($hex) > 255)
-        return $url;
-      $signature = hash_hmac('sha1', $url, env('IMG_PROXY_KEY'));
-      $proxy = env('IMG_PROXY_URL').$signature.'/'.$hex;
-      return $proxy;
-    }
-
     private function _download(Entry $entry, $url, $maxSize=false, $proxy=true) {
       if(!$entry->source->download_images || !env('MEDIA_URL')) {
-        if($proxy)
-          return $this->_imageProxy($url);
-        else
-          return $url;
+        return $url;
       }
 
       $media = Media::createFromURL($url, $maxSize);
@@ -139,11 +127,8 @@ class EntrySavedListener implements ShouldQueue
         $entry->media()->attach($media->id);
         return $media;
       } else {
-        Log::info('Failed to download file ('.$url.') returning proxy URL instead');
-        if($proxy)
-          return $this->_imageProxy($url);
-        else
-          return $url;
+        Log::info('Failed to download file ('.$url.')');
+        return $url;
       }
     }
 
