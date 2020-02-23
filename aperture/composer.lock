@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "ec765f9bec169aa3f86c50844bc5e891",
+    "content-hash": "89d641d809254de9712c95ada09cfce4",
     "packages": [
         {
             "name": "cebe/markdown",
@@ -1773,16 +1773,16 @@
         },
         {
             "name": "p3k/http",
-            "version": "0.1.8",
+            "version": "0.1.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aaronpk/p3k-http.git",
-                "reference": "a43977636d7a930080009eddda06994037c88fd7"
+                "reference": "24d28287e0c5606aa45b23c6e3c17628d89468f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aaronpk/p3k-http/zipball/a43977636d7a930080009eddda06994037c88fd7",
-                "reference": "a43977636d7a930080009eddda06994037c88fd7",
+                "url": "https://api.github.com/repos/aaronpk/p3k-http/zipball/24d28287e0c5606aa45b23c6e3c17628d89468f7",
+                "reference": "24d28287e0c5606aa45b23c6e3c17628d89468f7",
                 "shasum": ""
             },
             "require": {
@@ -1807,7 +1807,7 @@
             ],
             "description": "A simple wrapper API around the PHP curl functions",
             "homepage": "https://github.com/aaronpk/p3k-http",
-            "time": "2019-06-15T20:49:26+00:00"
+            "time": "2020-02-19T03:00:09+00:00"
         },
         {
             "name": "p3k/micropub",
@@ -1996,16 +1996,16 @@
         },
         {
             "name": "p3k/xray",
-            "version": "v1.10.1",
+            "version": "v1.10.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aaronpk/XRay.git",
-                "reference": "8a82c3cd8d8b3af38488da7e94ce4bd302c21d84"
+                "reference": "aacac198a8c8a3561b21c0b271024e3457a8bb40"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aaronpk/XRay/zipball/8a82c3cd8d8b3af38488da7e94ce4bd302c21d84",
-                "reference": "8a82c3cd8d8b3af38488da7e94ce4bd302c21d84",
+                "url": "https://api.github.com/repos/aaronpk/XRay/zipball/aacac198a8c8a3561b21c0b271024e3457a8bb40",
+                "reference": "aacac198a8c8a3561b21c0b271024e3457a8bb40",
                 "shasum": ""
             },
             "require": {
@@ -2016,7 +2016,7 @@
                 "indieweb/link-rel-parser": "0.1.*",
                 "masterminds/html5": "^2.3",
                 "mf2/mf2": "^0.4",
-                "p3k/http": ">=0.1.8",
+                "p3k/http": ">=0.1.11",
                 "p3k/picofeed": ">=0.1.35",
                 "p3k/timezone": "*"
             },
@@ -2041,7 +2041,7 @@
             ],
             "description": "X-Ray returns structured data from any URL",
             "homepage": "https://github.com/aaronpk/XRay",
-            "time": "2020-01-29T15:51:15+00:00"
+            "time": "2020-02-23T18:59:15+00:00"
         },
         {
             "name": "paragonie/random_compat",
