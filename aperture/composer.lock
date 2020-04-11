@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "89d641d809254de9712c95ada09cfce4",
+    "content-hash": "c70b1ee80177365b802dd014e1e25105",
     "packages": [
         {
             "name": "cebe/markdown",
@@ -724,6 +724,12 @@
                 "url": "https://github.com/ezyang/htmlpurifier.git",
                 "reference": "d85d39da4576a6934b72480be6978fb10c860021"
             },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/d85d39da4576a6934b72480be6978fb10c860021",
+                "reference": "d85d39da4576a6934b72480be6978fb10c860021",
+                "shasum": ""
+            },
             "require": {
                 "php": ">=5.2"
             },
@@ -1045,6 +1051,7 @@
                     "homepage": "http://www.acci.cz"
                 }
             ],
+            "abandoned": "php-parallel-lint/php-console-color",
             "time": "2014-04-08T15:00:19+00:00"
         },
         {
@@ -1089,6 +1096,7 @@
                     "homepage": "http://www.acci.cz/"
                 }
             ],
+            "abandoned": "php-parallel-lint/php-console-highlighter",
             "time": "2015-04-20T18:58:01+00:00"
         },
         {
@@ -1996,16 +2004,16 @@
         },
         {
             "name": "p3k/xray",
-            "version": "v1.10.2",
+            "version": "v1.10.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aaronpk/XRay.git",
-                "reference": "aacac198a8c8a3561b21c0b271024e3457a8bb40"
+                "reference": "9fb8a0c9a3085e342e31278c80c684ed310575bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aaronpk/XRay/zipball/aacac198a8c8a3561b21c0b271024e3457a8bb40",
-                "reference": "aacac198a8c8a3561b21c0b271024e3457a8bb40",
+                "url": "https://api.github.com/repos/aaronpk/XRay/zipball/9fb8a0c9a3085e342e31278c80c684ed310575bf",
+                "reference": "9fb8a0c9a3085e342e31278c80c684ed310575bf",
                 "shasum": ""
             },
             "require": {
@@ -2041,7 +2049,7 @@
             ],
             "description": "X-Ray returns structured data from any URL",
             "homepage": "https://github.com/aaronpk/XRay",
-            "time": "2020-02-23T18:59:15+00:00"
+            "time": "2020-04-11T22:56:12+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -5113,5 +5121,6 @@
     "platform": {
         "php": ">=7.0.0"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
 }
