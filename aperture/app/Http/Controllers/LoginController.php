@@ -94,7 +94,7 @@ class LoginController extends Controller
     }
 
     // Check the authorization code at the endpoint previously discovered
-    $auth = IndieAuth\Client::getAccessToken(session('token_endpoint'), Request::input('code'), session('indieauth_url'), route('login_callback'), route('index'));
+    $auth = IndieAuth\Client::getAccessToken(session('token_endpoint'), Request::input('code'), session('indieauth_url'), route('login_callback'), route('index').'/');
 
     if(isset($auth['me'])) {
 
