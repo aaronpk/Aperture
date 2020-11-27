@@ -8,7 +8,7 @@
         "php": ">=7.0.0",
         "doctrine/dbal": "^2.6",
         "fideloper/proxy": "~3.3",
-        "indieauth/client": ">=0.4.1",
+        "indieauth/client": "~1.1",
         "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0",
         "mf2/mf2": "^0.4",
@@ -16,7 +16,7 @@
         "p3k/http": ">=0.1.8",
         "p3k/micropub": ">=0.0.2",
         "p3k/utils": ">=1.0",
-        "p3k/xray": ">=1.10.3",
+        "p3k/xray": ">=1.10.6",
         "predis/predis": "^1.1"
     },
     "require-dev": {

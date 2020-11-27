@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c70b1ee80177365b802dd014e1e25105",
+    "content-hash": "8c78c5c7a3205e41d02ceeefab31c744",
     "packages": [
         {
             "name": "cebe/markdown",
@@ -745,7 +745,6 @@
                     "library/HTMLPurifier.composer.php"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "LGPL"
             ],
@@ -880,23 +879,23 @@
         },
         {
             "name": "indieauth/client",
-            "version": "0.4.1",
+            "version": "1.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/indieweb/indieauth-client-php.git",
-                "reference": "3e47004ccfccddc5760639f4faf9ed5ceadb460e"
+                "reference": "02b6c7fc9bdfc51780df17a2ddc2349e79b8eaa3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/indieweb/indieauth-client-php/zipball/3e47004ccfccddc5760639f4faf9ed5ceadb460e",
-                "reference": "3e47004ccfccddc5760639f4faf9ed5ceadb460e",
+                "url": "https://api.github.com/repos/indieweb/indieauth-client-php/zipball/02b6c7fc9bdfc51780df17a2ddc2349e79b8eaa3",
+                "reference": "02b6c7fc9bdfc51780df17a2ddc2349e79b8eaa3",
                 "shasum": ""
             },
             "require": {
                 "indieweb/representative-h-card": "^0.1.2",
                 "mf2/mf2": ">=0.3.2",
                 "p3k/http": ">=0.1.6",
-                "php": ">5.3.0"
+                "php": ">5.6.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "4.8.*"
@@ -918,7 +917,13 @@
                 }
             ],
             "description": "IndieAuth Client Library",
-            "time": "2018-03-13T23:39:55+00:00"
+            "funding": [
+                {
+                    "url": "https://opencollective.com/indieweb",
+                    "type": "opencollective"
+                }
+            ],
+            "time": "2020-11-26T23:27:17+00:00"
         },
         {
             "name": "indieweb/link-rel-parser",
@@ -1099,6 +1104,111 @@
             ],
             "abandoned": "php-parallel-lint/php-console-highlighter",
             "time": "2015-04-20T18:58:01+00:00"
+        },
+        {
+            "name": "laminas/laminas-xml",
+            "version": "1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laminas/laminas-xml.git",
+                "reference": "844dc64557b1ad8a2e0eadb741510ba992674f99"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laminas/laminas-xml/zipball/844dc64557b1ad8a2e0eadb741510ba992674f99",
+                "reference": "844dc64557b1ad8a2e0eadb741510ba992674f99",
+                "shasum": ""
+            },
+            "require": {
+                "laminas/laminas-zendframework-bridge": "^1.0",
+                "php": "^7.3 || ~8.0.0"
+            },
+            "replace": {
+                "zendframework/zendxml": "^1.2.0"
+            },
+            "require-dev": {
+                "ext-iconv": "*",
+                "laminas/laminas-coding-standard": "~1.0.0",
+                "phpunit/phpunit": "^9.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Laminas\\Xml\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Utility library for XML usage, best practices, and security in PHP",
+            "homepage": "https://laminas.dev",
+            "keywords": [
+                "laminas",
+                "security",
+                "xml"
+            ],
+            "funding": [
+                {
+                    "url": "https://funding.communitybridge.org/projects/laminas-project",
+                    "type": "community_bridge"
+                }
+            ],
+            "time": "2020-11-18T20:46:37+00:00"
+        },
+        {
+            "name": "laminas/laminas-zendframework-bridge",
+            "version": "1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laminas/laminas-zendframework-bridge.git",
+                "reference": "6ede70583e101030bcace4dcddd648f760ddf642"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laminas/laminas-zendframework-bridge/zipball/6ede70583e101030bcace4dcddd648f760ddf642",
+                "reference": "6ede70583e101030bcace4dcddd648f760ddf642",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.6 || ^7.0 || ^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.7 || ^6.5 || ^7.5 || ^8.1 || ^9.3",
+                "squizlabs/php_codesniffer": "^3.5"
+            },
+            "type": "library",
+            "extra": {
+                "laminas": {
+                    "module": "Laminas\\ZendFrameworkBridge"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/autoload.php"
+                ],
+                "psr-4": {
+                    "Laminas\\ZendFrameworkBridge\\": "src//"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Alias legacy ZF class names to Laminas Project equivalents.",
+            "keywords": [
+                "ZendFramework",
+                "autoloading",
+                "laminas",
+                "zf"
+            ],
+            "funding": [
+                {
+                    "url": "https://funding.communitybridge.org/projects/laminas-project",
+                    "type": "community_bridge"
+                }
+            ],
+            "time": "2020-09-14T14:23:00+00:00"
         },
         {
             "name": "laravel/framework",
@@ -1864,16 +1974,16 @@
         },
         {
             "name": "p3k/picofeed",
-            "version": "v0.1.38",
+            "version": "v0.1.40",
             "source": {
                 "type": "git",
-                "url": "https://github.com/aaronpk/picoFeed.git",
-                "reference": "989c0bcf2eac016a4104abce1aadff791fc287ab"
+                "url": "https://github.com/aaronpk/picofeed.git",
+                "reference": "356fd66d48779193b10ac28532cb4a4e11bb801c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aaronpk/picoFeed/zipball/989c0bcf2eac016a4104abce1aadff791fc287ab",
-                "reference": "989c0bcf2eac016a4104abce1aadff791fc287ab",
+                "url": "https://api.github.com/repos/aaronpk/picofeed/zipball/356fd66d48779193b10ac28532cb4a4e11bb801c",
+                "reference": "356fd66d48779193b10ac28532cb4a4e11bb801c",
                 "shasum": ""
             },
             "require": {
@@ -1882,8 +1992,11 @@
                 "ext-libxml": "*",
                 "ext-simplexml": "*",
                 "ext-xml": "*",
-                "php": ">=5.3.0",
-                "zendframework/zendxml": "^1.0"
+                "laminas/laminas-xml": "^1.2",
+                "php": ">=5.3.0"
+            },
+            "replace": {
+                "miniflux/picofeed": "0.1.35"
             },
             "require-dev": {
                 "phpdocumentor/reflection-docblock": "2.0.4",
@@ -1912,8 +2025,8 @@
                 }
             ],
             "description": "Modern library to handle RSS/Atom feeds",
-            "homepage": "https://github.com/miniflux/picoFeed",
-            "time": "2017-11-30T00:16:58+00:00"
+            "homepage": "https://github.com/aaronpk/picoFeed",
+            "time": "2020-04-25T17:48:36+00:00"
         },
         {
             "name": "p3k/timezone",
@@ -2005,16 +2118,16 @@
         },
         {
             "name": "p3k/xray",
-            "version": "v1.10.3",
+            "version": "v1.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aaronpk/XRay.git",
-                "reference": "9fb8a0c9a3085e342e31278c80c684ed310575bf"
+                "reference": "9edc99ce3c9815c447ede66fc55fd52550391cfd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aaronpk/XRay/zipball/9fb8a0c9a3085e342e31278c80c684ed310575bf",
-                "reference": "9fb8a0c9a3085e342e31278c80c684ed310575bf",
+                "url": "https://api.github.com/repos/aaronpk/XRay/zipball/9edc99ce3c9815c447ede66fc55fd52550391cfd",
+                "reference": "9edc99ce3c9815c447ede66fc55fd52550391cfd",
                 "shasum": ""
             },
             "require": {
@@ -2026,7 +2139,7 @@
                 "masterminds/html5": "^2.3",
                 "mf2/mf2": "^0.4",
                 "p3k/http": ">=0.1.11",
-                "p3k/picofeed": ">=0.1.35",
+                "p3k/picofeed": ">=0.1.39",
                 "p3k/timezone": "*"
             },
             "require-dev": {
@@ -2050,7 +2163,7 @@
             ],
             "description": "X-Ray returns structured data from any URL",
             "homepage": "https://github.com/aaronpk/XRay",
-            "time": "2020-04-11T22:56:12+00:00"
+            "time": "2020-05-11T00:18:56+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -2105,12 +2218,12 @@
             "version": "v1.1.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/nrk/predis.git",
+                "url": "https://github.com/predis/predis.git",
                 "reference": "f0210e38881631afeafb56ab43405a92cafd9fd1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nrk/predis/zipball/f0210e38881631afeafb56ab43405a92cafd9fd1",
+                "url": "https://api.github.com/repos/predis/predis/zipball/f0210e38881631afeafb56ab43405a92cafd9fd1",
                 "reference": "f0210e38881631afeafb56ab43405a92cafd9fd1",
                 "shasum": ""
             },
@@ -2427,17 +2540,17 @@
             ],
             "authors": [
                 {
-                    "name": "Ben Ramsey",
-                    "email": "ben@benramsey.com",
-                    "homepage": "https://benramsey.com"
-                },
-                {
                     "name": "Marijn Huizendveld",
                     "email": "marijn.huizendveld@gmail.com"
                 },
                 {
                     "name": "Thibaud Fabre",
                     "email": "thibaud@aztech.io"
+                },
+                {
+                    "name": "Ben Ramsey",
+                    "email": "ben@benramsey.com",
+                    "homepage": "https://benramsey.com"
                 }
             ],
             "description": "Formerly rhumsaa/uuid. A PHP 5.4+ library for generating RFC 4122 version 1, 3, 4, and 5 universally unique identifiers (UUID).",
@@ -2994,38 +3107,30 @@
         },
         {
             "name": "symfony/polyfill-php70",
-            "version": "v1.14.0",
+            "version": "v1.20.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php70.git",
-                "reference": "419c4940024c30ccc033650373a1fe13890d3255"
+                "reference": "5f03a781d984aae42cebd18e7912fa80f02ee644"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php70/zipball/419c4940024c30ccc033650373a1fe13890d3255",
-                "reference": "419c4940024c30ccc033650373a1fe13890d3255",
+                "url": "https://api.github.com/repos/symfony/polyfill-php70/zipball/5f03a781d984aae42cebd18e7912fa80f02ee644",
+                "reference": "5f03a781d984aae42cebd18e7912fa80f02ee644",
                 "shasum": ""
             },
             "require": {
-                "paragonie/random_compat": "~1.0|~2.0|~9.99",
-                "php": ">=5.3.3"
+                "php": ">=7.1"
             },
-            "type": "library",
+            "type": "metapackage",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.14-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Php70\\": ""
+                    "dev-main": "1.20-dev"
                 },
-                "files": [
-                    "bootstrap.php"
-                ],
-                "classmap": [
-                    "Resources/stubs"
-                ]
+                "thanks": {
+                    "name": "symfony/polyfill",
+                    "url": "https://github.com/symfony/polyfill"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -3049,7 +3154,21 @@
                 "portable",
                 "shim"
             ],
-            "time": "2020-01-13T11:15:53+00:00"
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-10-23T14:02:19+00:00"
         },
         {
             "name": "symfony/process",
@@ -3407,52 +3526,6 @@
                 "environment"
             ],
             "time": "2016-09-01T10:05:43+00:00"
-        },
-        {
-            "name": "zendframework/zendxml",
-            "version": "1.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zendframework/ZendXml.git",
-                "reference": "7b64507bc35d841c9c5802d67f6f87ef8e1a58c9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/ZendXml/zipball/7b64507bc35d841c9c5802d67f6f87ef8e1a58c9",
-                "reference": "7b64507bc35d841c9c5802d67f6f87ef8e1a58c9",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^5.3.3 || ^7.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^3.7 || ^4.0",
-                "squizlabs/php_codesniffer": "^1.5"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "ZendXml\\": "library/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Utility library for XML usage, best practices, and security in PHP",
-            "homepage": "http://packages.zendframework.com/",
-            "keywords": [
-                "security",
-                "xml",
-                "zf2"
-            ],
-            "abandoned": "laminas/laminas-xml",
-            "time": "2016-02-04T21:02:08+00:00"
         }
     ],
     "packages-dev": [

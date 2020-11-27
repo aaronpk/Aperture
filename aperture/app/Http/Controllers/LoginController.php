@@ -30,7 +30,6 @@ class LoginController extends Controller
     // Discover the endpoints
     $url = Request::input('url');
     $url = IndieAuth\Client::normalizeMeURL($url);
-    $url = IndieAuth\Client::resolveMeURL($url); // follows redirects and uses the canonical one
 
     if(env('PUBLIC_ACCESS') == false) {
       $check = User::where('url', $url)->first();
@@ -57,8 +56,10 @@ class LoginController extends Controller
     }
 
     $state = str_random(32);
+    $code_verifier = IndieAuth\Client::generatePKCECodeVerifier();
     session([
       'state' => $state,
+      'code_verifier' => $code_verifier,
       'authorization_endpoint' => $authorizationEndpoint,
       'token_endpoint' => $tokenEndpoint,
       'micropub_endpoint' => $micropubEndpoint,
@@ -68,8 +69,15 @@ class LoginController extends Controller
 
     $redirect_uri = route('login_callback');
     $client_id = route('index');
-    $scope = 'read'; // Request "read" scope so that Aperture can get a token to fetch the Micropub config 
-    $authorizationURL = IndieAuth\Client::buildAuthorizationURL($authorizationEndpoint, $url, $redirect_uri, $client_id, $state, $scope);
+    $scope = 'read'; // Request "read" scope so that Aperture can get a token to fetch the Micropub config
+    $authorizationURL = IndieAuth\Client::buildAuthorizationURL($authorizationEndpoint, [
+      'me' => $url,
+      'redirect_uri' => $redirect_uri,
+      'client_id' => $client_id,
+      'state' => $state,
+      'scope' => $scope,
+      'code_verifier' => $code_verifier,
+    ]);
 
     return redirect($authorizationURL);
   }
@@ -94,19 +102,28 @@ class LoginController extends Controller
     }
 
     // Check the authorization code at the endpoint previously discovered
-    $auth = IndieAuth\Client::getAccessToken(session('token_endpoint'), Request::input('code'), session('indieauth_url'), route('login_callback'), route('index'));
+    $auth = IndieAuth\Client::exchangeAuthorizationCode(session('token_endpoint'), [
+      'code' => Request::input('code'),
+      'redirect_uri' => route('login_callback'),
+      'client_id' => route('index'),
+      'code_verifier' => session('code_verifier'),
+    ]);
 
-    if(isset($auth['me'])) {
+    if(isset($auth['response']['me'])) {
 
-      // Check that the URL returned is on the same domain as the expected URL
-      if(parse_url($auth['me'], PHP_URL_HOST) != parse_url(session('indieauth_url'), PHP_URL_HOST)) {
-        return view('login/error', [
-          'error' => 'invalid user',
-          'description' => 'The URL for the user returned did not match the domain of the user initially signing in'
-        ]);
+      // Make sure "me" returned matches the original or shares an authorization endpoint
+      if(session('indieauth_url') != $auth['response']['me']) {
+        $newAuthorizationEndpoint = \IndieAuth\Client::discoverAuthorizationEndpoint($auth['response']['me']);
+
+        if(session('authorization_endpoint') != $newAuthorizationEndpoint) {
+          return view('login/error', [
+            'error' => 'user mismatch',
+            'description' => 'The authorization endpoint of the returned user URL does not match the authorization endpoint orignally used'
+          ]);
+        }
       }
 
-      $auth['me'] = IndieAuth\Client::normalizeMeURL($auth['me']);
+      $auth['me'] = IndieAuth\Client::normalizeMeURL($auth['response']['me']);
 
       // Load or create the user record
       $user = User::where('url', $auth['me'])->first();
@@ -117,15 +134,15 @@ class LoginController extends Controller
 
       $user->token_endpoint = session('token_endpoint');
 
-      if(session('micropub_endpoint') && isset($auth['access_token'])) {
+      if(session('micropub_endpoint') && isset($auth['response']['access_token'])) {
         $user->micropub_endpoint = session('micropub_endpoint');
-        $user->reload_micropub_config($auth['access_token']);
+        $user->reload_micropub_config($auth['response']['access_token']);
       }
 
       $user->save();
 
       session([
-        'access_token' => $auth['access_token'] ?? false,
+        'access_token' => $auth['response']['access_token'] ?? false,
         'state' => false,
         'authorization_endpoint' => false,
         'token_endpoint' => false,
