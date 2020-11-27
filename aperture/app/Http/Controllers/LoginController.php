@@ -68,7 +68,8 @@ class LoginController extends Controller
     ]);
 
     $redirect_uri = route('login_callback');
-    $client_id = route('index');
+
+    $client_id = route('index').'/';
     $scope = 'read'; // Request "read" scope so that Aperture can get a token to fetch the Micropub config
     $authorizationURL = IndieAuth\Client::buildAuthorizationURL($authorizationEndpoint, [
       'me' => $url,
@@ -105,12 +106,11 @@ class LoginController extends Controller
     $auth = IndieAuth\Client::exchangeAuthorizationCode(session('token_endpoint'), [
       'code' => Request::input('code'),
       'redirect_uri' => route('login_callback'),
-      'client_id' => route('index'),
+      'client_id' => route('index').'/',
       'code_verifier' => session('code_verifier'),
     ]);
 
     if(isset($auth['response']['me'])) {
-
       // Make sure "me" returned matches the original or shares an authorization endpoint
       if(session('indieauth_url') != $auth['response']['me']) {
         $newAuthorizationEndpoint = \IndieAuth\Client::discoverAuthorizationEndpoint($auth['response']['me']);
