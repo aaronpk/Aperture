@@ -162,7 +162,7 @@ class LoginController extends Controller
     } else {
       return view('login/error', [
         'error' => 'indieauth error',
-        'description' => 'The authoriation code was not able to be verified'
+        'description' => 'The authorization code was not able to be verified'
       ]);
     }
   }
