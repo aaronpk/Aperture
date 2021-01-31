@@ -439,6 +439,10 @@ class MicrosubController extends Controller
 
     #Log::info('new paging: '.json_encode($response['paging']));
 
+    if(count($response['paging']) == 0) {
+      $response['paging'] = new \stdClass;
+    }
+
     return Response::json($response);
   }
 
