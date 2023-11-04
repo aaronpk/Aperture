@@ -53,12 +53,11 @@ class Channel extends Model {
       $sources = $this->sources()->get();
       $array['sources'] = [];
       foreach($sources as $source) {
-        $source_array = $source->to_array();
-
-        $array['sources'][] = array_merge([
+        $array['sources'][] = [
           '_id' => $source->id,
-          'url' => $source->url
-        ], $source_array);
+	  'url' => $source->url,
+	  'name' => $source->pivot->name ? $source->pivot->name : $source->name
+        ];
       }
     }
     return $array;
