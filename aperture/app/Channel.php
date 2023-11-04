@@ -33,7 +33,7 @@ class Channel extends Model {
     return $types;
   }
 
-  public function to_array() {
+  public function to_array($include_sources = false) {
     $array = [
       'uid' => $this->uid,
       'name' => $this->name,
@@ -48,6 +48,18 @@ class Channel extends Model {
     }
     if($this->default_destination) {
       $array['destination'] = $this->default_destination;
+    }
+    if($include_sources) {
+      $sources = $this->sources()->get();
+      $array['sources'] = [];
+      foreach($sources as $source) {
+        $source_array = $source->to_array();
+
+        $array['sources'][] = array_merge([
+          '_id' => $source->id,
+          'url' => $source->url
+        ], $source_array);
+      }
     }
     return $array;
   }

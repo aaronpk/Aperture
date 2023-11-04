@@ -144,10 +144,11 @@ class MicrosubController extends Controller
   //////////////////////////////////////////////////////////////////////////////////
 
   private function get_channels() {
+    $include_sources = (Request::input('method') == 'tree');
     $channels = [];
 
     foreach(Auth::user()->channels()->get() as $channel) {
-      $channels[] = $channel->to_array();
+      $channels[] = $channel->to_array($include_sources);
     }
 
     return [
