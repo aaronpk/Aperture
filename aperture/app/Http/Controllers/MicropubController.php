@@ -104,8 +104,13 @@ class MicropubController extends Controller
 
       Log::info("Adding entry ".$entry->unique." to channels");
       foreach($source->channels()->get() as $channel) {
-        Log::info("  Adding to channel #".$channel->id);
-        $channel->entries()->attach($entry->id, ['created_at'=>date('Y-m-d H:i:s')]);
+
+        $shouldAdd = $channel->should_add_entry($entry);
+        if($shouldAdd) {
+          Log::info("  Adding to channel #".$channel->id);
+          $channel->entries()->attach($entry->id, ['created_at'=>date('Y-m-d H:i:s')]);
+        }
+
         // TODO: send websub notification for the channel
         // try to wait until after the EntryCreated listener is done downloading images
       }
