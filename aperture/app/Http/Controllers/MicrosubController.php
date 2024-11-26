@@ -600,7 +600,9 @@ class MicrosubController extends Controller
       return '';
     }
 
-    $channel->remove_source($source);
+    $remove_entries = Request::input('method') === 'remove';
+
+    $channel->remove_source($source, $remove_entries);
 
     return [
       'type' => 'feed',
