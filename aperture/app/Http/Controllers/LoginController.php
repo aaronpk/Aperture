@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use Request, DB;
 use Auth;
 use IndieAuth;
-use App\User;
+use App\Models\User;
 use App\Jobs\VerifyAPIRegistration;
 
 class LoginController extends Controller
@@ -31,7 +31,7 @@ class LoginController extends Controller
     $url = Request::input('url');
     $url = IndieAuth\Client::normalizeMeURL($url);
 
-    if(env('PUBLIC_ACCESS') == false) {
+    if(config('aperture.public_access') == false) {
       $check = User::where('url', $url)->first();
       if(!$check) {
         return redirect('login')->with('auth_error', 'invalid url')
@@ -55,7 +55,7 @@ class LoginController extends Controller
         ->with('auth_url', Request::input('url'));
     }
 
-    $state = str_random(32);
+    $state = \Illuminate\Support\Str::random(32);
     $code_verifier = IndieAuth\Client::generatePKCECodeVerifier();
     session([
       'state' => $state,
@@ -168,7 +168,7 @@ class LoginController extends Controller
   }
 
   public function api_register() {
-    if(env('PUBLIC_ACCESS') == false) {
+    if(config('aperture.public_access') == false) {
       return 'This server does not allow public registrations';
     }
 

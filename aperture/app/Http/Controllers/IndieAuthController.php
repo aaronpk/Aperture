@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use Request, DB, Cache;
 use Auth;
 use IndieAuth;
-use App\User, App\Channel, App\Source;
+use App\Models\User, App\Models\Channel, App\Models\Source;
 
 class IndieAuthController extends Controller
 {
@@ -44,7 +44,7 @@ class IndieAuthController extends Controller
       ]), 400);
     }
 
-    if(Request::get('response_type') != 'code') {
+    if(Request::input('response_type') != 'code') {
       return response(view('oauth/error', [
         'error' => 'bad response type',
         'description' => 'Aperture cannot be used to just log in to apps, it can only be used with Micropub apps to create posts in your channels.'
@@ -168,7 +168,7 @@ class IndieAuthController extends Controller
     return redirect($redirect);
   }
 
-  private static function generateAuthCode(\App\User $user, \App\Channel $channel, $authData) {
+  private static function generateAuthCode(\App\Models\User $user, \App\Models\Channel $channel, $authData) {
     $codeData = array(
       'iat' => time(),
       'exp' => time()+60,
@@ -178,8 +178,8 @@ class IndieAuthController extends Controller
       'redirect_uri' => $authData['redirect_uri'],
       'scope' => $authData['scope'],
     );
-    $code = 'a.'.str_random(60);
-    Cache::put($code, json_encode($codeData), 1);
+    $code = 'a.'.\Illuminate\Support\Str::random(60);
+    Cache::put($code, json_encode($codeData), 60);
     return $code;
   }
 
@@ -205,13 +205,13 @@ class IndieAuthController extends Controller
   }
 
   private function _me(User $user, Channel $channel, Source $source) {
-    return env('APP_URL').'/'.\p3k\b10to60($user->id).'-'.\p3k\b10to60($channel->id).'-'.\p3k\b10to60($source->id);
+    return config('app.url').'/'.\p3k\b10to60($user->id).'-'.\p3k\b10to60($channel->id).'-'.\p3k\b10to60($source->id);
   }
 
   public function token_get() {
     // Verify access tokens
     // This is called with the ChannelAPIKey middleware which handles parsing the header and verifying the token
-    $td = Request::get('token_data');
+    $td = request()->attributes->get('token_data');
     if(isset($td['type']) && $td['type'] == 'source') {
       $source = Source::where('id', $td['source_id'])->first();
       $user = User::where('id', $td['user_id'])->first();
@@ -282,7 +282,7 @@ class IndieAuthController extends Controller
     $source = Source::where('created_by', $user->id)->where('name', $data['client_id'])->first();
     if(!$source) {
       $source = new Source();
-      $source->token = str_random(32);
+      $source->token = \Illuminate\Support\Str::random(32);
       $source->name = $data['client_id'];
       $source->format = 'apikey';
       $source->created_by = $user->id;
@@ -323,7 +323,7 @@ class IndieAuthController extends Controller
 
   private static function _client_info($client_id) {
     $http = app(\p3k\HTTP::class);
-    $http->set_user_agent(env('USER_AGENT'));
+    $http->set_user_agent(config('aperture.user_agent'));
     $http->set_timeout(30);
     $xray = new \p3k\XRay();
     $xray->http = $http;

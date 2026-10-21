@@ -2,18 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-
-class Controller extends BaseController
+abstract class Controller
 {
-  use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-
 
   protected function _buildEntryCursor($entry) {
-    // if(env('APP_ENV') == 'testing')
+    // if(app()->environment('testing'))
     //   return $entry['added_to_channel_at']
     //     .'  '.$entry['batch_order'];
     // else
@@ -22,7 +15,7 @@ class Controller extends BaseController
   }
 
   protected function _parseEntryCursor($cursor) {
-    // if(env('APP_ENV') == 'testing')
+    // if(app()->environment('testing'))
     //   if(preg_match('/([0-9\-]{10} [0-9:]{8})  ([0-9]+)/', $cursor, $match)) {
     //     return [$match[1], $match[2]];
     //   }

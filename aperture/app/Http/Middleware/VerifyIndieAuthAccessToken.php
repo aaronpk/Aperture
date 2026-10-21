@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure, Log, Request, Response, Auth, Cache;
-use App\User, App\ChannelToken;
+use App\Models\User, App\Models\ChannelToken;
 use p3k\HTTP;
 
 class VerifyIndieAuthAccessToken
@@ -143,7 +143,8 @@ class VerifyIndieAuthAccessToken
                     $token_data['scope'] = explode(" ", $token_data['scope']);
             }
 
-            Cache::set('token:'.$token, json_encode($token_data), 300);
+            // 5 hours, the same as the previous 300 minute TTL
+            Cache::set('token:'.$token, json_encode($token_data), 300*60);
         }
 
         $request->attributes->set('token_data', $token_data);

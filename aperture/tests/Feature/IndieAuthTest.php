@@ -3,7 +3,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Source;
+use App\Models\Source;
 
 class IndieAuthTest extends TestCase
 {
@@ -97,7 +97,7 @@ class IndieAuthTest extends TestCase
 
     // The profile URL renders with IndieAuth discovery links
     $this->get(parse_url($data['me'], PHP_URL_PATH))
-      ->assertStatus(200)->assertSee('<link rel="token_endpoint" href="http://aperture.test/token">');
+      ->assertStatus(200)->assertSee('<link rel="token_endpoint" href="http://aperture.test/token">', false);
   }
 
   public function testSecondAuthorizationReusesTheSameSource() {

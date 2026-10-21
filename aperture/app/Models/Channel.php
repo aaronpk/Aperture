@@ -1,5 +1,5 @@
 <?php
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Events\SourceRemoved;
@@ -12,15 +12,15 @@ class Channel extends Model {
   ];
 
   public function user() {
-    return $this->belongsTo('\App\User');
+    return $this->belongsTo('\App\Models\User');
   }
 
   public function sources() {
-    return $this->belongsToMany('\App\Source')->withPivot('name');
+    return $this->belongsToMany('\App\Models\Source')->withPivot('name');
   }
 
   public function entries() {
-    return $this->belongsToMany('\App\Entry');
+    return $this->belongsToMany('\App\Models\Entry');
   }
 
   public function excluded_types() {

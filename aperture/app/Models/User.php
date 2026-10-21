@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -34,7 +34,7 @@ class User extends Authenticatable
     ];
 
     public function channels() {
-        $channels = $this->hasMany('App\Channel')
+        $channels = $this->hasMany('App\Models\Channel')
           ->where('archived', 0)
           ->orderBy('sort');
         if($this->demo_mode_enabled) {
@@ -44,7 +44,7 @@ class User extends Authenticatable
     }
 
     public function archived_channels() {
-        $channels = $this->hasMany('App\Channel')
+        $channels = $this->hasMany('App\Models\Channel')
           ->where('archived', 1)
           ->orderBy('sort');
         if($this->demo_mode_enabled) {
@@ -54,7 +54,7 @@ class User extends Authenticatable
     }
 
     public function all_channels() {
-        $channels = $this->hasMany('App\Channel')
+        $channels = $this->hasMany('App\Models\Channel')
           ->orderBy('sort');
         return $channels;
     }
@@ -69,7 +69,7 @@ class User extends Authenticatable
         $channel = new Channel;
         $channel->user_id = $this->id;
         $channel->name = $name;
-        $channel->uid = str_random(24);
+        $channel->uid = \Illuminate\Support\Str::random(24);
         $channel->sort = 1;
         $channel->save();
 

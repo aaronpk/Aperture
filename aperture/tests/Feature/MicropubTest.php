@@ -3,7 +3,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Entry;
+use App\Models\Entry;
 use DB;
 
 class MicropubTest extends TestCase
@@ -82,7 +82,7 @@ class MicropubTest extends TestCase
     $this->micropub($body, 'application/json')->assertStatus(201);
 
     $this->assertEquals(1, Entry::where('source_id', $this->source->id)->count());
-    $this->assertContains('Second version', Entry::where('source_id', $this->source->id)->first()->data);
+    $this->assertStringContainsString('Second version', Entry::where('source_id', $this->source->id)->first()->data);
     $this->assertEquals(1, DB::table('channel_entry')->where('channel_id', $this->channel->id)->count());
   }
 

@@ -4,13 +4,11 @@ namespace Tests;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\Cache;
-use App\User, App\Source, App\Channel, App\Entry;
+use App\Models\User, App\Models\Source, App\Models\Channel, App\Models\Entry;
 use Tests\Support\FakeTransport, Tests\Support\PinnedTransportHTTP;
 
 abstract class TestCase extends BaseTestCase
 {
-    use CreatesApplication;
-
     /** @var FakeTransport */
     protected $http;
 

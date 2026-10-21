@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use IndieAuth;
 use Log;
-use App\User;
+use App\Models\User;
 
 class VerifyAPIRegistration implements ShouldQueue {
   use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -28,10 +28,10 @@ class VerifyAPIRegistration implements ShouldQueue {
 
   public function handle()
   {
-    $challenge = str_random(32);
+    $challenge = \Illuminate\Support\Str::random(32);
 
     $http = app(\p3k\HTTP::class);
-    $http->set_user_agent(env('USER_AGENT'));
+    $http->set_user_agent(config('aperture.user_agent'));
     $http->set_timeout(30);
 
     $response = $http->post($this->verification_endpoint, http_build_query([
@@ -67,7 +67,7 @@ class VerifyAPIRegistration implements ShouldQueue {
     $user->token_endpoint = $tokenEndpoint;
     $user->save();
 
-    $microsubEndpoint = env('APP_URL').'/microsub/'.$user->id;
+    $microsubEndpoint = config('app.url').'/microsub/'.$user->id;
 
     $http->post($this->verification_endpoint, http_build_query([
       'code' => $this->code,

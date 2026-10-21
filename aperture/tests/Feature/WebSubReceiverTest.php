@@ -3,7 +3,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Entry;
+use App\Models\Entry;
 use DB;
 
 class WebSubReceiverTest extends TestCase
@@ -31,7 +31,7 @@ class WebSubReceiverTest extends TestCase
 
     $unsubs = $this->http->requestsTo('POST', 'https://watchtower.test/');
     $this->assertCount(1, $unsubs);
-    $this->assertContains('hub.mode=unsubscribe', $unsubs[0]['body']);
+    $this->assertStringContainsString('hub.mode=unsubscribe', $unsubs[0]['body']);
     $this->assertEquals(0, Entry::count());
   }
 

@@ -39,7 +39,7 @@
 
     <p>Once you have an API key, you can use it like a Micropub access token. Aperture's API accepts <a href="https://micropub.net">Micropub requests</a> to create content in channels.</p>
 
-    <pre>POST {{ env('APP_URL') }}/micropub
+    <pre>POST {{ config('app.url') }}/micropub
 Authorization: Bearer (CHANNEL API KEY)
 Content-type: application/x-www-form-urlencoded
 

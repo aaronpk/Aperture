@@ -3,14 +3,14 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Source;
+use App\Models\Source;
 
 class WebPagesTest extends TestCase
 {
   use RefreshDatabase;
 
   public function testPublicPages() {
-    $this->get('/')->assertStatus(200)->assertSee('<link rel="micropub" href="http://aperture.test/micropub">');
+    $this->get('/')->assertStatus(200)->assertSee('<link rel="micropub" href="http://aperture.test/micropub">', false);
     $this->get('/docs')->assertStatus(200)->assertSee('POST http://aperture.test/micropub');
     $this->get('/pricing')->assertStatus(200);
     $this->get('/login')->assertStatus(200);
@@ -26,7 +26,7 @@ class WebPagesTest extends TestCase
     $this->actingAs($user)->get('/dashboard')
       ->assertStatus(200)
       ->assertSee('Home')
-      ->assertSee(htmlspecialchars('<link rel="microsub" href="http://aperture.test/microsub/'.$user->id.'">'));
+      ->assertSee(htmlspecialchars('<link rel="microsub" href="http://aperture.test/microsub/'.$user->id.'">'), false);
   }
 
   public function testChannelPageAndPermissions() {

@@ -14,7 +14,7 @@ class LongUrlProperties extends Migration
     public function up()
     {
         Schema::table('sources', function (Blueprint $table) {
-            $table->string('url', 2048)->change();
+            $table->string('url', 2048)->default('')->change();
         });
         Schema::table('entries', function (Blueprint $table) {
             $table->string('unique', 2048)->change();
@@ -29,7 +29,7 @@ class LongUrlProperties extends Migration
     public function down()
     {
         Schema::table('sources', function (Blueprint $table) {
-            $table->string('url', 512)->change();
+            $table->string('url', 512)->default('')->change();
         });
         Schema::table('entries', function (Blueprint $table) {
             $table->string('unique', 512)->change();

@@ -6,7 +6,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Log, Storage, File;
 use IMagick;
-use App\Entry, App\Media;
+use App\Models\Entry, App\Models\Media;
 use DOMXPath, DOMDocument;
 
 class EntrySavedListener implements ShouldQueue
@@ -28,7 +28,7 @@ class EntrySavedListener implements ShouldQueue
      */
     public function handle(EntrySaved $event)
     {
-        if(!env('MEDIA_URL'))
+        if(!config('aperture.media_url'))
             return;
 
         $modified = false;
@@ -113,11 +113,12 @@ class EntrySavedListener implements ShouldQueue
     }
 
     private static function toHtmlEntities($input) {
-      return mb_convert_encoding($input, 'HTML-ENTITIES', mb_detect_encoding($input));
+      $input = mb_convert_encoding($input, 'UTF-8', mb_detect_encoding($input));
+      return mb_encode_numericentity($input, [0x80, 0x10FFFF, 0, 0x1FFFFF], 'UTF-8');
     }
 
     private function _download(Entry $entry, $url, $maxSize=false, $proxy=true) {
-      if(!$entry->source->download_images || !env('MEDIA_URL')) {
+      if(!$entry->source->download_images || !config('aperture.media_url')) {
         return $url;
       }
 

@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use App\User, App\Channel;
+use App\Models\User, App\Models\Channel;
 
 class FixNotificationsChannelOrder extends Migration
 {

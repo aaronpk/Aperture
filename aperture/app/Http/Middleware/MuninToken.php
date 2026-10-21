@@ -9,7 +9,7 @@ class MuninToken
 {
     public function handle($request, Closure $next, $guard = null)
     {
-        if(Request::input('token') != env('MUNIN_TOKEN')) {
+        if(Request::input('token') != config('aperture.munin_token')) {
             return response('Unauthorized', 401)->header('Content-type', 'text/plain');
         }
 

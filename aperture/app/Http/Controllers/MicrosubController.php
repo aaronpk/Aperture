@@ -3,7 +3,7 @@ namespace App\Http\Controllers;
 
 use Request, Response, DB, Log, Auth;
 use App\Events\SourceAdded, App\Events\SourceRemoved;
-use App\User, App\Source, App\Channel, App\Entry, App\ChannelToken;
+use App\Models\User, App\Models\Source, App\Models\Channel, App\Models\Entry, App\Models\ChannelToken;
 use p3k\XRay;
 
 class MicrosubController extends Controller
@@ -27,7 +27,7 @@ class MicrosubController extends Controller
   private function _verifyScopeForAction($action) {
     $expect = self::_actions()[$action];
     if($expect) {
-      $tokenData = Request::get('token_data');
+      $tokenData = request()->attributes->get('token_data');
       if(isset($tokenData['scope']) && is_array($tokenData['scope']))
         return in_array($expect, $tokenData['scope']);
       else
@@ -50,7 +50,7 @@ class MicrosubController extends Controller
 
   private function _getRequestChannel() {
     // For channel tokens, force the request channel to the channel defined in the token
-    $td = Request::get('token_data');
+    $td = request()->attributes->get('token_data');
     if(isset($td['type']) && $td['type'] == 'channel') {
       return Channel::where('id', $td['channel_id'])->first();
     } else {
@@ -74,7 +74,7 @@ class MicrosubController extends Controller
   }
 
   public function get(Request $request) {
-    $token_data = Request::get('token_data');
+    $token_data = request()->attributes->get('token_data');
 
     $action = Request::input('action');
 
@@ -108,7 +108,7 @@ class MicrosubController extends Controller
   }
 
   public function post(Request $request) {
-    $token_data = Request::get('token_data');
+    $token_data = request()->attributes->get('token_data');
 
     $action = Request::input('action');
 
@@ -226,7 +226,7 @@ class MicrosubController extends Controller
     } else {
       // Create
 
-      if(!trim(Request::input('name'))) {
+      if(!trim((string)Request::input('name'))) {
         return Response::json(['error' => 'invalid_input', 'error_description' => 'Missing name parameter'], 400);
       }
 
@@ -280,7 +280,7 @@ class MicrosubController extends Controller
       }
 
       $http = app(\p3k\HTTP::class);
-      $http->set_user_agent(env('USER_AGENT'));
+      $http->set_user_agent(config('aperture.user_agent'));
       $http->timeout = 4;
 
       $xray = new \p3k\XRay();
@@ -332,7 +332,7 @@ class MicrosubController extends Controller
     } else {
       // Fetch the feed and return the first results
       $http = app(\p3k\HTTP::class);
-      $http->set_user_agent(env('USER_AGENT'));
+      $http->set_user_agent(config('aperture.user_agent'));
       $http->timeout = 4;
 
       $xray = new \p3k\XRay();
@@ -572,7 +572,7 @@ class MicrosubController extends Controller
       $source = new Source;
       $source->created_by = Auth::user()->id;
       $source->url = Request::input('url');
-      $source->token = str_random(32);
+      $source->token = \Illuminate\Support\Str::random(32);
       $source->is_new = true;
       $source->save();
     }

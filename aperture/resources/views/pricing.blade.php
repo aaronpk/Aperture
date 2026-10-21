@@ -10,7 +10,7 @@
 
   <p>You are encouraged to bookmark and favorite content that you see in a reader so that you can save the content to your own website!</p>
 
-  @if(env('EMAIL_SIGNUP'))
+  @if(config('aperture.email_signup'))
     <p>In the future, we may introduce paid plans that will store data for longer. If you're interested in that, please sign up for the mailing list to be notified when there are any updates.</p>
 
     <!-- Begin MailChimp Signup Form -->

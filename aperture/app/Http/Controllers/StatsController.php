@@ -2,14 +2,15 @@
 namespace App\Http\Controllers;
 
 use Request, Response, DB, Log;
-use App\User, App\Source, App\Channel, App\Entry, App\Media;
+use App\Models\User, App\Models\Source, App\Models\Channel, App\Models\Entry, App\Models\Media;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Routing\Controllers\HasMiddleware;
 
-class StatsController extends Controller
+class StatsController extends Controller implements HasMiddleware
 {
 
-  public function __construct() {
-    $this->middleware('munin');
+  public static function middleware(): array {
+    return ['munin'];
   }
 
   private function _text($text) {
@@ -51,7 +52,7 @@ new_entries.type DERIVE
 new_entries.min 0
 ";
     } else {
-      $entries = DB::SELECT('SELECT AUTO_INCREMENT FROM information_schema.tables WHERE table_schema="'.env("DB_DATABASE").'" AND table_name="entries"');
+      $entries = DB::SELECT('SELECT AUTO_INCREMENT FROM information_schema.tables WHERE table_schema="'.DB::getDatabaseName().'" AND table_name="entries"');
       $response = 'new_entries.value '.$entries[0]->AUTO_INCREMENT;
     }
 
@@ -72,7 +73,7 @@ entries.type GAUGE
 entries.min 0
 ";
     } else {
-      $entries = Redis::get(env('APP_URL').'::entries');
+      $entries = Redis::get(config('app.url').'::entries');
       $response = 'entries.value '.$entries;
     }
 
@@ -150,7 +151,7 @@ disk.min 0
   }
 
   public function proxy_bytes() {
-    if(env('IMG_PROXY_URL')) {
+    if(config('aperture.img_proxy.url')) {
       if(Request::input('mode') == 'config') {
         $response = "graph_title Aperture Image Proxy
 graph_info Image proxy bandwidth usage
@@ -164,7 +165,7 @@ bandwidth.type DERIVE
 bandwidth.min 0
 ";
       } else {
-        $stats = file_get_contents(env('IMG_PROXY_URL').'status');
+        $stats = file_get_contents(config('aperture.img_proxy.url').'status');
         if(preg_match('/, (\d+)/', $stats, $match)) {
           $response = 'bandwidth.value '.$match[1];
         }

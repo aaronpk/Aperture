@@ -2,9 +2,9 @@
 
 @section('headtags')
 
-    <link rel="authorization_endpoint" href="{{ env('APP_URL') }}/auth">
-    <link rel="token_endpoint" href="{{ env('APP_URL') }}/token">
-    <link rel="micropub" href="{{ env('APP_URL') }}/micropub">
+    <link rel="authorization_endpoint" href="{{ config('app.url') }}/auth">
+    <link rel="token_endpoint" href="{{ config('app.url') }}/token">
+    <link rel="micropub" href="{{ config('app.url') }}/micropub">
 @endsection
 
 @section('content')

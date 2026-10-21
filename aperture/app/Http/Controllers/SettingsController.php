@@ -2,12 +2,13 @@
 namespace App\Http\Controllers;
 
 use Auth, Gate, Request, DB;
-use App\Channel, App\Source;
+use App\Models\Channel, App\Models\Source;
+use Illuminate\Routing\Controllers\HasMiddleware;
 
-class SettingsController extends Controller
+class SettingsController extends Controller implements HasMiddleware
 {
-  public function __construct() {
-    $this->middleware('auth');
+  public static function middleware(): array {
+    return ['auth'];
   }
 
   public function index() {

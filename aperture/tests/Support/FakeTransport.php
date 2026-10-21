@@ -31,6 +31,10 @@ class FakeTransport implements Transport
     return $this->respond('POST', $url, $body, $headers);
   }
 
+  public function put($url, $body, $headers=[]) {
+    return $this->respond('PUT', $url, $body, $headers);
+  }
+
   public function head($url, $headers=[]) {
     $response = $this->respond('HEAD', $url, null, $headers);
     $response['body'] = false;

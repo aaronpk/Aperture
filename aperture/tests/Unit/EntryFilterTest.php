@@ -2,7 +2,7 @@
 namespace Tests\Unit;
 
 use Tests\TestCase;
-use App\Entry, App\Channel;
+use App\Models\Entry, App\Models\Channel;
 
 class EntryFilterTest extends TestCase
 {

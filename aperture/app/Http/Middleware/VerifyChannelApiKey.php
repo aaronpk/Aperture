@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure, Log, Request, Response, Auth, Cache;
-use App\User, App\Source;
+use App\Models\User, App\Models\Source;
 use p3k\HTTP;
 
 class VerifyChannelApiKey
@@ -61,7 +61,8 @@ class VerifyChannelApiKey
                 return Response::json(['error'=>'forbidden'], 403);
             }
 
-            Cache::set('token:'.$token, json_encode($token_data), 300);
+            // 5 hours, the same as the previous 300 minute TTL
+            Cache::set('token:'.$token, json_encode($token_data), 300*60);
         }
 
         $request->attributes->set('token_data', $token_data);

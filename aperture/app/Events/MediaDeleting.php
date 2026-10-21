@@ -3,7 +3,7 @@ namespace App\Events;
 
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
-use App\Media;
+use App\Models\Media;
 use Log;
 
 class MediaDeleting

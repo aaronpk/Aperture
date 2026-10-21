@@ -6,14 +6,14 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Redis;
 use Log, Storage;
-use App\Entry, App\Media;
+use App\Models\Entry, App\Models\Media;
 
 class EntryDeletingListener # implements ShouldQueue
 {
 
   public function handle(EntryDeleting $event)
   {
-    Redis::decr(env('APP_URL').'::entries');
+    Redis::decr(config('app.url').'::entries');
 
     $media = $event->entry->media()->get();
     foreach($media as $file) {

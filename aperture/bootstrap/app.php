@@ -1,55 +1,41 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Create The Application
-|--------------------------------------------------------------------------
-|
-| The first thing we will do is create a new Laravel application instance
-| which serves as the "glue" for all the components of Laravel, and is
-| the IoC container for the system binding all of the various parts.
-|
-*/
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Configuration\Exceptions;
+use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Support\Facades\Route;
 
-$app = new Illuminate\Foundation\Application(
-    realpath(__DIR__.'/../')
-);
+return Application::configure(basePath: dirname(__DIR__))
+    ->withRouting(
+        commands: __DIR__.'/../routes/console.php',
+        using: function () {
+            Route::pattern('user', '[0-9]+');
+            Route::pattern('channel', '[0-9]+');
+            Route::pattern('source_id', '[0-9]+');
+            Route::pattern('entry', '[0-9a-zA-Z@\#]+');
+            Route::pattern('channel_uid', '[0-9a-zA-Z]+');
 
-/*
-|--------------------------------------------------------------------------
-| Bind Important Interfaces
-|--------------------------------------------------------------------------
-|
-| Next, we need to bind some important interfaces into the container so
-| we will be able to resolve them when needed. The kernels serve the
-| incoming requests to this application from both the web and CLI.
-|
-*/
+            // web.php applies the "web" group itself, since some routes in it must not use cookies
+            Route::group([], base_path('routes/web.php'));
 
-$app->singleton(
-    Illuminate\Contracts\Http\Kernel::class,
-    App\Http\Kernel::class
-);
+            Route::middleware('websub')->group(base_path('routes/websub.php'));
+            Route::middleware('microsub')->group(base_path('routes/microsub.php'));
+            Route::middleware('micropub')->group(base_path('routes/micropub.php'));
+        },
+    )
+    ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->group('websub', []);
+        $middleware->group('microsub', [
+            \App\Http\Middleware\VerifyIndieAuthAccessToken::class,
+        ]);
+        $middleware->group('micropub', [
+            \App\Http\Middleware\VerifyChannelApiKey::class,
+        ]);
 
-$app->singleton(
-    Illuminate\Contracts\Console\Kernel::class,
-    App\Console\Kernel::class
-);
-
-$app->singleton(
-    Illuminate\Contracts\Debug\ExceptionHandler::class,
-    App\Exceptions\Handler::class
-);
-
-/*
-|--------------------------------------------------------------------------
-| Return The Application
-|--------------------------------------------------------------------------
-|
-| This script returns the application instance. The instance is given to
-| the calling script so we can separate the building of the instances
-| from the actual running of the application and sending responses.
-|
-*/
-
-return $app;
+        $middleware->alias([
+            'munin' => \App\Http\Middleware\MuninToken::class,
+        ]);
+    })
+    ->withExceptions(function (Exceptions $exceptions): void {
+        //
+    })->create();

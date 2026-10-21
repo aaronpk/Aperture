@@ -1,5 +1,5 @@
 <?php
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,7 +10,7 @@ class ChannelToken extends Model {
   ];
 
   public function channel() {
-    return $this->belongsTo('\App\Channel');
+    return $this->belongsTo('\App\Models\Channel');
   }
 
   public function scopes() {

@@ -2,16 +2,12 @@
 namespace App\Http\Controllers;
 
 use Request, Response, DB, Log;
-use App\User, App\Source, App\Channel, App\Entry;
+use App\Models\User, App\Models\Source, App\Models\Channel, App\Models\Entry;
 use p3k\XRay;
 use App\Events\EntrySaved;
 
 class WebSubReceiverController extends Controller
 {
-
-  public function __construct() {
-    $this->middleware('websub');
-  }
 
   public function source_callback($token) {
     #Log::info('WebSub callback: '.$token);

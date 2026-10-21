@@ -2,14 +2,14 @@
 namespace App\Http\Controllers;
 
 use Request, Response, DB, Log, Auth;
-use App\User, App\Source, App\Channel, App\Entry, App\Media, App\ChannelToken;
+use App\Models\User, App\Models\Source, App\Models\Channel, App\Models\Entry, App\Models\Media, App\Models\ChannelToken;
 use App\Events\EntrySaved;
 use p3k\XRay;
 
 class MicropubController extends Controller
 {
   private function _getRequestSource() {
-    $td = Request::get('token_data');
+    $td = request()->attributes->get('token_data');
     if(isset($td['type']) && $td['type'] == 'source') {
       return Source::where('id', $td['source_id'])->first();
     } else {
@@ -23,7 +23,7 @@ class MicropubController extends Controller
   public function get() {
     if(Request::input('q') == 'config') {
       return response()->json([
-        'media-endpoint' => env('APP_URL').'/micropub/media'
+        'media-endpoint' => config('app.url').'/micropub/media'
       ]);
     }
   }
@@ -81,7 +81,7 @@ class MicropubController extends Controller
     if(!$entry) {
       $entry = new Entry();
       $entry->source_id = $source->id;
-      $entry->unique = isset($item['url']) ? md5($item['url']) : str_random(32);
+      $entry->unique = isset($item['url']) ? md5($item['url']) : \Illuminate\Support\Str::random(32);
       $new = true;
     }
 

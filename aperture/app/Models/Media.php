@@ -1,5 +1,5 @@
 <?php
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Storage, Log;
@@ -17,18 +17,18 @@ class Media extends Model {
   ];
 
   public function entries() {
-    return $this->belongsToMany('\App\Entry');
+    return $this->belongsToMany('\App\Models\Entry');
   }
 
   public function url() {
-    return env('MEDIA_URL').'/'.$this->filename;
+    return config('aperture.media_url').'/'.$this->filename;
   }
 
   public static function createFromURL($url, $maxSize=false) {
 
     $host = parse_url($url, PHP_URL_HOST);
 
-    if($host == parse_url(env('MEDIA_URL'), PHP_URL_HOST))
+    if($host == parse_url(config('aperture.media_url'), PHP_URL_HOST))
       return $url;
 
     @mkdir(sys_get_temp_dir().'/aperture', 0755);
@@ -67,7 +67,7 @@ class Media extends Model {
 
   public static function createFromUpload($filedata, $maxSize=false) {
     $hash = hash_file('sha256', $filedata);
-    $media = self::_createFromFile(env('APP_URL').'/media/'.$hash, $filedata, $maxSize);
+    $media = self::_createFromFile(config('app.url').'/media/'.$hash, $filedata, $maxSize);
     return $media;
   }
 

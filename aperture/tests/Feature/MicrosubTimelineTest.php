@@ -57,8 +57,8 @@ class MicrosubTimelineTest extends TestCase
     $empty = $this->user->create_channel('Empty');
     $response = $this->microsubGet($this->user, $this->token, ['action' => 'timeline', 'channel' => $empty->uid]);
     $response->assertStatus(200);
-    $this->assertContains('"paging":{}', $response->getContent());
-    $this->assertContains('"items":[]', $response->getContent());
+    $this->assertStringContainsString('"paging":{}', $response->getContent());
+    $this->assertStringContainsString('"items":[]', $response->getContent());
   }
 
   public function testReadTrackingDisabledOmitsIsRead() {

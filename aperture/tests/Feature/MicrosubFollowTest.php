@@ -3,7 +3,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Source;
+use App\Models\Source;
 
 class MicrosubFollowTest extends TestCase
 {
@@ -84,7 +84,7 @@ class MicrosubFollowTest extends TestCase
     // Last channel removed, so the source is unsubscribed
     $unsubs = $this->http->requestsTo('POST', 'https://watchtower.test/');
     $this->assertCount(1, $unsubs);
-    $this->assertContains('hub.mode=unsubscribe', $unsubs[0]['body']);
+    $this->assertStringContainsString('hub.mode=unsubscribe', $unsubs[0]['body']);
 
     // Unknown URL returns an empty body
     $response = $this->microsubPost($user, $token, ['action' => 'unfollow', 'channel' => $channel->uid, 'url' => 'https://nope.example/']);

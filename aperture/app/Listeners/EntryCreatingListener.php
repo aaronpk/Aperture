@@ -6,14 +6,14 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Redis;
 use Log, Storage;
-use App\Entry, App\Media;
+use App\Models\Entry, App\Models\Media;
 
 class EntryCreatingListener # implements ShouldQueue
 {
 
   public function handle(EntryCreating $event)
   {
-    Redis::incr(env('APP_URL').'::entries');
+    Redis::incr(config('app.url').'::entries');
   }
 
 }

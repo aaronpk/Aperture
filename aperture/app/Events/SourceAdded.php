@@ -7,7 +7,7 @@ use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-use App\Source, App\Channel;
+use App\Models\Source, App\Models\Channel;
 
 class SourceAdded
 {

@@ -5,7 +5,7 @@ use App\Events\MediaDeleting;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Log, Storage;
-use App\Media;
+use App\Models\Media;
 
 class MediaDeletingListener # implements ShouldQueue
 {

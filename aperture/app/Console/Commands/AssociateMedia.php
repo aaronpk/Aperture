@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\User, App\Channel, App\Source, App\Entry, App\Media;
+use App\Models\User, App\Models\Channel, App\Models\Source, App\Models\Entry, App\Models\Media;
 use DB;
 
 class AssociateMedia extends Command
@@ -37,7 +37,7 @@ class AssociateMedia extends Command
         }
 
         $media = array_map(function($url){
-          return str_replace(env('MEDIA_URL').'/', '', $url);
+          return str_replace(config('aperture.media_url').'/', '', $url);
         }, $media);
 
         if(count($media)) {

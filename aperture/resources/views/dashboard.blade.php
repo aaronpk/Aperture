@@ -60,7 +60,7 @@
 
     <p>To use Aperture as your Microsub endpoint, add this HTML to your home page.</p>
 
-    <pre><?= htmlspecialchars('<link rel="microsub" href="'.env('APP_URL').'/microsub/'.Auth::user()->id.'">') ?></pre>
+    <pre><?= htmlspecialchars('<link rel="microsub" href="'.config('app.url').'/microsub/'.Auth::user()->id.'">') ?></pre>
 
     <p>Then choose a <a href="https://indieweb.org/Microsub#Clients">reader</a> and log in, and the reader will find your subscriptions and data in Aperture.</p>
   </div>

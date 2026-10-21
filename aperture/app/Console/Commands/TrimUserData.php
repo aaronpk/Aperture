@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\User, App\Channel, App\Source, App\Entry, App\Media;
+use App\Models\User, App\Models\Channel, App\Models\Source, App\Models\Entry, App\Models\Media;
 use DB;
 
 class TrimUserData extends Command

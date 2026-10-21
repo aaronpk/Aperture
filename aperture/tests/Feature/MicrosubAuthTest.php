@@ -3,7 +3,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\ChannelToken;
+use App\Models\ChannelToken;
 
 class MicrosubAuthTest extends TestCase
 {

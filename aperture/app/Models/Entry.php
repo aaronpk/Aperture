@@ -1,5 +1,5 @@
 <?php
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use DB;
@@ -18,19 +18,19 @@ class Entry extends Model {
   ];
 
   public function source() {
-    return $this->belongsTo('\App\Source');
+    return $this->belongsTo('\App\Models\Source');
   }
 
   public function channels() {
-    return $this->belongsToMany('\App\Channel');
+    return $this->belongsToMany('\App\Models\Channel');
   }
 
   public function media() {
-    return $this->belongsToMany('\App\Media');
+    return $this->belongsToMany('\App\Models\Media');
   }
 
   public function permalink() {
-    return env('APP_URL').'/entry/'.$this->source->id.'/'.$this->unique;
+    return config('app.url').'/entry/'.$this->source->id.'/'.$this->unique;
   }
 
   public function to_array($channel=false) {
@@ -50,7 +50,7 @@ class Entry extends Model {
     }
 
     // For testing, override the JSON published with the DB published
-    if(env('APP_ENV') == 'testing')
+    if(app()->environment('testing'))
       $data['published'] = date('c', strtotime($this->published));
 
     return $data;
@@ -69,7 +69,7 @@ class Entry extends Model {
       }
     }
 
-    if(!$matches && isset($data['content'])) {
+    if(!$matches && isset($data['content']['text'])) {
       if(stripos($data['content']['text'], $keyword) !== false) {
         $matches = true;
       }

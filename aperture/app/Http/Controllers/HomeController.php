@@ -2,13 +2,14 @@
 namespace App\Http\Controllers;
 
 use Auth, Gate, Request, DB;
-use App\Channel, App\Source;
+use App\Models\Channel, App\Models\Source;
 use App\Events\SourceAdded, App\Events\SourceRemoved;
+use Illuminate\Routing\Controllers\HasMiddleware;
 
-class HomeController extends Controller
+class HomeController extends Controller implements HasMiddleware
 {
-  public function __construct() {
-    $this->middleware('auth');
+  public static function middleware(): array {
+    return ['auth'];
   }
 
   public function dashboard() {
@@ -52,7 +53,7 @@ class HomeController extends Controller
         $source->created_by = Auth::user()->id;
         $source->url = Request::input('url');
         $source->format = Request::input('format');
-        $source->token = str_random(32);
+        $source->token = \Illuminate\Support\Str::random(32);
         $source->is_new = true;
         $source->save();
       }
@@ -78,10 +79,10 @@ class HomeController extends Controller
       $channel->include_only = Request::input('include_only') ?: '';
       $channel->exclude_types = Request::input('exclude_types') ?: '';
 
-      $keywords = preg_split('/[ ,]+/', Request::input('include_keywords'));
+      $keywords = preg_split('/[ ,]+/', (string)Request::input('include_keywords'));
       $channel->include_keywords = implode(' ', $keywords);
 
-      $keywords = preg_split('/[ ,]+/', Request::input('exclude_keywords'));
+      $keywords = preg_split('/[ ,]+/', (string)Request::input('exclude_keywords'));
       $channel->exclude_keywords = implode(' ', $keywords);
 
       $channel->read_tracking_mode = Request::input('read_tracking_mode') ?: 'counts';
@@ -175,7 +176,7 @@ class HomeController extends Controller
 
       // Create a new source for this API key
       $source = new Source();
-      $source->token = str_random(32);
+      $source->token = \Illuminate\Support\Str::random(32);
       $source->name = Request::input('name') ?: '';
       $source->format = 'apikey';
       $source->created_by = Auth::user()->id;
@@ -202,7 +203,7 @@ class HomeController extends Controller
     $url = \p3k\url\normalize($url);
 
     $http = app(\p3k\HTTP::class);
-    $http->set_user_agent(env('USER_AGENT'));
+    $http->set_user_agent(config('aperture.user_agent'));
     $http->set_timeout(30);
     $xray = new \p3k\XRay();
     $xray->http = $http;

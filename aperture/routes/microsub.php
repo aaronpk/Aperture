@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\MicrosubController;
+
 /*
 |--------------------------------------------------------------------------
 | Microsub Routes
 |--------------------------------------------------------------------------
 */
 
-Route::get('/microsub/{user}', 'MicrosubController@get');
-Route::post('/microsub/{user}', 'MicrosubController@post');
+Route::get('/microsub/{user}', [MicrosubController::class, 'get']);
+Route::post('/microsub/{user}', [MicrosubController::class, 'post']);

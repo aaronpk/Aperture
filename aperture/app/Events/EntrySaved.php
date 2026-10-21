@@ -3,7 +3,7 @@ namespace App\Events;
 
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
-use App\Entry;
+use App\Models\Entry;
 use Log;
 
 class EntrySaved

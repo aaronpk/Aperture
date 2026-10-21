@@ -9,9 +9,9 @@
 
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet" type="text/css">
 
-    <link rel="authorization_endpoint" href="{{ env('APP_URL') }}/auth">
-    <link rel="token_endpoint" href="{{ env('APP_URL') }}/token">
-    <link rel="micropub" href="{{ env('APP_URL') }}/micropub">
+    <link rel="authorization_endpoint" href="{{ config('app.url') }}/auth">
+    <link rel="token_endpoint" href="{{ config('app.url') }}/token">
+    <link rel="micropub" href="{{ config('app.url') }}/micropub">
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 

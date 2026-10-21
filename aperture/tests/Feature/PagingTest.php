@@ -4,7 +4,7 @@ namespace Tests\Feature;
 use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\User, App\Source, App\Channel, App\Entry;
+use App\Models\User, App\Models\Source, App\Models\Channel, App\Models\Entry;
 
 class PagingTest extends TestCase
 {
@@ -17,26 +17,21 @@ class PagingTest extends TestCase
   }
 
   public function testPagingWithBatchOrdering() {
-    $user = factory(User::class)->create();
-    $channel = $user->channels()->where('user_id', $user->id)->where('uid', '!=', 'notifications')->first();
+    $user = $this->createUser();
+    $channel = $this->homeChannel($user);
 
     Cache::shouldReceive('get')
       ->with('token:1234')
       ->andReturn('{"scope": ["create", "update", "media", "read"], "client_id": "https://aperture.p3k.io", "me": "https://aaronparecki.com/","user_id": '.$user->id.'}');
 
-    $source = factory(Source::class)->create();
+    $source = $this->createSource($user);
 
     // Generate 30 entries all with the same created_at date
     $entries = [];
     for($i=30; $i>=1; $i--) {
       $date = '2017-10-01 08:00:00';
       $published = '2017-12-'.sprintf('%02d',$i).' 08:00:00';
-      $entries[] = factory(Entry::class)->create([
-        'source_id' => $source->id,
-        'published' => $published,
-        'created_at' => $date,
-        'updated_at' => $date,
-      ]);
+      $entries[] = $this->createEntry($source, ['published' => $published], ['created_at' => $date, 'updated_at' => $date]);
     }
 
     // Add all the entries to the channel with different batch_orders
@@ -91,25 +86,20 @@ class PagingTest extends TestCase
 
   public function testPagingParameters()
   {
-    $user = factory(User::class)->create();
-    $channel = $user->channels()->where('user_id', $user->id)->where('uid', '!=', 'notifications')->first();
+    $user = $this->createUser();
+    $channel = $this->homeChannel($user);
 
     Cache::shouldReceive('get')
       ->with('token:1234')
       ->andReturn('{"scope": ["create", "update", "media", "read"], "client_id": "https://aperture.p3k.io", "me": "https://aaronparecki.com/","user_id": '.$user->id.'}');
 
-    $source = factory(Source::class)->create();
+    $source = $this->createSource($user);
 
     // Generate 30 entries all dated different days in October
     $entries = [];
     for($i=30; $i>=1; $i--) {
       $date = '2017-10-'.sprintf('%02d',$i).' 08:00:00';
-      $entries[] = factory(Entry::class)->create([
-        'source_id' => $source->id,
-        'published' => $date,
-        'created_at' => $date,
-        'updated_at' => $date,
-      ]);
+      $entries[] = $this->createEntry($source, ['published' => $date], ['created_at' => $date, 'updated_at' => $date]);
     }
 
     // Add all the entries to the channel
@@ -189,12 +179,7 @@ class PagingTest extends TestCase
     $entries = [];
     for($i=30; $i>=1; $i--) {
       $date = '2017-11-'.sprintf('%02d',$i).' 07:00:00';
-      $entries[] = factory(Entry::class)->create([
-        'source_id' => $source->id,
-        'published' => $date,
-        'created_at' => $date,
-        'updated_at' => $date,
-      ]);
+      $entries[] = $this->createEntry($source, ['published' => $date], ['created_at' => $date, 'updated_at' => $date]);
     }
 
     // Add all the entries to the channel
