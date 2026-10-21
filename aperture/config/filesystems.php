@@ -33,6 +33,10 @@ return [
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app'),
+            // Media is served directly by the web server, so keep the 0644/0755
+            // permissions Laravel 5.5 used instead of Flysystem 3's private default
+            'visibility' => 'public',
+            'directory_visibility' => 'public',
             'throw' => false,
             'report' => false,
         ],

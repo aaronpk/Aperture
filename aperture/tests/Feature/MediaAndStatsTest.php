@@ -44,6 +44,19 @@ class MediaAndStatsTest extends TestCase
     $this->assertEquals(storage_path('app'), config('filesystems.disks.local.root'));
   }
 
+  public function testLocalDiskCreatesWorldReadableMedia() {
+    $root = sys_get_temp_dir().'/aperture-disk-test-'.bin2hex(random_bytes(4));
+    $disk = Storage::build(array_merge(config('filesystems.disks.local'), ['root' => $root]));
+
+    $disk->makeDirectory('media/example.com');
+    $disk->put('media/example.com/file.png', fopen('data://text/plain,hello', 'r'));
+
+    $this->assertEquals('0755', substr(sprintf('%o', fileperms($root.'/media/example.com')), -4));
+    $this->assertEquals('0644', substr(sprintf('%o', fileperms($root.'/media/example.com/file.png')), -4));
+
+    (new \Illuminate\Filesystem\Filesystem)->deleteDirectory($root);
+  }
+
   public function testEntryCounterUsesUnprefixedRedisKey() {
     $key = config('app.url').'::entries';
     Redis::set($key, 10);
