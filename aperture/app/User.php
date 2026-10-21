@@ -111,7 +111,7 @@ class User extends Authenticatable
 
       $config = false;
 
-      $http = new \p3k\HTTP();
+      $http = app(\p3k\HTTP::class);
       $response = $http->get(\p3k\url\add_query_params_to_url($this->micropub_endpoint, ['q'=>'config']), [
           'Authorization: Bearer '.$token,
           'Accept: application/json'

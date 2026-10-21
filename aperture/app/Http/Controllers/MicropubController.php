@@ -34,7 +34,7 @@ class MicropubController extends Controller
     if(get_class($source) == 'Illuminate\Http\JsonResponse')
       return $source;
 
-    $input = file_get_contents('php://input');
+    $input = Request::getContent();
 
     #Log::info('raw input: '.$input);
 

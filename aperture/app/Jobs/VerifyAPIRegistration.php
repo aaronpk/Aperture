@@ -30,7 +30,8 @@ class VerifyAPIRegistration implements ShouldQueue {
   {
     $challenge = str_random(32);
 
-    $http = new \p3k\HTTP(env('USER_AGENT'));
+    $http = app(\p3k\HTTP::class);
+    $http->set_user_agent(env('USER_AGENT'));
     $http->set_timeout(30);
 
     $response = $http->post($this->verification_endpoint, http_build_query([

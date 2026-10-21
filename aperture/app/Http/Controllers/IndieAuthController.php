@@ -322,7 +322,8 @@ class IndieAuthController extends Controller
   }
 
   private static function _client_info($client_id) {
-    $http = new \p3k\HTTP(env('USER_AGENT'));
+    $http = app(\p3k\HTTP::class);
+    $http->set_user_agent(env('USER_AGENT'));
     $http->set_timeout(30);
     $xray = new \p3k\XRay();
     $xray->http = $http;

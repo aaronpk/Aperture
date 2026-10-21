@@ -279,7 +279,7 @@ class MicrosubController extends Controller
         }
       }
 
-      $http = new \p3k\HTTP();
+      $http = app(\p3k\HTTP::class);
       $http->set_user_agent(env('USER_AGENT'));
       $http->timeout = 4;
 
@@ -331,7 +331,7 @@ class MicrosubController extends Controller
       }
     } else {
       // Fetch the feed and return the first results
-      $http = new \p3k\HTTP();
+      $http = app(\p3k\HTTP::class);
       $http->set_user_agent(env('USER_AGENT'));
       $http->timeout = 4;
 

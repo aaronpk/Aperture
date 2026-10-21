@@ -19,7 +19,7 @@ class Source extends Model {
   }
 
   public function subscribe() {
-    $http = new \p3k\HTTP();
+    $http = app(\p3k\HTTP::class);
     $response = $http->post(env('WATCHTOWER_URL'), http_build_query([
       'hub.mode' => 'subscribe',
       'hub.topic' => $this->url,
@@ -31,7 +31,7 @@ class Source extends Model {
   }
 
   public function unsubscribe() {
-    $http = new \p3k\HTTP();
+    $http = app(\p3k\HTTP::class);
     $response = $http->post(env('WATCHTOWER_URL'), http_build_query([
       'hub.mode' => 'unsubscribe',
       'hub.topic' => $this->url,

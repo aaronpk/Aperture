@@ -80,7 +80,7 @@ class VerifyIndieAuthAccessToken
                     ], 403);
                 }
             } else {
-                $http = new HTTP();
+                $http = app(HTTP::class);
                 $token_response = $http->get($user->token_endpoint, [
                     'Authorization: Bearer '.$token,
                     'Accept: application/json'
