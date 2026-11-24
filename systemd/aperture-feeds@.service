@@ -12,7 +12,7 @@ PartOf=aperture-workers.target
 User=www-data
 Group=www-data
 WorkingDirectory=/web/sites/aperture.p3k.io/aperture
-ExecStart=/usr/bin/php8.6 artisan queue:work --queue=feeds --sleep=3 --max-time=3600
+ExecStart=/usr/bin/php8.6 artisan queue:work --name=aperture-feeds-%i --queue=feeds --sleep=3 --max-time=3600
 # The worker exits after an hour (--max-time) and is started fresh, which keeps memory in check
 Restart=always
 RestartSec=5

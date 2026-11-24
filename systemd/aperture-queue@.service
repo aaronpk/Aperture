@@ -12,7 +12,7 @@ PartOf=aperture-workers.target
 User=www-data
 Group=www-data
 WorkingDirectory=/web/sites/aperture.p3k.io/aperture
-ExecStart=/usr/bin/php8.6 artisan queue:work --sleep=3 --max-time=3600
+ExecStart=/usr/bin/php8.6 artisan queue:work --name=aperture-queue-%i --sleep=3 --max-time=3600
 Restart=always
 RestartSec=5
 TimeoutStopSec=90
