@@ -1,0 +1,14 @@
+# Groups all of Aperture's queue workers, so they can be started, stopped and
+# restarted together:
+#
+#   systemctl restart aperture-workers.target
+#
+# To change how many workers run, edit the Wants= lines, then run
+# `systemctl daemon-reload` and `systemctl restart aperture-workers.target`.
+[Unit]
+Description=Aperture queue workers
+Wants=aperture-feeds@1.service aperture-feeds@2.service aperture-feeds@3.service aperture-feeds@4.service
+Wants=aperture-queue@1.service
+
+[Install]
+WantedBy=multi-user.target

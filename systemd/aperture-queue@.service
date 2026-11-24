@@ -1,0 +1,22 @@
+# Aperture worker for the default queue: image downloads and everything else that
+# isn't a feed fetch.
+[Unit]
+Description=Aperture queue worker %i
+After=network-online.target redis-server.service mariadb.service
+Wants=network-online.target
+# Stopping or restarting aperture-workers.target does the same to this unit
+PartOf=aperture-workers.target
+
+[Service]
+# The same user as PHP-FPM: workers share storage/ and /tmp/aperture with it
+User=www-data
+Group=www-data
+WorkingDirectory=/web/sites/aperture.p3k.io/aperture
+ExecStart=/usr/bin/php8.6 artisan queue:work --sleep=3 --max-time=3600
+Restart=always
+RestartSec=5
+TimeoutStopSec=90
+KillSignal=SIGTERM
+
+[Install]
+WantedBy=aperture-workers.target

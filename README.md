@@ -33,11 +33,28 @@ Run Laravel's scheduler from cron every minute. It queues a fetch of each feed t
 * * * * * cd /path/to/aperture && php artisan schedule:run >> /dev/null 2>&1
 ```
 
-Run at least one queue worker for the `feeds` queue, which is where the fetch jobs go:
+Run queue workers: at least one for the `feeds` queue, which is where the fetch jobs go, and one for the default queue, which handles image downloads and everything else.
 
 ```
 php artisan queue:work --queue=feeds
+php artisan queue:work
 ```
+
+The `systemd` folder has units that keep these running: `aperture-feeds@.service` and `aperture-queue@.service` each run one worker per instance, and `aperture-workers.target` groups four feed workers and one default worker. Check the paths, PHP binary and user in the two service files, then:
+
+```
+sudo cp systemd/aperture-* /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now aperture-workers.target
+```
+
+After deploying new code, restart them all so they pick it up:
+
+```
+sudo systemctl restart aperture-workers.target
+```
+
+To run a different number of workers, edit the `Wants=` lines in `aperture-workers.target`.
 
 Run the workers and the cron job as the same user as PHP-FPM, since they share the `storage` folder and a temporary folder for downloaded images. If you change the queue connection's `retry_after`, keep it above 75 seconds, which is how long a fetch job is allowed to run.
 
