@@ -39,6 +39,18 @@ class LoginController extends Controller
       }
     }
 
+    // Look for IndieAuth server metadata first. If the site has it, the endpoints
+    // below come from the metadata instead of from rel links on the page.
+    $issuer = false;
+    if($metadataEndpoint = IndieAuth\Client::discoverMetadataEndpoint($url)) {
+      $issuer = IndieAuth\Client::discoverIssuer($metadataEndpoint);
+      if($issuer instanceof IndieAuth\ErrorResponse) {
+        return redirect('login')->with('auth_error', 'invalid issuer')
+          ->with('auth_error_description', 'The issuer in your IndieAuth server\'s metadata is missing or does not match the metadata URL')
+          ->with('auth_url', Request::input('url'));
+      }
+    }
+
     $authorizationEndpoint = IndieAuth\Client::discoverAuthorizationEndpoint($url);
     $tokenEndpoint = IndieAuth\Client::discoverTokenEndpoint($url);
     $micropubEndpoint = IndieAuth\Client::discoverMicropubEndpoint($url);
@@ -63,6 +75,7 @@ class LoginController extends Controller
       'authorization_endpoint' => $authorizationEndpoint,
       'token_endpoint' => $tokenEndpoint,
       'micropub_endpoint' => $micropubEndpoint,
+      'issuer' => $issuer,
       'indieauth_url' => $url,
       'redirect_after_login' => Request::input('return'),
     ]);
@@ -102,6 +115,15 @@ class LoginController extends Controller
       ]);
     }
 
+    // A server that publishes metadata identifies itself in the callback, so that a
+    // response from a different server can't be mixed up with this one
+    if(IndieAuth\Client::validateIssuerMatch(Request::all(), session('issuer')) instanceof IndieAuth\ErrorResponse) {
+      return view('login/error', [
+        'error' => 'invalid issuer',
+        'description' => 'The issuer returned in the callback was missing or did not match the IndieAuth server that was discovered.'
+      ]);
+    }
+
     // Check the authorization code at the endpoint previously discovered
     $auth = IndieAuth\Client::exchangeAuthorizationCode(session('token_endpoint'), [
       'code' => Request::input('code'),
@@ -113,6 +135,7 @@ class LoginController extends Controller
     if(isset($auth['response']['me'])) {
       // Make sure "me" returned matches the original or shares an authorization endpoint
       if(session('indieauth_url') != $auth['response']['me']) {
+        \IndieAuth\Client::discoverMetadataEndpoint($auth['response']['me']);
         $newAuthorizationEndpoint = \IndieAuth\Client::discoverAuthorizationEndpoint($auth['response']['me']);
 
         if(session('authorization_endpoint') != $newAuthorizationEndpoint) {
@@ -147,6 +170,7 @@ class LoginController extends Controller
         'authorization_endpoint' => false,
         'token_endpoint' => false,
         'micropub_endpoint' => false,
+        'issuer' => false,
         'indieauth_url' => false
       ]);
 

@@ -54,6 +54,8 @@ class CreateUser extends Command
       return;
     }
 
+    // Use the site's IndieAuth server metadata if it has any, otherwise its rel links
+    \IndieAuth\Client::discoverMetadataEndpoint($url);
     $tokenEndpoint = \IndieAuth\Client::discoverTokenEndpoint($url);
 
     if(!$tokenEndpoint) {

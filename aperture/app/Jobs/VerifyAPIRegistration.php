@@ -46,6 +46,8 @@ class VerifyAPIRegistration implements ShouldQueue {
       return;
     }
 
+    // Use the site's IndieAuth server metadata if it has any, otherwise its rel links
+    IndieAuth\Client::discoverMetadataEndpoint($this->site);
     $tokenEndpoint = IndieAuth\Client::discoverTokenEndpoint($this->site);
     $micropubEndpoint = IndieAuth\Client::discoverMicropubEndpoint($this->site);
 
