@@ -162,9 +162,11 @@ disk.min 0
     return $this->_text($response);
   }
 
-  // Sources that sources:poll checks: they have a URL and are in at least one channel
+  // Sources that sources:poll checks: they have a URL, are in at least one channel, and
+  // haven't been stopped for failing for too long
   private function _polledSources() {
     return Source::where('url', '!=', '')
+      ->whereNull('stopped_at')
       ->whereExists(function($q) {
         $q->selectRaw('1')->from('channel_source')->whereColumn('channel_source.source_id', 'sources.id');
       });
@@ -259,6 +261,9 @@ slowed.min 0
 daily.label Slowed to daily (".PollingSchedule::FAILURES_BEFORE_DORMANT."+ failures)
 daily.type GAUGE
 daily.min 0
+stopped.label Stopped after ".PollingSchedule::STOP_AFTER_DAYS." days of failures
+stopped.type GAUGE
+stopped.min 0
 ";
     } else {
       $row = $this->_polledSources()->selectRaw('
@@ -266,9 +271,15 @@ daily.min 0
         COALESCE(SUM(consecutive_failures >= ?), 0) AS slowed,
         COALESCE(SUM(consecutive_failures >= ?), 0) AS daily
       ', [PollingSchedule::FAILURES_BEFORE_QUIET, PollingSchedule::FAILURES_BEFORE_DORMANT])->first();
+      // Stopped sources aren't polled, so they are counted separately from the rest
+      $stopped = Source::where('url', '!=', '')->whereNotNull('stopped_at')
+        ->whereExists(function($q) {
+          $q->selectRaw('1')->from('channel_source')->whereColumn('channel_source.source_id', 'sources.id');
+        })->count();
       $response = 'failing.value '.(int)$row->failing."\n"
         .'slowed.value '.(int)$row->slowed."\n"
-        .'daily.value '.(int)$row->daily;
+        .'daily.value '.(int)$row->daily."\n"
+        .'stopped.value '.$stopped;
     }
     return $this->_text($response);
   }

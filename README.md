@@ -60,6 +60,8 @@ Run the workers and the cron job as the same user as PHP-FPM, since they share t
 
 How often a feed is checked depends on how often it has new entries, from every 5 minutes for feeds with 10 or more new entries a day, down to once a day for feeds that haven't had anything new in over a year. The tiers are defined in `app/Services/PollingSchedule.php`. `POLL_MAX_PER_RUN` (default 120) and `POLL_MAX_PER_HOST` (default 10) in `.env` limit how many fetches are queued each minute, in total and for any one hostname.
 
+A feed that fails is checked less often: at most every 6 hours after 5 failures in a row, and once a day after 30. If every fetch fails for 30 days, Aperture stops checking it. The channel's page says so, with a "Try again" button, and following the feed again from any channel also starts it up again.
+
 
 Private Networks
 ----------------

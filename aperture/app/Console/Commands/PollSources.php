@@ -25,6 +25,8 @@ class PollSources extends Command
     // Sources that are due, most overdue first. Only sources that are in a channel
     // are polled, so removing a source from its last channel stops the polling.
     $query = Source::where('url', '!=', '')
+      // Stopped after failing for too long. Following it again or retrying it resumes it.
+      ->whereNull('stopped_at')
       ->whereExists(function($q) {
         $q->selectRaw('1')->from('channel_source')->whereColumn('channel_source.source_id', 'sources.id');
       })

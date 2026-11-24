@@ -49,6 +49,8 @@ class PollingStatsTest extends TestCase
     $this->source(['check_interval' => 5], false);
     $this->source(['check_interval' => 5, 'url' => '', 'format' => 'apikey']);
 
+    $this->source(['check_interval' => 5, 'stopped_at' => '2026-10-30 00:00:00']);
+
     $this->assertEquals(['fast' => 1, 'frequent' => 2, 'active' => 3, 'quiet' => 0, 'dormant' => 1], $this->stat('polling_tiers'));
 
     $config = $this->get('/stats/polling_tiers?token=munin&mode=config')->getContent();
@@ -60,8 +62,11 @@ class PollingStatsTest extends TestCase
     foreach([0, 0, 1, 4, 5, 29, 30, 200] as $failures)
       $this->source(['consecutive_failures' => $failures]);
     $this->source(['consecutive_failures' => 50], false);
+    // Stopped sources are no longer polled, so they are only counted as stopped
+    $this->source(['consecutive_failures' => 40, 'stopped_at' => '2026-10-30 00:00:00']);
+    $this->source(['consecutive_failures' => 40, 'stopped_at' => '2026-10-30 00:00:00'], false);
 
-    $this->assertEquals(['failing' => 6, 'slowed' => 4, 'daily' => 2], $this->stat('polling_failures'));
+    $this->assertEquals(['failing' => 6, 'slowed' => 4, 'daily' => 2, 'stopped' => 1], $this->stat('polling_failures'));
   }
 
   public function testPollingBacklogCountsOverdueAndQueuedSources() {
@@ -72,12 +77,14 @@ class PollingStatsTest extends TestCase
     $this->source(['next_check_at' => '2026-11-01 11:00:00', 'fetch_queued_at' => '2026-11-01 11:59:00']); // overdue and queued
     $this->source(['next_check_at' => '2026-11-01 09:00:00'], false);                                 // not followed
 
+    $this->source(['next_check_at' => null, 'stopped_at' => '2026-10-30 00:00:00']);                  // stopped
+
     $this->assertEquals(['overdue' => 3, 'queued' => 1], $this->stat('polling_backlog'));
   }
 
   public function testEmptyDatabaseReportsZeros() {
     $this->assertEquals(['fast' => 0, 'frequent' => 0, 'active' => 0, 'quiet' => 0, 'dormant' => 0], $this->stat('polling_tiers'));
-    $this->assertEquals(['failing' => 0, 'slowed' => 0, 'daily' => 0], $this->stat('polling_failures'));
+    $this->assertEquals(['failing' => 0, 'slowed' => 0, 'daily' => 0, 'stopped' => 0], $this->stat('polling_failures'));
     $this->assertEquals(['overdue' => 0, 'queued' => 0], $this->stat('polling_backlog'));
     $this->assertEquals(['fetches' => 0, 'fetches_changed' => 0, 'fetches_failed' => 0], $this->stat('polls'));
   }

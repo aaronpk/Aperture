@@ -48,9 +48,9 @@ class FetchSource implements ShouldQueue
     $source->timestamps = false;
     $source->fetch_queued_at = null;
 
-    if(!$source->url || $source->channels()->count() == 0) {
-      // Nothing follows this source any more, so there is nothing to fetch it for.
-      // sources:poll only selects sources that are in a channel.
+    if(!$source->url || $source->stopped_at || $source->channels()->count() == 0) {
+      // Nothing follows this source any more, or it was stopped after failing for too
+      // long, so there is nothing to fetch. sources:poll doesn't select these either.
       $source->save();
       return;
     }
@@ -135,7 +135,21 @@ class FetchSource implements ShouldQueue
     $source->consecutive_failures = $failed ? $source->consecutive_failures + 1 : 0;
     $source->last_checked_at = $now;
     $source->check_interval = PollingSchedule::interval($source, $now);
-    $source->next_check_at = PollingSchedule::nextCheckAt($source->check_interval, $now);
+
+    if(!$failed) {
+      $source->failing_since = null;
+    } elseif(!$source->failing_since) {
+      $source->failing_since = $now;
+    }
+
+    if($failed && PollingSchedule::shouldStop($source, $now)) {
+      $source->stopped_at = $now;
+      $source->next_check_at = null;
+      Log::info('Stopped polling source:'.$source->id.' ('.parse_url($source->url, PHP_URL_HOST).'), which has failed every fetch since '.$source->failing_since);
+    } else {
+      $source->next_check_at = PollingSchedule::nextCheckAt($source->check_interval, $now);
+    }
+
     $source->save();
   }
 

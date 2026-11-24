@@ -47,6 +47,21 @@
         @endif
       </div>
 
+      @if($source->stopped_at)
+        <div class="notification is-warning source-stopped">
+          <p>
+            <strong>Aperture stopped checking this feed</strong> on {{ date('F j, Y', strtotime($source->stopped_at)) }},
+            because every attempt to fetch it since {{ date('F j, Y', strtotime($source->failing_since)) }} failed{{ $source->last_http_status ? ' (most recently with HTTP status '.$source->last_http_status.')' : '' }}.
+          </p>
+          <p><a href="#" class="button is-small retry-source" data-source="{{ $source->id }}">Try again</a></p>
+        </div>
+      @elseif($source->consecutive_failures >= \App\Services\PollingSchedule::FAILURES_BEFORE_QUIET)
+        <p class="help is-danger source-failing">
+          This feed has been failing since {{ date('F j, Y', strtotime($source->failing_since ?: $source->last_checked_at)) }}{{ $source->last_http_status ? ' (HTTP status '.$source->last_http_status.')' : '' }}, so it is being checked less often.
+          If it keeps failing for {{ \App\Services\PollingSchedule::STOP_AFTER_DAYS }} days, Aperture will stop checking it.
+        </p>
+      @endif
+
       @if($source->format == 'apikey')
         <div><code class="hidden-secret">{{ $source->token }}</code></div>
         <p class="help">Use this API key to create entries in this channel with a POST request. See <a href="/docs">the documentation</a> for more details.</p>
@@ -371,6 +386,16 @@ $(function(){
       name: $("#source-name").val()
     }, function(response) {
       reload_window(); // cheap way out
+    });
+  });
+
+  $('.retry-source').click(function(e){
+    e.preventDefault();
+    $(this).addClass("is-loading");
+    $.post("/channel/{{ $channel->id }}/source/"+$(this).data("source")+"/retry", {
+      _token: csrf_token()
+    }, function(response) {
+      reload_window();
     });
   });
 

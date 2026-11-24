@@ -32,7 +32,15 @@ class SourceAddedListener implements ShouldQueue
 
         // If this was a newly added source (belongs to just one channel), fetch it right away.
         // After that, sources:poll checks it on a schedule.
-        if($event->source->url && $channels->count() == 1) {
+        // A source that was stopped after failing for a long time gets another chance
+        // whenever someone follows it.
+        $stopped = (bool)$event->source->stopped_at;
+        if($stopped) {
+            Log::info("[".$event->source->url."] Resuming polling of a stopped source");
+            $event->source->resume();
+        }
+
+        if($event->source->url && ($channels->count() == 1 || $stopped)) {
             \App\Jobs\FetchSource::dispatch($event->source->id);
             // The fetch may have added entries and updated the source
             $event->source->refresh();

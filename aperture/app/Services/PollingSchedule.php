@@ -32,6 +32,10 @@ class PollingSchedule
   const FAILURES_BEFORE_QUIET = 5;
   const FAILURES_BEFORE_DORMANT = 30;
 
+  // A source whose every fetch has failed for this many days stops being polled, until
+  // someone follows it again or retries it from the channel's settings
+  const STOP_AFTER_DAYS = 30;
+
   public static function interval(Source $source, ?Carbon $now=null) {
     $now = $now ?: now();
 
@@ -67,6 +71,16 @@ class PollingSchedule
       return self::QUIET;
 
     return self::DORMANT;
+  }
+
+  /**
+   * Whether a source that has just failed again has been failing for long enough to
+   * give up on it.
+   */
+  public static function shouldStop(Source $source, ?Carbon $now=null) {
+    $now = $now ?: now();
+    return $source->failing_since
+      && Carbon::parse($source->failing_since) <= $now->copy()->subDays(self::STOP_AFTER_DAYS);
   }
 
   /**

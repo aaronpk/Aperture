@@ -32,6 +32,7 @@ Route::middleware('web')->group(function(){
 
     Route::post('/source/find_feeds', [HomeController::class, 'find_feeds'])->name('find_feeds');
     Route::post('/channel/{channel}/source/{source}/save', [HomeController::class, 'save_source'])->name('save_source');
+    Route::post('/channel/{channel}/source/{source}/retry', [HomeController::class, 'retry_source'])->name('retry_source');
 
     Route::get('/login', [LoginController::class, 'login'])->name('login');
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');

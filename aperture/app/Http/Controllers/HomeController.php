@@ -125,6 +125,32 @@ class HomeController extends Controller implements HasMiddleware
     }
   }
 
+  // Try a source again after it was stopped for failing for too long
+  public function retry_source(Channel $channel, Source $source) {
+    if(Gate::allows('edit-channel', $channel)) {
+
+      if($channel->sources()->where('source_id', $source->id)->count() == 0)
+        abort(404);
+
+      if($source->stopped_at)
+        $source->resume();
+
+      // With a sync queue this fetches right away, so the result below is the outcome.
+      // Otherwise it reports the source as it was, and the fetch happens shortly.
+      \App\Jobs\FetchSource::dispatch($source->id);
+      $source->refresh();
+
+      return response()->json([
+        'result' => 'ok',
+        'stopped' => (bool)$source->stopped_at,
+        'failing' => $source->consecutive_failures > 0,
+        'last_http_status' => $source->last_http_status,
+      ]);
+    } else {
+      abort(401);
+    }
+  }
+
   public function remove_source(Channel $channel) {
     if(Gate::allows('edit-channel', $channel)) {
 
