@@ -5,7 +5,6 @@ use App\Events\EntrySaved;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Log, Storage, File;
-use IMagick;
 use App\Models\Entry, App\Models\Media;
 use DOMXPath, DOMDocument;
 
@@ -198,18 +197,12 @@ class EntrySavedListener implements ShouldQueue
         return $meta;
       }
 
-      try {
-        $fp = fopen($filedata, 'r');
-        $im = new Imagick();
-        $im->readImageFile($fp);
-        $d = $im->getImageGeometry();
-
-        $meta['width'] = $d['width'];
-        $meta['height'] = $d['height'];
-
-      #$meta['dominant-color'] = '#000000';
-
-      } catch(\Exception $e) {
+      // Reads the dimensions from the file's header, without decoding the image
+      $dimensions = @getimagesize($filedata);
+      if($dimensions && $dimensions[0] > 0 && $dimensions[1] > 0) {
+        $meta['width'] = $dimensions[0];
+        $meta['height'] = $dimensions[1];
+      } else {
         Log::info('Failed to get metadata for '.$url);
       }
 
