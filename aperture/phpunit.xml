@@ -37,8 +37,5 @@
         <env name="DB_DATABASE" value="aperture_test"/>
         <env name="APP_URL" value="http://aperture.test"/>
         <env name="MEDIA_URL" value=""/>
-        <env name="WATCHTOWER_URL" value="https://watchtower.test/"/>
-        <env name="WATCHTOWER_CB" value="http://aperture.test"/>
-        <env name="WATCHTOWER_TOKEN" value="watchtower-token"/>
     </php>
 </phpunit>

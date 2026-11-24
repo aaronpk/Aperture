@@ -6,33 +6,41 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\Entry;
 use DB;
 
-class WebSubReceiverTest extends TestCase
+class FeedProcessorTest extends TestCase
 {
   use RefreshDatabase;
 
+  // Process a snapshot of the feed the way FetchSource does after fetching it
   private function deliver($source, $body) {
-    return $this->call('POST', '/websub/source/'.$source->token, [], [], [], ['CONTENT_TYPE' => 'text/html'], $body);
+    return app(\App\Services\FeedProcessor::class)->process($source->fresh(), $body);
   }
 
   private function feed() {
     return file_get_contents(__DIR__.'/../data/h-feed.html');
   }
 
-  public function testUnknownSourceIs404() {
-    $this->call('POST', '/websub/source/nope', [], [], [], [], $this->feed())
-      ->assertStatus(404)->assertJson(['error' => 'not_found']);
+  public function testContentThatIsNotAFeedIsRejected() {
+    $user = $this->createUser();
+    $channel = $this->homeChannel($user);
+    $source = $this->createSource($user, ['url' => 'https://new.example/']);
+    $channel->sources()->attach($source->id, ['created_at' => date('Y-m-d H:i:s')]);
+
+    $this->assertFalse($this->deliver($source, '{"not":"a feed"}'));
+    $this->assertEquals(0, Entry::count());
   }
 
-  public function testSourceWithoutChannelsIsUnsubscribed() {
+  public function testFeedWithNoEntriesIsValidAndFlagsOldEntriesAsGone() {
     $user = $this->createUser();
+    $channel = $this->homeChannel($user);
     $source = $this->createSource($user, ['url' => 'https://new.example/']);
+    $channel->sources()->attach($source->id, ['created_at' => date('Y-m-d H:i:s')]);
+    $this->deliver($source, $this->feed());
 
-    $this->deliver($source, $this->feed())->assertStatus(200)->assertExactJson(['result' => 'empty']);
+    $empty = '<?xml version="1.0"?><rss version="2.0"><channel><title>Empty</title><link>https://new.example/</link></channel></rss>';
+    $this->assertSame(0, $this->deliver($source, $empty));
 
-    $unsubs = $this->http->requestsTo('POST', 'https://watchtower.test/');
-    $this->assertCount(1, $unsubs);
-    $this->assertStringContainsString('hub.mode=unsubscribe', $unsubs[0]['body']);
-    $this->assertEquals(0, Entry::count());
+    $this->assertEquals(2, Entry::count());
+    $this->assertEquals(0, Entry::where('currently_in_feed', true)->count());
   }
 
   public function testNewSourceBackfillsUsingPublishedDates() {
@@ -41,7 +49,7 @@ class WebSubReceiverTest extends TestCase
     $source = $this->createSource($user, ['url' => 'https://new.example/', 'is_new' => true]);
     $channel->sources()->attach($source->id, ['created_at' => date('Y-m-d H:i:s')]);
 
-    $this->deliver($source, $this->feed())->assertStatus(200);
+    $this->deliver($source, $this->feed());
 
     $entries = Entry::where('source_id', $source->id)->orderBy('id')->get();
     $this->assertCount(2, $entries);
@@ -70,8 +78,8 @@ class WebSubReceiverTest extends TestCase
     $source = $this->createSource($user, ['url' => 'https://new.example/']);
     $channel->sources()->attach($source->id, ['created_at' => date('Y-m-d H:i:s')]);
 
-    $this->deliver($source, $this->feed())->assertStatus(200);
-    $this->deliver($source, $this->feed())->assertStatus(200);
+    $this->deliver($source, $this->feed());
+    $this->deliver($source, $this->feed());
 
     $this->assertEquals(2, Entry::where('source_id', $source->id)->count());
     $rows = DB::table('channel_entry')->where('channel_id', $channel->id)->get();

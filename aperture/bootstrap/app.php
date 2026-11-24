@@ -18,13 +18,11 @@ return Application::configure(basePath: dirname(__DIR__))
             // web.php applies the "web" group itself, since some routes in it must not use cookies
             Route::group([], base_path('routes/web.php'));
 
-            Route::middleware('websub')->group(base_path('routes/websub.php'));
             Route::middleware('microsub')->group(base_path('routes/microsub.php'));
             Route::middleware('micropub')->group(base_path('routes/micropub.php'));
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->group('websub', []);
         $middleware->group('microsub', [
             \App\Http\Middleware\VerifyIndieAuthAccessToken::class,
         ]);

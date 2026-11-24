@@ -22,12 +22,32 @@ You will need to have a token endpoint set up already in order for Aperture to k
 You can enable a config option to allow anyone to sign in to your instance. Set `PUBLIC_ACCESS=true` in `.env`.
 
 
+Feed Polling
+------------
+
+Aperture fetches the feeds that channels follow. Two things need to be running for that to work.
+
+Run Laravel's scheduler from cron every minute. It queues a fetch of each feed that is due:
+
+```
+* * * * * cd /path/to/aperture && php artisan schedule:run >> /dev/null 2>&1
+```
+
+Run at least one queue worker for the `feeds` queue, which is where the fetch jobs go:
+
+```
+php artisan queue:work --queue=feeds
+```
+
+Run the workers and the cron job as the same user as PHP-FPM, since they share the `storage` folder and a temporary folder for downloaded images. If you change the queue connection's `retry_after`, keep it above 75 seconds, which is how long a fetch job is allowed to run.
+
+How often a feed is checked depends on how often it has new entries, from every 5 minutes for feeds with 10 or more new entries a day, down to once a day for feeds that haven't had anything new in over a year. The tiers are defined in `app/Services/PollingSchedule.php`. `POLL_MAX_PER_RUN` (default 120) and `POLL_MAX_PER_HOST` (default 10) in `.env` limit how many fetches are queued each minute, in total and for any one hostname.
+
+
 Dependencies
 ------------
 
-Aperture relies on a few external services to work.
-
-[Watchtower](https://github.com/aaronpk/Watchtower) handles actually subscribing to feeds and delivering content to Aperture. Aperture is only responsible for parsing the content, but contains no feed polling/fetching logic.
+Aperture relies on an external service to work.
 
 Aperture uses an image proxy to rewrite all image URLs as https URLs. It expects to use a service that matches GitHub's camo API. You can use either [camo](https://github.com/atmos/camo) itself, or an API-compatible project such as [go-camo](https://github.com/cactus/go-camo). You'll need to define the base URL `IMG_PROXY_URL` and the signing secret `IMG_PROXY_KEY` in the `.env` file.
 

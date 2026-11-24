@@ -61,7 +61,7 @@ class WebPagesTest extends TestCase
     $this->actingAs($user)->post('/channel/'.$channel->id.'/add_source', ['url' => 'https://blog.example/', 'format' => 'microformats'])
       ->assertStatus(200)->assertExactJson(['result' => 'ok']);
     $this->assertEquals(1, $channel->sources()->where('url', 'https://blog.example/')->count());
-    $this->assertCount(1, $this->http->requestsTo('POST', 'https://watchtower.test/'));
+    $this->assertCount(1, $this->http->requestsTo('GET', 'https://blog.example/'));
   }
 
   public function testSettings() {

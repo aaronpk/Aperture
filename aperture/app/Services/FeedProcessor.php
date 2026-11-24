@@ -1,33 +1,22 @@
 <?php
-namespace App\Http\Controllers;
+namespace App\Services;
 
-use Request, Response, DB, Log;
-use App\Models\User, App\Models\Source, App\Models\Channel, App\Models\Entry;
+use DB, Log;
+use App\Models\Source, App\Models\Entry;
 use p3k\XRay;
 use App\Events\EntrySaved;
 
-class WebSubReceiverController extends Controller
+/**
+ * Turns the fetched contents of a source's URL into entries, and adds new entries to
+ * the channels that follow the source.
+ */
+class FeedProcessor
 {
-
-  public function source_callback($token) {
-    #Log::info('WebSub callback: '.$token);
-
-    $source = Source::where('token', $token)->first();
-    if(!$source) {
-      Log::warning('Source not found');
-      return Response::json(['error'=>'not_found'], 404);
-    }
-
-    if($source->channels()->count() == 0) {
-      Log::warning('Source:'.$source->id.' ('.parse_url($source->url,PHP_URL_HOST).') is not associated with any channels, skipping and unsubscribing');
-      \App\Jobs\UnsubscribeSource::dispatch($source);
-      return Response::json(['result'=>'empty'], 200);
-    }
-
+  /**
+   * @return int|false the number of new entries, or false if the content isn't a feed
+   */
+  public function process(Source $source, $body) {
     $source_is_empty = $source->is_new;
-
-    $content_type = Request::header('Content-Type');
-    $body = Request::getContent();
 
     $xray = new XRay();
     $parsed = $xray->parse($source->url, $body, ['expect'=>'feed']);
@@ -39,7 +28,8 @@ class WebSubReceiverController extends Controller
 
       // Check each entry in the feed to see if we've already seen it
       // Add new entries to any channels that include this source
-      foreach($parsed['data']['items'] as $i=>$item) {
+      // A feed with nothing in it has no "items" at all
+      foreach(($parsed['data']['items'] ?? []) as $i=>$item) {
 
         // Prefer uid, then url, then hash the content
         if(isset($item['uid']))
@@ -131,7 +121,10 @@ class WebSubReceiverController extends Controller
 
     } else {
       Log::error('Error parsing source from '.$source->url);
+      return false;
     }
+
+    return $new_entries;
 
   }
 

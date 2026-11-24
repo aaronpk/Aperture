@@ -30,9 +30,12 @@ class SourceAddedListener implements ShouldQueue
         $channels = $event->source->channels();
         Log::info("[".$event->source->url."] Source now belongs to ".$channels->count()." channels");
 
-        // If this was a newly added source (belongs to just one channel), subscribe to updates
+        // If this was a newly added source (belongs to just one channel), fetch it right away.
+        // After that, sources:poll checks it on a schedule.
         if($event->source->url && $channels->count() == 1) {
-            $event->source->subscribe();
+            \App\Jobs\FetchSource::dispatch($event->source->id);
+            // The fetch may have added entries and updated the source
+            $event->source->refresh();
         }
 
         // Add any existing entries to this channel

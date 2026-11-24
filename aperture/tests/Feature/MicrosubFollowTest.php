@@ -9,7 +9,7 @@ class MicrosubFollowTest extends TestCase
 {
   use RefreshDatabase;
 
-  public function testFollowNewSourceSubscribesViaWatchtower() {
+  public function testFollowNewSourceFetchesItRightAway() {
     $user = $this->createUser();
     $token = $this->microsubToken($user);
     $channel = $this->homeChannel($user);
@@ -24,14 +24,12 @@ class MicrosubFollowTest extends TestCase
     $this->assertEquals($user->id, $source->created_by);
     $this->assertEquals(1, $source->is_new);
 
-    $subs = $this->http->requestsTo('POST', 'https://watchtower.test/');
-    $this->assertCount(1, $subs);
-    $this->assertEquals(http_build_query([
-      'hub.mode' => 'subscribe',
-      'hub.topic' => 'https://blog.example/',
-      'hub.callback' => 'http://aperture.test/websub/source/'.$source->token,
-    ]), $subs[0]['body']);
-    $this->assertContains('Authorization: Bearer watchtower-token', $subs[0]['headers']);
+    // The feed is fetched once, straight away, and then scheduled for regular checks
+    $fetches = $this->http->requestsTo('GET', 'https://blog.example/');
+    $this->assertCount(1, $fetches);
+    $this->assertCount(0, $this->http->requestsTo('POST', ''));
+    $this->assertNotNull($source->last_checked_at);
+    $this->assertNotNull($source->next_check_at);
 
     $following = $this->microsubGet($user, $token, ['action' => 'follow', 'channel' => $channel->uid])->json();
     $this->assertEquals(['items' => [['type' => 'feed', 'url' => 'https://blog.example/']]], $following);
@@ -50,8 +48,9 @@ class MicrosubFollowTest extends TestCase
     $this->microsubPost($user, $token, ['action' => 'follow', 'channel' => $second->uid, 'url' => 'https://blog.example/'])
       ->assertStatus(200);
 
-    // Already subscribed via the first channel, so no new subscription
-    $this->assertCount(0, $this->http->requestsTo('POST', 'https://watchtower.test/'));
+    // Already being polled because of the first channel, so it isn't fetched again
+    $this->assertCount(0, $this->http->requests);
+    $this->assertNull($source->fresh()->last_checked_at);
 
     $items = $this->microsubGet($user, $token, ['action' => 'timeline', 'channel' => $second->uid])->json()['items'];
     $this->assertEquals(['Old post'], array_column($items, 'name'));
@@ -81,10 +80,10 @@ class MicrosubFollowTest extends TestCase
 
     $this->assertCount(0, $channel->sources()->get());
 
-    // Last channel removed, so the source is unsubscribed
-    $unsubs = $this->http->requestsTo('POST', 'https://watchtower.test/');
-    $this->assertCount(1, $unsubs);
-    $this->assertStringContainsString('hub.mode=unsubscribe', $unsubs[0]['body']);
+    // Last channel removed, so the source is no longer polled. Nothing has to be told.
+    $this->assertCount(0, $this->http->requests);
+    $this->artisan('sources:poll');
+    $this->assertCount(0, $this->http->requests);
 
     // Unknown URL returns an empty body
     $response = $this->microsubPost($user, $token, ['action' => 'unfollow', 'channel' => $channel->uid, 'url' => 'https://nope.example/']);
