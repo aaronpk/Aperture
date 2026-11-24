@@ -59,3 +59,7 @@ Route::get('/stats/entries', [StatsController::class, 'entries']);
 Route::get('/stats/entries_size', [StatsController::class, 'entries_size']);
 Route::get('/stats/sources', [StatsController::class, 'sources']);
 Route::get('/stats/media_size', [StatsController::class, 'media_size']);
+Route::get('/stats/polling_tiers', [StatsController::class, 'polling_tiers']);
+Route::get('/stats/polls', [StatsController::class, 'polls']);
+Route::get('/stats/polling_failures', [StatsController::class, 'polling_failures']);
+Route::get('/stats/polling_backlog', [StatsController::class, 'polling_backlog']);

@@ -61,7 +61,7 @@ When working on Aperture itself, make requests with `app(\p3k\HTTP::class)` or `
 Monitoring
 ----------
 
-Aperture reports statistics in [Munin](https://munin-monitoring.org/)'s format at `/stats`: users, sources, entries, the rate of new entries, and the size of entries and media. Set `MUNIN_TOKEN` in `.env` to a secret; requests have to send it, either as `Authorization: Bearer <token>` or as a `token` query parameter.
+Aperture reports statistics in [Munin](https://munin-monitoring.org/)'s format at `/stats`: users, sources, entries, the rate of new entries, the size of entries and media, and feed polling (sources per polling tier, fetches per minute, failing sources, and the polling backlog). The backlog is the one to alert on: it grows if the scheduler or the `feeds` queue workers stop. Set `MUNIN_TOKEN` in `.env` to a secret; requests have to send it, either as `Authorization: Bearer <token>` or as a `token` query parameter.
 
 `munin/aperture_` is a Munin plugin that graphs them. On the machine running munin-node, copy that file to Munin's plugin directory (usually `/usr/share/munin/plugins/`), make it executable, and then:
 

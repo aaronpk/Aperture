@@ -8,6 +8,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use App\Models\Source;
 use App\Services\FeedProcessor, App\Services\PollingSchedule;
 use Log;
+use Illuminate\Support\Facades\Redis;
 
 /**
  * Fetches a source's URL, processes it if the content changed, and schedules the
@@ -78,6 +79,7 @@ class FetchSource implements ShouldQueue
 
     $new_entries = 0;
     $first_import = false;
+    $processed = false;
 
     if($code == 304) {
       $failed = false;
@@ -112,12 +114,19 @@ class FetchSource implements ShouldQueue
           $new_entries = 0;
         } else {
           $failed = false;
+          $processed = true;
           $source->content_hash = $content_hash;
           $source->http_etag = substr((string)self::header($response, 'Etag'), 0, 255);
           $source->http_last_modified = substr((string)self::header($response, 'Last-Modified'), 0, 100);
         }
       }
     }
+
+    self::count('fetches');
+    if($failed)
+      self::count('fetches_failed');
+    elseif($processed)
+      self::count('fetches_changed');
 
     $now = now();
     $source->entries_per_day = PollingSchedule::entriesPerDay($source, $first_import ? 0 : $new_entries, $now);
@@ -128,6 +137,18 @@ class FetchSource implements ShouldQueue
     $source->check_interval = PollingSchedule::interval($source, $now);
     $source->next_check_at = PollingSchedule::nextCheckAt($source->check_interval, $now);
     $source->save();
+  }
+
+  /**
+   * Counters for the /stats/polls graph. Statistics must never get in the way of
+   * fetching, so a Redis problem is only logged.
+   */
+  private static function count($name) {
+    try {
+      Redis::incr(config('app.url').'::'.$name);
+    } catch(\Throwable $e) {
+      Log::warning('Could not update the '.$name.' counter: '.$e->getMessage());
+    }
   }
 
   private static function header($response, $name) {
