@@ -82,5 +82,8 @@ class MediaAndStatsTest extends TestCase
     $this->get('/stats/users?token=munin')->assertStatus(200)->assertSeeText('users.value 1');
     $this->get('/stats/users?token=munin&mode=config')->assertStatus(200)->assertSeeText('graph_title Aperture Users');
     $this->get('/stats/new_entries?token=munin')->assertStatus(200)->assertSeeText('new_entries.value');
+
+    // The image proxy is no longer used, so there is nothing to graph for it
+    $this->get('/stats/proxy_bytes?token=munin')->assertStatus(404);
   }
 }

@@ -32,11 +32,4 @@ return [
         // The most sources on one hostname that it queues each time it runs
         'max_per_host' => env('POLL_MAX_PER_HOST', 10),
     ],
-
-    // Camo-compatible image proxy
-    'img_proxy' => [
-        'url' => env('IMG_PROXY_URL'),
-        'key' => env('IMG_PROXY_KEY'),
-    ],
-
 ];

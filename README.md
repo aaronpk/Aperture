@@ -58,15 +58,6 @@ HTTP_ALLOW_PRIVATE=192.168.1.0/24,feeds.lan
 When working on Aperture itself, make requests with `app(\p3k\HTTP::class)` or `App\Services\SafeDownload` so these checks apply. A test fails if code in `app/` builds its own HTTP client or calls curl directly.
 
 
-Dependencies
-------------
-
-Aperture relies on an external service to work.
-
-Aperture uses an image proxy to rewrite all image URLs as https URLs. It expects to use a service that matches GitHub's camo API. You can use either [camo](https://github.com/atmos/camo) itself, or an API-compatible project such as [go-camo](https://github.com/cactus/go-camo). You'll need to define the base URL `IMG_PROXY_URL` and the signing secret `IMG_PROXY_KEY` in the `.env` file.
-
-
-
 Credits
 -------
 
