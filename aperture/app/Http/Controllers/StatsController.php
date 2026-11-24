@@ -17,6 +17,14 @@ class StatsController extends Controller implements HasMiddleware
     return response($text)->header('Content-type', 'text/plain');
   }
 
+  // Every statistic that has a /stats/{name} route. The Munin plugin in munin/aperture_
+  // reads this list from /stats to know which graphs exist.
+  const GRAPHS = ['users', 'new_entries', 'entries', 'entries_size', 'sources', 'media_size'];
+
+  public function index() {
+    return $this->_text(implode("\n", self::GRAPHS)."\n");
+  }
+
   public function users() {
     if(Request::input('mode') == 'config') {
       $response = "graph_title Aperture Users
@@ -74,7 +82,9 @@ entries.min 0
 ";
     } else {
       $entries = Redis::get(config('app.url').'::entries');
-      $response = 'entries.value '.$entries;
+      // The counter doesn't exist until data:update_entry_count has run. "U" is
+      // Munin's way of saying the value is unknown.
+      $response = 'entries.value '.(is_numeric($entries) ? $entries : 'U');
     }
 
     return $this->_text($response);
@@ -138,11 +148,12 @@ disk.min 0
 ";
     } else {
       $known = Media::sum('bytes');
-      $du = shell_exec('du -sk ../storage/app/media');
-      if(preg_match('/(\d+)/', $du, $match)) {
+      $du = shell_exec('du -sk '.escapeshellarg(storage_path('app/media')).' 2>/dev/null');
+      if(preg_match('/^(\d+)/', (string)$du, $match)) {
         $disk = ((int)$match[1])*1024;
       } else {
-        $disk = null;
+        // "U" is Munin's way of saying the value is unknown
+        $disk = 'U';
       }
       $response = 'known.value '.$known."\n";
       $response .= 'disk.value '.$disk;

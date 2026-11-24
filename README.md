@@ -58,6 +58,28 @@ HTTP_ALLOW_PRIVATE=192.168.1.0/24,feeds.lan
 When working on Aperture itself, make requests with `app(\p3k\HTTP::class)` or `App\Services\SafeDownload` so these checks apply. A test fails if code in `app/` builds its own HTTP client or calls curl directly.
 
 
+Monitoring
+----------
+
+Aperture reports statistics in [Munin](https://munin-monitoring.org/)'s format at `/stats`: users, sources, entries, the rate of new entries, and the size of entries and media. Set `MUNIN_TOKEN` in `.env` to a secret; requests have to send it, either as `Authorization: Bearer <token>` or as a `token` query parameter.
+
+`munin/aperture_` is a Munin plugin that graphs them. On the machine running munin-node, copy that file to Munin's plugin directory (usually `/usr/share/munin/plugins/`), make it executable, and then:
+
+```
+# /etc/munin/plugin-conf.d/aperture
+[aperture_*]
+env.url https://aperture.example.com
+env.token your-MUNIN_TOKEN
+```
+
+```
+munin-node-configure --shell --families=manual | grep aperture_ | sh
+service munin-node restart
+```
+
+That creates one `aperture_<name>` link in `/etc/munin/plugins` for each statistic `/stats` lists. You can also create the links by hand, for example `aperture_users`.
+
+
 Credits
 -------
 

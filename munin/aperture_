@@ -1,0 +1,103 @@
+#!/bin/sh
+# -*- sh -*-
+
+: << =cut
+
+=head1 NAME
+
+aperture_ - Munin wildcard plugin for Aperture's statistics
+
+=head1 CONFIGURATION
+
+Create one symlink per graph. The part of the name after "aperture_" is the
+statistic to fetch:
+
+  ln -s /path/to/aperture/munin/aperture_ /etc/munin/plugins/aperture_users
+
+or let munin-node-configure create all of them:
+
+  munin-node-configure --shell --families=manual | grep aperture_ | sh
+
+Then tell the plugin where Aperture is, in /etc/munin/plugin-conf.d/aperture:
+
+  [aperture_*]
+  env.url https://aperture.example.com
+  env.token the-MUNIN_TOKEN-from-Apertures-env-file
+
+Optional settings:
+
+  env.timeout 10      seconds to wait for Aperture (default 10)
+  env.curlopts ...    extra options for curl, e.g. --resolve or --cacert
+
+The statistics available are whatever GET /stats lists, so a newer Aperture
+can add graphs without this plugin changing.
+
+=head1 MAGIC MARKERS
+
+ #%# family=manual
+ #%# capabilities=autoconf suggest
+
+=cut
+
+url=${url:-}
+token=${token:-}
+timeout=${timeout:-10}
+curlopts=${curlopts:-}
+
+stat=${0##*/aperture_}
+
+# fetch PATH: prints the response body, or explains on stderr and returns non-zero.
+# The token goes in a header rather than the URL, which keeps it out of access logs.
+fetch() {
+    if [ -z "$url" ]; then
+        echo "aperture_: env.url is not set (see plugin-conf.d)" >&2
+        return 1
+    fi
+    # shellcheck disable=SC2086
+    curl --silent --show-error --fail --max-time "$timeout" \
+        --header "Authorization: Bearer $token" \
+        $curlopts "${url%/}/stats$1"
+}
+
+case "$1" in
+    autoconf)
+        if ! command -v curl >/dev/null 2>&1; then
+            echo "no (curl is not installed)"
+        elif [ -z "$url" ]; then
+            echo "no (env.url is not set)"
+        elif ! fetch "" >/dev/null 2>&1; then
+            echo "no (could not fetch ${url%/}/stats)"
+        else
+            echo yes
+        fi
+        exit 0
+        ;;
+    suggest)
+        fetch "" || exit 1
+        exit 0
+        ;;
+esac
+
+case "$stat" in
+    ''|*[!a-z0-9_]*)
+        echo "aperture_: link this plugin as aperture_<statistic>, e.g. aperture_users" >&2
+        exit 1
+        ;;
+esac
+
+if [ "$1" = "config" ]; then
+    out=$(fetch "/$stat?mode=config") || exit 1
+    # Anything that isn't a graph definition (an error page, say) must not reach Munin
+    case "$out" in
+        graph_title*) printf '%s\n' "$out" ;;
+        *) echo "aperture_$stat: unexpected config response from Aperture" >&2; exit 1 ;;
+    esac
+    exit 0
+fi
+
+out=$(fetch "/$stat") || exit 1
+if printf '%s\n' "$out" | grep -qvE '^[a-z0-9_]+\.value (U|-?[0-9]+(\.[0-9]+)?)$'; then
+    echo "aperture_$stat: unexpected response from Aperture" >&2
+    exit 1
+fi
+printf '%s\n' "$out"

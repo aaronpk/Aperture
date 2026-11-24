@@ -52,6 +52,7 @@ Route::post('/token', [IndieAuthController::class, 'token_post'])->name('token_p
 
 Route::post('/api/register', [LoginController::class, 'api_register']);
 
+Route::get('/stats', [StatsController::class, 'index']);
 Route::get('/stats/users', [StatsController::class, 'users']);
 Route::get('/stats/new_entries', [StatsController::class, 'new_entries']);
 Route::get('/stats/entries', [StatsController::class, 'entries']);

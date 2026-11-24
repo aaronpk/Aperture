@@ -86,4 +86,59 @@ class MediaAndStatsTest extends TestCase
     // The image proxy is no longer used, so there is nothing to graph for it
     $this->get('/stats/proxy_bytes?token=munin')->assertStatus(404);
   }
+
+  public function testStatsTokenCanBeSentAsABearerToken() {
+    config(['aperture.munin_token' => 'munin']);
+
+    $this->withHeaders(['Authorization' => 'Bearer munin'])->get('/stats/users')->assertStatus(200)->assertSeeText('users.value');
+    $this->withHeaders(['Authorization' => 'Bearer wrong'])->get('/stats/users')->assertStatus(401);
+    // A wrong header isn't rescued by a correct query parameter
+    $this->withHeaders(['Authorization' => 'Bearer wrong'])->get('/stats/users?token=munin')->assertStatus(401);
+    // The query parameter still works on its own
+    $this->flushHeaders();
+    $this->get('/stats/users?token=wrong')->assertStatus(401);
+    $this->get('/stats/users?token=munin')->assertStatus(200);
+  }
+
+  public function testEntriesStatIsUnknownUntilTheCounterExists() {
+    config(['aperture.munin_token' => 'munin']);
+    \Illuminate\Support\Facades\Redis::del(config('app.url').'::entries');
+
+    $this->get('/stats/entries?token=munin')->assertStatus(200)->assertSeeText('entries.value U');
+  }
+
+  public function testStatsIndexListsEveryGraph() {
+    config(['aperture.munin_token' => 'munin', 'aperture.media_url' => 'https://media.aperture.test']);
+    \Illuminate\Support\Facades\Storage::fake('local');
+    $auth = ['Authorization' => 'Bearer munin'];
+
+    $this->get('/stats')->assertStatus(401);
+    $response = $this->withHeaders($auth)->get('/stats');
+    $response->assertStatus(200);
+    $names = array_filter(explode("\n", $response->getContent()));
+
+    // The list is exactly the set of /stats/{name} routes
+    $routes = [];
+    foreach(\Illuminate\Support\Facades\Route::getRoutes() as $route) {
+      if(preg_match('#^stats/(.+)$#', $route->uri(), $match))
+        $routes[] = $match[1];
+    }
+    sort($routes);
+    $sorted = $names;
+    sort($sorted);
+    $this->assertEquals($routes, array_values($sorted));
+
+    // Each one answers both of the requests Munin makes, in the format it expects
+    foreach($names as $name) {
+      $config = $this->withHeaders($auth)->get('/stats/'.$name.'?mode=config');
+      $config->assertStatus(200);
+      $this->assertStringStartsWith('graph_title Aperture ', $config->getContent(), $name);
+      $this->assertStringContainsString("graph_category aperture\n", $config->getContent(), $name);
+
+      $data = $this->withHeaders($auth)->get('/stats/'.$name);
+      $data->assertStatus(200);
+      foreach(explode("\n", trim($data->getContent())) as $line)
+        $this->assertMatchesRegularExpression('/^[a-z0-9_]+\.value (U|-?[0-9]+(\.[0-9]+)?)$/', $line, $name);
+    }
+  }
 }
