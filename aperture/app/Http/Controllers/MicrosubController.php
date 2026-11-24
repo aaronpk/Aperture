@@ -281,7 +281,7 @@ class MicrosubController extends Controller
 
       $http = app(\p3k\HTTP::class);
       $http->set_user_agent(config('aperture.user_agent'));
-      $http->timeout = 4;
+      $http->set_timeout(4);
 
       $xray = new \p3k\XRay();
       $xray->http = $http;
@@ -333,7 +333,7 @@ class MicrosubController extends Controller
       // Fetch the feed and return the first results
       $http = app(\p3k\HTTP::class);
       $http->set_user_agent(config('aperture.user_agent'));
-      $http->timeout = 4;
+      $http->set_timeout(4);
 
       $xray = new \p3k\XRay();
       $xray->http = $http;

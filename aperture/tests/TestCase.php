@@ -12,6 +12,8 @@ abstract class TestCase extends BaseTestCase
     /** @var FakeTransport */
     protected $http;
 
+    private $deprecationHandlerInstalled = false;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -21,6 +23,30 @@ abstract class TestCase extends BaseTestCase
         $this->app->bind(\p3k\HTTP::class, function() {
             return new PinnedTransportHTTP(null, $this->http);
         });
+
+        // Laravel ignores PHP deprecations while running tests, so PHPUnit's failOnDeprecation
+        // never sees the ones raised during a request. Turn any deprecation raised by this
+        // app's own code (including compiled views) into an exception so the test fails.
+        $appPaths = [app_path(), base_path('routes'), base_path('config'), resource_path(), storage_path('framework/views')];
+        $previous = null;
+        $previous = set_error_handler(function($level, $message, $file='', $line=0) use ($appPaths, &$previous) {
+            foreach($appPaths as $path) {
+                if(str_starts_with($file, $path.DIRECTORY_SEPARATOR)) {
+                    throw new \ErrorException($message, 0, $level, $file, $line);
+                }
+            }
+            return $previous ? $previous($level, $message, $file, $line) : false;
+        }, E_DEPRECATED | E_USER_DEPRECATED);
+        $this->deprecationHandlerInstalled = true;
+    }
+
+    protected function tearDown(): void
+    {
+        if($this->deprecationHandlerInstalled) {
+            restore_error_handler();
+            $this->deprecationHandlerInstalled = false;
+        }
+        parent::tearDown();
     }
 
     // These helpers deliberately use plain Eloquent instead of model factories

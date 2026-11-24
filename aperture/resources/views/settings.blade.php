@@ -34,7 +34,7 @@
   <br><br>
 
   <h3 class="subtitle">Micropub Config</h3>
-  <pre style="margin-bottom: 6px;" id="micropub-config">{{ json_encode(json_decode(Auth::user()->micropub_config), JSON_PRETTY_PRINT+JSON_UNESCAPED_SLASHES) }}</pre>
+  <pre style="margin-bottom: 6px;" id="micropub-config">{{ json_encode(json_decode((string)Auth::user()->micropub_config), JSON_PRETTY_PRINT+JSON_UNESCAPED_SLASHES) }}</pre>
   <div class="control"><button class="button is-primary" id="reload-micropub-config">Reload</button></div>
 
 </div>
