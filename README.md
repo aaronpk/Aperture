@@ -99,6 +99,12 @@ service munin-node restart
 That creates one `aperture_<name>` link in `/etc/munin/plugins` for each statistic `/stats` lists. You can also create the links by hand, for example `aperture_users`.
 
 
+Front End
+---------
+
+There is no JavaScript or CSS build step. `public/js/app.js` and `public/css/app.css` are Aperture's own script and styles, and are edited directly. Alongside them are jQuery (`public/js/jquery-3.7.1.min.js`) and Bulma 0.6.1 (`public/css/bulma.css`), unmodified.
+
+
 Credits
 -------
 

@@ -70,4 +70,37 @@ class WebPagesTest extends TestCase
     $this->actingAs($user)->post('/settings/save', ['demo_mode_enabled' => 'on'])->assertRedirect('/settings');
     $this->assertEquals(1, $user->fresh()->demo_mode_enabled);
   }
+
+  public function testPagesOnlyLoadAssetsThatExist() {
+    // There is no build step: every script and stylesheet a page loads is a file in public/
+    $user = $this->createUser();
+    $channel = $this->homeChannel($user);
+    $pages = [
+      $this->get('/'),
+      $this->get('/login'),
+      $this->get('/docs'),
+      $this->actingAs($user)->get('/dashboard'),
+      $this->actingAs($user)->get('/channel/'.$channel->id),
+      $this->actingAs($user)->get('/settings'),
+    ];
+
+    foreach($pages as $page) {
+      $page->assertStatus(200);
+      $html = $page->getContent();
+      preg_match_all('/<(?:script[^>]+src|link[^>]+rel="stylesheet"[^>]*href|link[^>]+href)="([^"]+\.(?:js|css))(?:\?[^"]*)?"/', $html, $matches);
+      $local = array_filter($matches[1], function($url) { return !preg_match('#^(https?:)?//(?!aperture\.test)#', $url); });
+      $this->assertNotEmpty($local);
+      foreach($local as $url) {
+        $path = public_path(ltrim(parse_url($url, PHP_URL_PATH), '/'));
+        $this->assertFileExists($path, $url);
+      }
+
+      // jQuery has to be loaded before the script that uses it
+      $this->assertLessThan(strpos($html, 'js/app.js'), strpos($html, 'js/jquery-3.7.1.min.js'));
+      $this->assertLessThan(strpos($html, 'css/app.css'), strpos($html, 'css/bulma.css'));
+    }
+
+    foreach(['package.json', 'yarn.lock', 'package-lock.json', 'webpack.mix.js'] as $file)
+      $this->assertFileDoesNotExist(base_path($file));
+  }
 }

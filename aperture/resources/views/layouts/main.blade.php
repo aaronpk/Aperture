@@ -15,7 +15,8 @@
 
     <script defer src="/font-awesome/js/fontawesome-all.js"></script>
 
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/bulma.css') }}?v=2" rel="stylesheet">
+    <link href="{{ asset('css/app.css') }}?v=2" rel="stylesheet">
 </head>
 <body>
 
@@ -25,7 +26,8 @@
 
     @include('components/footer')
 
-    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/jquery-3.7.1.min.js') }}"></script>
+    <script src="{{ asset('js/app.js') }}?v=2"></script>
     @yield('scripts')
 
 </body>
