@@ -6,8 +6,8 @@
     "require": {
         "php": "^8.4",
         "indieauth/client": "^1.2",
-        "laravel/framework": "^12.0",
-        "laravel/tinker": "^2.10",
+        "laravel/framework": "^13.0",
+        "laravel/tinker": "^3.0",
         "p3k/http": "^0.2",
         "p3k/micropub": ">=0.0.3",
         "p3k/utils": "^1.2",
@@ -18,7 +18,7 @@
         "fakerphp/faker": "^1.23",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
-        "phpunit/phpunit": "^11.5"
+        "phpunit/phpunit": "^12.5"
     },
     "autoload": {
         "psr-4": {
