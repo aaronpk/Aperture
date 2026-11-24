@@ -61,7 +61,13 @@ class Entry extends Model {
 
     $matches = false;
 
-    // Check the name, content.text, and category values for a keyword match
+    // Check the author, name, content.text, and category values for a keyword match
+    
+    if(isset($data['url'])) {
+      if(stripos($data['url'], $keyword) !== false) {
+        $matches = true;
+      }
+    }
 
     if(isset($data['name'])) {
       if(stripos($data['name'], $keyword) !== false) {
