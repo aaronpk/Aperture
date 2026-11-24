@@ -109,21 +109,13 @@
           <h3 class="subtitle">Aperture makes it easy to get started using Together, Monocle, and more!</h3>
 
           <div class="tile is-ancestor">
-            <div class="tile is-4 is-vertical is-parent">
-              <div class="tile is-child box">
-                <a href="https://indieweb.org/Indigenous"><img src="https://indieweb.org/images/2/2a/indigenous-0.3-reader.png" style="max-height: 420px; display: block; margin: 0 auto;"></a>
-                <div style="text-align: center;"><a href="https://indieweb.org/Indigenous">Indigenous for iPhone</a></div>
-              </div>
-              <div class="tile is-child box">
-                <a href="https://indieweb.org/Indigenous_for_Android"><img src="https://realize.be/sites/default/files/2018-04/Screenshot_20180411-112042.png" style="max-width: 80%; max-height: 420px; display: block; margin: 0 auto; border: 1px #eee solid;"></a>
-                <div style="text-align: center;"><a href="https://indieweb.org/Indigenous_for_Android">Indigenous for Android</a></div>
-              </div>
-            </div>
-            <div class="tile is-8 is-vertical is-parent">
+            <div class="tile is-parent">
               <div class="tile is-child box">
                 <a href="https://indieweb.org/Monocle"><img src="https://aaronparecki.com/2018/04/20/46/indieweb-reader-interface.png" style="width: 100%;"></a>
                 <div style="text-align: center;"><a href="https://indieweb.org/Monocle">Monocle</a></div>
               </div>
+            </div>
+            <div class="tile is-parent">
               <div class="tile is-child box">
                 <a href="https://indieweb.org/Together"><img src="/img/together-reader.png" style="width: 100%;"></a>
                 <div style="text-align: center;"><a href="https://indieweb.org/Together">Together</a></div>

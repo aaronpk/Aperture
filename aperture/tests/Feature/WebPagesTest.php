@@ -103,4 +103,11 @@ class WebPagesTest extends TestCase
     foreach(['package.json', 'yarn.lock', 'package-lock.json', 'webpack.mix.js'] as $file)
       $this->assertFileDoesNotExist(base_path($file));
   }
+
+  public function testHomePageDoesNotPromoteDiscontinuedApps() {
+    $page = $this->get('/')->assertStatus(200);
+    $page->assertSee('Monocle')->assertSee('Together');
+    foreach(['Indigenous', 'IndiePass', 'indiepass', 'realize.be'] as $gone)
+      $page->assertDontSee($gone);
+  }
 }
