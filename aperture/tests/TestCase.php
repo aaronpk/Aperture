@@ -12,6 +12,9 @@ abstract class TestCase extends BaseTestCase
     /** @var FakeTransport */
     protected $http;
 
+    /** @var array hostname => addresses, for hosts that should not resolve to a public address */
+    protected $dns = [];
+
     private $deprecationHandlerInstalled = false;
 
     protected function setUp(): void
@@ -20,9 +23,20 @@ abstract class TestCase extends BaseTestCase
 
         // Every p3k\HTTP resolved from the container will use this transport
         $this->http = new FakeTransport();
-        $this->app->bind(\p3k\HTTP::class, function() {
-            return new PinnedTransportHTTP(null, $this->http);
+        // The client keeps safe mode on, as it is in the app, with a resolver that never
+        // touches real DNS: hostnames are public unless a test lists them in $this->dns.
+        $resolver = function($host) {
+            return $this->dns[$host] ?? ['93.184.216.34'];
+        };
+        $this->app->bind(\p3k\HTTP::class, function() use($resolver) {
+            $http = new PinnedTransportHTTP(null, $this->http);
+            $http->set_safe_mode(true, config('aperture.http.allow_private'), $resolver);
+            return $http;
         });
+        $this->app->bind(\p3k\HTTP\Guard::class, function() use($resolver) {
+            return new \p3k\HTTP\Guard(config('aperture.http.allow_private'), $resolver);
+        });
+        \IndieAuth\Client::$http = $this->app->make(\p3k\HTTP::class);
 
         // Laravel ignores PHP deprecations while running tests, so PHPUnit's failOnDeprecation
         // never sees the ones raised during a request. Turn any deprecation raised by this

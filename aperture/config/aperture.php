@@ -16,6 +16,13 @@ return [
     // Token required by the /stats endpoints
     'munin_token' => env('MUNIN_TOKEN'),
 
+    // Outgoing HTTP requests are only allowed to reach public addresses. List any
+    // hostnames, IP addresses or CIDR ranges on a private network that should be
+    // reachable anyway, such as feeds on your own LAN.
+    'http' => [
+        'allow_private' => array_values(array_filter(array_map('trim', explode(',', (string)env('HTTP_ALLOW_PRIVATE', ''))))),
+    ],
+
     // Feed polling. See App\Services\PollingSchedule for the tiers.
     'poll' => [
         // The queue that fetch jobs go on, so that slow feeds don't delay other jobs

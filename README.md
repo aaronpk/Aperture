@@ -44,6 +44,20 @@ Run the workers and the cron job as the same user as PHP-FPM, since they share t
 How often a feed is checked depends on how often it has new entries, from every 5 minutes for feeds with 10 or more new entries a day, down to once a day for feeds that haven't had anything new in over a year. The tiers are defined in `app/Services/PollingSchedule.php`. `POLL_MAX_PER_RUN` (default 120) and `POLL_MAX_PER_HOST` (default 10) in `.env` limit how many fetches are queued each minute, in total and for any one hostname.
 
 
+Private Networks
+----------------
+
+Aperture fetches URLs that come from its users and from the feeds they follow, so it only connects to addresses on the public internet. Requests to localhost, private ranges such as `10.0.0.0/8` and `192.168.0.0/16`, link-local addresses and the like are refused, including when a public URL redirects to one.
+
+If you want to follow feeds on your own network, or your token endpoint is on it, list the hostnames, IP addresses or CIDR ranges to allow in `.env`:
+
+```
+HTTP_ALLOW_PRIVATE=192.168.1.0/24,feeds.lan
+```
+
+When working on Aperture itself, make requests with `app(\p3k\HTTP::class)` or `App\Services\SafeDownload` so these checks apply. A test fails if code in `app/` builds its own HTTP client or calls curl directly.
+
+
 Dependencies
 ------------
 

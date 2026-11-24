@@ -33,34 +33,20 @@ class Media extends Model {
 
     @mkdir(sys_get_temp_dir().'/aperture', 0755);
     $filedata = tempnam(sys_get_temp_dir().'/aperture', 'file-data');
-    $fileheader = tempnam(sys_get_temp_dir().'/aperture', 'file-header');
 
-    $fd = fopen($filedata, 'w');
-    $fh = fopen($fileheader, 'w');
-
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-    curl_setopt($ch, CURLOPT_FILE, $fd);
-    curl_setopt($ch, CURLOPT_WRITEHEADER, $fh);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, 4000);
-    curl_setopt($ch, CURLOPT_TIMEOUT_MS, 10000);
-    curl_exec($ch);
-
-    fclose($fd);
-    fclose($fh);
+    // The URL comes from a feed or a Micropub post. Whatever it returns is stored and
+    // served publicly, so it must not be able to reach anything on a private network.
+    $response = app(\App\Services\SafeDownload::class)->toFile($url, $filedata, 4000, 10000);
 
     $media = false;
-    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-    if(!curl_errno($ch) && $code == 200) {
+    if(!$response['error'] && $response['code'] == 200) {
       $media = self::_createFromFile($url, $filedata, $maxSize);
     } else {
-      Log::info('Media file '.$url.' returned '.$code);
+      Log::info('Media file '.$url.' returned '.$response['code'].' '.$response['error']);
     }
 
     unlink($filedata);
-    unlink($fileheader);
 
     return $media;
   }
@@ -135,6 +121,14 @@ class Media extends Model {
       Log::info("Stored file ".$url." at url: ".$media->url());
     }
     return $media;
+  }
+
+  /**
+   * Whether a file is one of the image types that are safe to open with Imagick.
+   * Other formats it understands, such as SVG and MVG, can refer to other files and URLs.
+   */
+  public static function is_bitmap_image($filename) {
+    return in_array(self::_file_extension($filename), ['.jpg', '.png', '.gif', '.webp']);
   }
 
   private static function _file_extension($filename) {

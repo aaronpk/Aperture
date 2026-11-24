@@ -179,21 +179,24 @@ class EntrySavedListener implements ShouldQueue
 
       @mkdir(sys_get_temp_dir().'/aperture', 0755);
       $filedata = tempnam(sys_get_temp_dir().'/aperture', 'file-data');
-      $fd = fopen($filedata, 'w');
+      // The URL comes from a feed or a Micropub post, so only fetch it from a public address
+      $response = app(\App\Services\SafeDownload::class)->toFile($url, $filedata, 4000, 10000);
 
-      $ch = curl_init($url);
-      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-      curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-      curl_setopt($ch, CURLOPT_FILE, $fd);
-      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, 4000);
-      curl_setopt($ch, CURLOPT_TIMEOUT_MS, 10000);
-      curl_exec($ch);
-      fclose($fd);
+      if($response['error'] || $response['code'] != 200) {
+        Log::info('Failed to fetch '.$url.' for metadata: '.$response['code'].' '.$response['error']);
+        @unlink($filedata);
+        return $meta;
+      }
 
       $meta['bytes'] = filesize($filedata);
 
       Log::info('URL '.$url.' has size '.$meta['bytes']);
+
+      if(!Media::is_bitmap_image($filedata)) {
+        Log::info('Not reading metadata for '.$url.' because it is not a JPEG, PNG, GIF or WebP image');
+        @unlink($filedata);
+        return $meta;
+      }
 
       try {
         $fp = fopen($filedata, 'r');
