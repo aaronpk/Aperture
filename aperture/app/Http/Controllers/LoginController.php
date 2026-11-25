@@ -11,9 +11,7 @@ class LoginController extends Controller
 {
 
   public function login() {
-    return view('login/login', [
-      'return' => Request::input('return')
-    ]);
+    return view('login/login');
   }
 
   public function logout() {
@@ -77,7 +75,6 @@ class LoginController extends Controller
       'micropub_endpoint' => $micropubEndpoint,
       'issuer' => $issuer,
       'indieauth_url' => $url,
-      'redirect_after_login' => Request::input('return'),
     ]);
 
     $redirect_uri = route('login_callback');
@@ -176,12 +173,7 @@ class LoginController extends Controller
 
       Auth::login($user);
 
-      if($r=session('redirect_after_login')) {
-        session()->forget('redirect_after_login');
-        return redirect($r);
-      } else {
-        return redirect(route('dashboard'));
-      }
+      return redirect(route('dashboard'));
 
     } else {
       return view('login/error', [

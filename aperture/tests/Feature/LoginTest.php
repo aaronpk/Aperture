@@ -61,6 +61,18 @@ class LoginTest extends TestCase
     $this->http->on('POST', $endpoint, 200, json_encode(['me' => $me]), 'Content-Type: application/json');
   }
 
+  // Login used to redirect to whatever URL was passed as "return", to any site
+  public function testLoginIgnoresAReturnUrl() {
+    $url = $this->siteWithRelLinks('return-login');
+    $this->assertStringNotContainsString('evil.example', $this->get('/login?return=https://evil.example/')->getContent());
+
+    $location = $this->post('/login', ['url' => $url, 'return' => 'https://evil.example/'])->headers->get('Location');
+    parse_str((string)parse_url($location, PHP_URL_QUERY), $params);
+
+    $this->tokenEndpointReturns('https://rel-auth.example/token', $url);
+    $this->get('/login/callback?code=abc&state='.$params['state'])->assertRedirect('http://aperture.test/dashboard');
+  }
+
   public function testLoginWithRelLinks() {
     $url = $this->siteWithRelLinks('rel-login');
 
