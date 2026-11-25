@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\IndieAuthController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MicropubController;
 use App\Http\Controllers\PublicController;
@@ -39,18 +38,10 @@ Route::middleware('web')->group(function(){
     Route::post('/login', [LoginController::class, 'start']);
     Route::get('/login/callback', [LoginController::class, 'callback'])->name('login_callback');
 
-    Route::get('/auth', [IndieAuthController::class, 'auth_get'])->name('auth_get');
-    Route::post('/auth/process', [IndieAuthController::class, 'auth_process'])->name('auth_process');
-
-    Route::get('/{user_b60}-{channel_b60}-{source_b60}', [IndieAuthController::class, 'profile'])->name('profile_url');
-
     Route::get('/entry/{source_id}/{entry}', [MicropubController::class, 'entry'])->name('entry');
 });
 
 // No cookies on these routes since they are used by API clients
-Route::post('/auth', [IndieAuthController::class, 'auth_post'])->name('auth_post');
-Route::post('/token', [IndieAuthController::class, 'token_post'])->name('token_post');
-
 Route::post('/api/register', [LoginController::class, 'api_register']);
 
 Route::get('/stats', [StatsController::class, 'index']);

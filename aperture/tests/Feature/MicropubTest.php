@@ -112,17 +112,4 @@ class MicropubTest extends TestCase
       ->where('channel_id', $this->channel->id)->pluck('data')->map(function($d) { return json_decode($d, true)['content']['text']; })->all();
     $this->assertEquals(['This is fine'], $texts);
   }
-
-  public function testTokenEndpointVerification() {
-    $this->withHeaders(['Authorization' => 'Bearer micropub-token'])->get('/token')
-      ->assertStatus(200)->assertExactJson([
-        'me' => 'http://aperture.test/'.\p3k\b10to60($this->user->id).'-'.\p3k\b10to60($this->channel->id).'-'.\p3k\b10to60($this->source->id)
-      ]);
-
-    // A source in multiple channels can't be resolved to one channel
-    $this->user->create_channel('Second')->sources()->attach($this->source->id, ['created_at' => date('Y-m-d H:i:s')]);
-    \Cache::flush();
-    $this->withHeaders(['Authorization' => 'Bearer micropub-token'])->get('/token')
-      ->assertStatus(404)->assertJson(['error' => 'not_found']);
-  }
 }

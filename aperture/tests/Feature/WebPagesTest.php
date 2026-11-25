@@ -10,10 +10,29 @@ class WebPagesTest extends TestCase
   use RefreshDatabase;
 
   public function testPublicPages() {
-    $this->get('/')->assertStatus(200)->assertSee('<link rel="micropub" href="http://aperture.test/micropub">', false);
+    $this->get('/')->assertStatus(200);
     $this->get('/docs')->assertStatus(200)->assertSee('POST http://aperture.test/micropub');
     $this->get('/pricing')->assertStatus(200);
     $this->get('/login')->assertStatus(200);
+  }
+
+  // Aperture used to be an IndieAuth authorization server for Micropub apps.
+  // That was removed; API keys are created from the channel page instead.
+  public function testAuthorizationServerIsGone() {
+    $user = $this->createUser();
+    $channel = $user->create_channel('Test');
+
+    $home = $this->get('/')->getContent();
+    foreach(['authorization_endpoint', 'token_endpoint', 'rel="micropub"'] as $rel)
+      $this->assertStringNotContainsString($rel, $home);
+
+    $query = '?client_id=https://app.example/&redirect_uri=https://app.example/cb&response_type=code&scope=create&state=x';
+    $this->actingAs($user)->get('/auth'.$query)->assertStatus(404);
+    $this->actingAs($user)->post('/auth/process', ['channel' => $channel->id])->assertStatus(404);
+    $this->post('/auth', ['code' => 'a.x'])->assertStatus(404);
+    $this->post('/token', ['code' => 'a.x'])->assertStatus(404);
+    $this->withHeaders(['Authorization' => 'Bearer anything'])->get('/token')->assertStatus(404);
+    $this->get('/'.\p3k\b10to60($user->id).'-'.\p3k\b10to60($channel->id).'-1')->assertStatus(404);
   }
 
   public function testGuestsAreRedirectedToLogin() {

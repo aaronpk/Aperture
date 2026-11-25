@@ -100,17 +100,6 @@ class SsrfTest extends TestCase
     $this->assertCount(0, $this->http->requestsTo('GET', 'http://192.168.1.1/'));
   }
 
-  public function testClientInfoIsNotFetchedFromAPrivateAddress() {
-    $this->actingAs($this->user)->get('/auth?'.http_build_query([
-      'client_id' => 'http://internal.example/',
-      'redirect_uri' => 'http://internal.example/callback',
-      'response_type' => 'code',
-      'state' => 'xyz',
-      'scope' => 'create',
-    ]));
-    $this->assertCount(0, $this->http->requests);
-  }
-
   public function testTokenIsNotVerifiedAtAPrivateTokenEndpoint() {
     $this->user->token_endpoint = 'http://169.254.169.254/latest/meta-data/';
     $this->user->save();
